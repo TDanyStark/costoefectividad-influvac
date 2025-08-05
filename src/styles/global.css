@@ -1,2 +1,23 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Brandon";
+  src: url("/apps/abbott/costoefectividad-influvac/fonts/Brandon_reg.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Brandon";
+  src: url("/apps/abbott/costoefectividad-influvac/fonts/Brandon_blk.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@theme {
+  --color-brown-influvac: #983c25;
+  --color-ochre-influvac: #e27532;
+  --color-blue-influvac: #417a93;
+  
+  --font-brandon: "Brandon", sans-serif;
+}
