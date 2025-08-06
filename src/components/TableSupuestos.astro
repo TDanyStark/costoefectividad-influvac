@@ -1,0 +1,121 @@
+---
+const supuestos = [
+  {
+    parametro: 'Casos Asintomáticos',
+    valor: '16% [IC95%: 13 - 19%]',
+    fuente: 'https://pubmed.ncbi.nlm.nih.gov/26133025/'
+  },
+  {
+    parametro: 'Consulta / Incapacidad*',
+    valor: '48,65%',
+    fuente: 'https://www.cdc.gov/flu/about/burden/index.html'
+  },
+  {
+    parametro: 'Hospitalización*',
+    valor: '1,54%',
+    fuente: 'https://www.cdc.gov/flu/about/burden/index.html'
+  },
+  {
+    parametro: 'Mortalidad*',
+    valor: '0,13%',
+    fuente: 'https://www.cdc.gov/flu/about/burden/index.html'
+  },
+  {
+    parametro: 'Protección Influvac AH1N1 (18 - 65 años)',
+    valor: '94,90%',
+    fuente: 'https://pubmed.ncbi.nlm.nih.gov/33957854/'
+  },
+  {
+    parametro: 'Protección Influvac AH3N2 (18 - 65 años)',
+    valor: '96,60%',
+    fuente: 'https://pubmed.ncbi.nlm.nih.gov/33957854/'
+  },
+  {
+    parametro: 'Protección Influvac B Victoria (18 - 65 años)',
+    valor: '51,70%',
+    fuente: 'https://pubmed.ncbi.nlm.nih.gov/33957854/'
+  },
+  {
+    parametro: 'Protección Influvac B yamagata (18 - 65 años)',
+    valor: '53,40%',
+    fuente: 'https://pubmed.ncbi.nlm.nih.gov/33957854/'
+  },
+];
+---
+<!-- Responsive Table -->
+<div class="">
+  <!-- Mobile view (single column) -->
+  <div class="md:hidden space-y-4">
+    {supuestos.map((item) => (
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div
+          class="px-4 py-3 font-semibold text-white text-lg"
+          style="background-color: var(--color-ochre-influvac);"
+        >
+          {item.parametro}
+        </div>
+        <div class="p-4">
+          <div
+            class="text-2xl font-bold mb-2"
+            style="color: var(--color-brown-influvac);"
+          >
+            {item.valor}
+          </div>
+          <a
+            href={item.fuente}
+            class="underline text-sm break-all"
+            style="color: var(--color-blue-influvac);"
+          >
+            {item.fuente}
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Desktop/Tablet view (table layout) -->
+  <div class="hidden md:block bg-white rounded-lg shadow-lg overflow-hidden">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-brown-influvac">
+          <th class="px-6 py-4 text-xl text-left text-white font-semibold"
+            >Parámetro</th
+          >
+          <th class="px-6 py-4 text-xl text-center text-white font-semibold"
+            >Valor</th
+          >
+          <th class="px-6 py-4 text-xl text-left text-white font-semibold"
+            >Fuente</th
+          >
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {supuestos.map((item) => (
+          <tr class="transition-colors" style="&:hover { background-color: #fef3f0; }">
+            <td
+              class="px-6 py-4 text-xl font-medium text-gray-800"
+              style="background-color: #fdeee8;"
+            >
+              {item.parametro}
+            </td>
+            <td
+              class="px-6 py-4 text-center font-bold text-lg"
+              style="color: var(--color-brown-influvac);"
+            >
+              {item.valor}
+            </td>
+            <td class="px-6 py-4">
+              <a
+                href={item.fuente}
+                class="underline break-all hover:opacity-80"
+                style="color: var(--color-blue-influvac);"
+              >
+                {item.fuente}
+              </a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
