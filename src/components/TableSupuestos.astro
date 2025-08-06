@@ -49,8 +49,7 @@ const supuestos = [
     {supuestos.map((item) => (
       <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div
-          class="px-4 py-3 font-semibold text-white text-lg"
-          style="background-color: var(--color-ochre-influvac);"
+          class="px-4 py-3 font-semibold text-white text-lg bg-brown-influvac"
         >
           {item.parametro}
         </div>
@@ -91,10 +90,9 @@ const supuestos = [
       </thead>
       <tbody class="divide-y divide-gray-200">
         {supuestos.map((item) => (
-          <tr class="transition-colors" style="&:hover { background-color: #fef3f0; }">
+          <tr class="transition-colors hover:bg-ochre-influvac/20">
             <td
-              class="px-6 py-4 text-xl font-medium text-gray-800"
-              style="background-color: #fdeee8;"
+              class="px-6 py-4 text-xl font-medium text-gray-800 bg-ochre-influvac/20"
             >
               {item.parametro}
             </td>
