@@ -6,7 +6,7 @@ function Resumen() {
 
   return (
     <main
-      className="min-h-screen flex flex-col overflow-clip"
+      className="min-h-screen flex flex-col overflow-clip m-0 p-0"
       style={{
         backgroundImage: `url('${URL_BASE}/img/bg/banner1.webp')`,
         backgroundSize: "cover",

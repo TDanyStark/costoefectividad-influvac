@@ -1,3 +1,4 @@
+import { URL_BASE } from "@/variables";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +8,19 @@ function System() {
   const cambiarVista = (num: number) => setVista(num);
 
   return (
-    <div>
+    <main
+      className="min-h-screen flex flex-col overflow-clip"
+      style={{
+        backgroundImage: `url('${URL_BASE}/img/bg/banner2.webp')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <header className="p-4 md:p-8">
+        <div className="max-w-7xl mx-auto">
+          <img className="w-52 h-auto" src={`${URL_BASE}/img/logoabbott_white.webp`} alt="Logo de Abbott" />
+        </div>
+      </header>
       {vista === 1 && <h2>Página 1</h2>}
       {vista === 2 && <h2>Página 2</h2>}
       {vista === 3 && <h2>Página 3</h2>}
@@ -20,7 +33,7 @@ function System() {
         <button onClick={() => cambiarVista(4)}>Ir a Página 4</button>
         <button onClick={() => navigate("resumen")}>Ir a Resumen</button>
       </div>
-    </div>
+    </main>
   );
 }
 
