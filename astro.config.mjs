@@ -3,10 +3,13 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from "@tailwindcss/vite";
 import path from 'path';
 
+import react from '@astrojs/react';
+
 // https://astro.build/config
 export default defineConfig({
   base: '/apps/abbott/costoefectividad-influvac',
   outDir: 'apps/abbott/costoefectividad-influvac',
+
   vite: {
     plugins: [tailwindcss()],
     resolve: {
@@ -15,4 +18,6 @@ export default defineConfig({
       }
     }
   },
+
+  integrations: [react()],
 });
