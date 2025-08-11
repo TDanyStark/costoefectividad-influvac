@@ -29,16 +29,21 @@ export default function generateinfluenzaAH1N1_V(
   const isLeap = (y: number) => y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
   const diasEnAnio = isLeap(year) ? 366 : 365;
 
-  // validar si tiene vacunación 1 y si tiene convertirlo a fecha
-  const firstVaccinationDate = vaccinationObject.firstVaccinationDate
-    ? new Date(vaccinationObject.firstVaccinationDate)
-    : null;
+  const parseDate = (dateStr: string) => (dateStr ? new Date(dateStr) : null);
+  const dayOfYear = (date: Date | null) =>
+    date
+      ? Math.floor(
+          (date.getTime() - new Date(year, 0, 0).getTime()) / 86400000
+        ) + 1
+      : null;
 
-  const secondVaccinationDate = vaccinationObject.secondVaccinationDate
-    ? new Date(vaccinationObject.secondVaccinationDate)
-    : null;
+  const firstVaccinationDate = parseDate(
+    vaccinationObject.firstVaccinationDate
+  );
+  const secondVaccinationDate = parseDate(
+    vaccinationObject.secondVaccinationDate
+  );
 
-  // si hay 2 fechas verificar que la segunda no sea menor
   if (
     firstVaccinationDate &&
     secondVaccinationDate &&
@@ -49,45 +54,25 @@ export default function generateinfluenzaAH1N1_V(
     );
   }
 
-  // calcular el dia del año de cada fecha
-  const firstVaccinationDayOfYear = firstVaccinationDate
-    ? Math.floor(
-        (firstVaccinationDate.getTime() - new Date(year, 0, 0).getTime()) /
-          1000 /
-          60 /
-          60 /
-          24
-      ) + 1
-    : null;
+  const firstVaccinationDayOfYear = dayOfYear(firstVaccinationDate);
+  const secondVaccinationDayOfYear = dayOfYear(secondVaccinationDate);
 
-  const secondVaccinationDayOfYear = secondVaccinationDate
-    ? Math.floor(
-        (secondVaccinationDate.getTime() - new Date(year, 0, 0).getTime()) /
-          1000 /
-          60 /
-          60 /
-          24
-      ) + 1
-    : null;
-
-  const porcentajeFirstDay = firstVaccinationDayOfYear
+  const porcentajeFirstDay = firstVaccinationDate
     ? vaccinationObject.firstvaccinatedIndividuals / suceptiblesIniciales
     : 0;
-
-  const porcentajeSecondDay = secondVaccinationDayOfYear
-    ? (vaccinationObject.secondvaccinatedIndividuals + vaccinationObject.firstvaccinatedIndividuals) / suceptiblesIniciales
+  const porcentajeSecondDay = secondVaccinationDate
+    ? (vaccinationObject.secondvaccinatedIndividuals +
+        vaccinationObject.firstvaccinatedIndividuals) /
+      suceptiblesIniciales
     : 0;
 
   const vaccinationProtection = 0.949;
 
-  const calculatePorcentByDay = (day: number) => {
-    // segun el dia dar porcentaje, entonces tener en cuenta porcentajeFirstDay y porcentajeSecondDay cuando sea mayor al dia debe empezar a contar ese porcentaje
-    if (secondVaccinationDayOfYear && day > secondVaccinationDayOfYear) {
+  const getPorcentajeVacunacion = (day: number) => {
+    if (secondVaccinationDayOfYear && day > secondVaccinationDayOfYear)
       return porcentajeSecondDay;
-    }
-    if (firstVaccinationDayOfYear && day > firstVaccinationDayOfYear) {
+    if (firstVaccinationDayOfYear && day > firstVaccinationDayOfYear)
       return porcentajeFirstDay;
-    }
     return 0;
   };
 
@@ -114,64 +99,44 @@ export default function generateinfluenzaAH1N1_V(
     Casos: 0,
     Acumulado: 0,
     "Casos Nuevos": 0,
-    // Solo λ (Transmisibilidad) y Ro se mantienen, el resto se usan como constantes
     "λ (Transmisibilidad)":
       Ro * gamma -
-      Ro * gamma * calculatePorcentByDay(1) * vaccinationProtection,
+      Ro * gamma * getPorcentajeVacunacion(1) * vaccinationProtection,
   });
 
-  // --- Filas siguientes ---
   for (let i = 1; i < diasEnAnio; i++) {
     const prev = serie[i - 1];
     const dia = i + 1;
     const fechaActual = new Date(year, 0, dia);
-
-    // Calcular semana normal: cada 7 días empieza una nueva semana
     const semanaActual = dia % 7 === 0 ? dia / 7 : null;
-
-    // Si la semana está en el ajustePoblacional, usar el valor, sino 0
-    const Fcol =
-      semanaActual !== null ? ajustePoblacional[semanaActual] ?? 0 : 0;
-
+    const Fcol = semanaActual ? ajustePoblacional[semanaActual] ?? 0 : 0;
     const lambda =
       Ro * gamma -
-      Ro * gamma * calculatePorcentByDay(dia) * vaccinationProtection;
+      Ro * gamma * getPorcentajeVacunacion(dia) * vaccinationProtection;
 
-    const Suceptibles =
-      prev.Suceptibles -
+    const susceptiblesFactor =
       prev["λ (Transmisibilidad)"] *
-        prev.Infectivos *
-        (prev.Suceptibles / prev.N) -
-      prev.F;
-
+      prev.Infectivos *
+      (prev.Suceptibles / prev.N);
+    const Suceptibles = prev.Suceptibles - susceptiblesFactor - prev.F;
     const Expuestos =
-      prev.Expuestos +
-      (prev["λ (Transmisibilidad)"] * prev.Infectivos * prev.Suceptibles) /
-        prev.N -
-      prev.Expuestos * epsilon;
-
+      prev.Expuestos + susceptiblesFactor - prev.Expuestos * epsilon;
     const Infectivos =
       prev.Infectivos +
       Fcol +
       prev.Expuestos * epsilon -
-      prev.Infectivos * gamma -
-      prev.Infectivos * alpha;
-
+      prev.Infectivos * gamma;
     const Recuperados = prev.Recuperados + prev.Infectivos * gamma;
-
     const Mortalidad = prev.Infectivos * alpha;
-
     const N = Suceptibles + Expuestos + Infectivos + Recuperados;
-
-    const porcentaje = N !== 0 ? Recuperados / N : 0;
-
+    const porcentaje = N ? Recuperados / N : 0;
     const Casos = prev.Casos + Expuestos;
     const Acumulado = Math.floor(Casos);
     const CasosNuevos = Acumulado - prev.Acumulado;
 
     serie.push({
       Fecha: fechaActual.toISOString().split("T")[0],
-      Día: i + 1,
+      Día: dia,
       Suceptibles,
       Expuestos,
       Infectivos,
