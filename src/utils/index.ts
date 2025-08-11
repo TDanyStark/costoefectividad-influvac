@@ -23,4 +23,4 @@ const ajustePoblacionalResult = ajustePoblacional(population, averageDaysOffWork
 const influenzaAH1N1 = generateinfluenzaAH1N1(population, ajustePoblacionalResult["A H1N1"]);
 const influenzaAH1N1_V = generateinfluenzaAH1N1_V(population, ajustePoblacionalResult["A H1N1"], vaccinationObject);
 
-console.log(influenzaAH1N1[364]);
+console.log(influenzaAH1N1_V[364]);

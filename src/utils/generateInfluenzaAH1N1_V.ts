@@ -12,12 +12,7 @@ type TypeSerie = {
   Casos: number;
   Acumulado: number;
   "Casos Nuevos": number;
-  "α (mortalidad)": number;
-  "γ (recuperación)": number;
-  "ε (infectividad)": number;
-  "1/ε (latencia)": number;
   "λ (Transmisibilidad)": number;
-  Ro: number;
 };
 
 export default function generateinfluenzaAH1N1_V(
@@ -114,12 +109,8 @@ export default function generateinfluenzaAH1N1_V(
     Casos: 0,
     Acumulado: 0,
     "Casos Nuevos": 0,
-    "α (mortalidad)": alpha,
-    "γ (recuperación)": gamma,
-    "ε (infectividad)": epsilon,
-    "1/ε (latencia)": invEpsilon,
+    // Solo λ (Transmisibilidad) y Ro se mantienen, el resto se usan como constantes
     "λ (Transmisibilidad)": (Ro * gamma) - ((Ro * gamma) * calculatePorcentByDay(1) * vaccinationProtection),
-    Ro: Ro,
   });
 
   // --- Filas siguientes ---
@@ -148,19 +139,19 @@ export default function generateinfluenzaAH1N1_V(
       prev.Expuestos +
       (prev["λ (Transmisibilidad)"] * prev.Infectivos * prev.Suceptibles) /
         prev.N -
-      prev.Expuestos * prev["ε (infectividad)"];
+      prev.Expuestos * epsilon;
 
     const Infectivos =
       prev.Infectivos +
       Fcol +
-      prev.Expuestos * prev["ε (infectividad)"] -
-      prev.Infectivos * prev["γ (recuperación)"] -
-      prev.Infectivos * prev["α (mortalidad)"];
+      prev.Expuestos * epsilon -
+      prev.Infectivos * gamma -
+      prev.Infectivos * alpha;
 
     const Recuperados =
-      prev.Recuperados + prev.Infectivos * prev["γ (recuperación)"];
+      prev.Recuperados + prev.Infectivos * gamma;
 
-    const Mortalidad = prev.Infectivos * prev["α (mortalidad)"];
+    const Mortalidad = prev.Infectivos * alpha;
 
     const N = Suceptibles + Expuestos + Infectivos + Recuperados;
 
@@ -184,12 +175,7 @@ export default function generateinfluenzaAH1N1_V(
       Casos,
       Acumulado,
       "Casos Nuevos": CasosNuevos,
-      "α (mortalidad)": alpha,
-      "γ (recuperación)": gamma,
-      "ε (infectividad)": epsilon,
-      "1/ε (latencia)": invEpsilon,
       "λ (Transmisibilidad)": lambda,
-      Ro,
     });
   }
 
