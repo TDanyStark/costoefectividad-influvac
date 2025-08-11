@@ -38,10 +38,16 @@ export default function generateinfluenzaAH1N1_V(
     ? new Date(vaccinationObject.secondVaccinationDate)
     : null;
 
-    // si hay 2 fechas verificar que la segunda no sea menor
-    if (firstVaccinationDate && secondVaccinationDate && secondVaccinationDate < firstVaccinationDate) {
-      throw new Error("La segunda fecha de vacunación no puede ser menor que la primera.");
-    }
+  // si hay 2 fechas verificar que la segunda no sea menor
+  if (
+    firstVaccinationDate &&
+    secondVaccinationDate &&
+    secondVaccinationDate < firstVaccinationDate
+  ) {
+    throw new Error(
+      "La segunda fecha de vacunación no puede ser menor que la primera."
+    );
+  }
 
   // calcular el dia del año de cada fecha
   const firstVaccinationDayOfYear = firstVaccinationDate
@@ -64,24 +70,23 @@ export default function generateinfluenzaAH1N1_V(
       ) + 1
     : null;
 
-    const porcentajeFirstDay = firstVaccinationDayOfYear
-      ? (vaccinationObject.firstvaccinatedIndividuals / suceptiblesIniciales)
-      : 0;
+  const porcentajeFirstDay = firstVaccinationDayOfYear
+    ? vaccinationObject.firstvaccinatedIndividuals / suceptiblesIniciales
+    : 0;
 
-    const porcentajeSecondDay = secondVaccinationDayOfYear
-      ? (vaccinationObject.secondvaccinatedIndividuals / suceptiblesIniciales)
-      : 0;
+  const porcentajeSecondDay = secondVaccinationDayOfYear
+    ? (vaccinationObject.secondvaccinatedIndividuals + vaccinationObject.firstvaccinatedIndividuals) / suceptiblesIniciales
+    : 0;
 
-
-    const vaccinationProtection = 0.949;
+  const vaccinationProtection = 0.949;
 
   const calculatePorcentByDay = (day: number) => {
     // segun el dia dar porcentaje, entonces tener en cuenta porcentajeFirstDay y porcentajeSecondDay cuando sea mayor al dia debe empezar a contar ese porcentaje
-    if (firstVaccinationDayOfYear && day > firstVaccinationDayOfYear) {
-      return porcentajeFirstDay;
-    }
     if (secondVaccinationDayOfYear && day > secondVaccinationDayOfYear) {
       return porcentajeSecondDay;
+    }
+    if (firstVaccinationDayOfYear && day > firstVaccinationDayOfYear) {
+      return porcentajeFirstDay;
     }
     return 0;
   };
@@ -110,7 +115,9 @@ export default function generateinfluenzaAH1N1_V(
     Acumulado: 0,
     "Casos Nuevos": 0,
     // Solo λ (Transmisibilidad) y Ro se mantienen, el resto se usan como constantes
-    "λ (Transmisibilidad)": (Ro * gamma) - ((Ro * gamma) * calculatePorcentByDay(1) * vaccinationProtection),
+    "λ (Transmisibilidad)":
+      Ro * gamma -
+      Ro * gamma * calculatePorcentByDay(1) * vaccinationProtection,
   });
 
   // --- Filas siguientes ---
@@ -126,7 +133,9 @@ export default function generateinfluenzaAH1N1_V(
     const Fcol =
       semanaActual !== null ? ajustePoblacional[semanaActual] ?? 0 : 0;
 
-    const lambda = (Ro * gamma) - ((Ro * gamma) * calculatePorcentByDay(dia) * vaccinationProtection);
+    const lambda =
+      Ro * gamma -
+      Ro * gamma * calculatePorcentByDay(dia) * vaccinationProtection;
 
     const Suceptibles =
       prev.Suceptibles -
@@ -148,8 +157,7 @@ export default function generateinfluenzaAH1N1_V(
       prev.Infectivos * gamma -
       prev.Infectivos * alpha;
 
-    const Recuperados =
-      prev.Recuperados + prev.Infectivos * gamma;
+    const Recuperados = prev.Recuperados + prev.Infectivos * gamma;
 
     const Mortalidad = prev.Infectivos * alpha;
 

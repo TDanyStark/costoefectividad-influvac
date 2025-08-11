@@ -4,10 +4,10 @@ import generateinfluenzaAH1N1_V from "@/utils/generateInfluenzaAH1N1_V";
 
 const population = 5000;
 const averageDaysOffWork = 2;
-const firstVaccinationDate = "2025-01-01";
+const firstVaccinationDate = "2025-05-30";
 const firstvaccinatedIndividuals = 2000;
-const secondVaccinationDate = "";
-const secondvaccinatedIndividuals = 0;
+const secondVaccinationDate = "2025-09-30";
+const secondvaccinatedIndividuals = 1000;
 
 const vaccinationObject = {
   firstVaccinationDate,
