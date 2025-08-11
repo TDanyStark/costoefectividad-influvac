@@ -4,17 +4,52 @@ import generateinfluenzaAH1N1_V from "@/utils/generateInfluenzaAH1N1_V";
 
 const population = 5000;
 const averageDaysOffWork = 2;
-const firstVaccinationDate = "2025-05-30";
-const firstvaccinatedIndividuals = 2000;
-const secondVaccinationDate = "2025-09-30";
-const secondvaccinatedIndividuals = 1000;
+const firstVaccinationDate: string = "2025-05-30";
+const firstvaccinatedIndividuals: number = 2000;
+const secondVaccinationDate: string = ""; // opcional
+const secondvaccinatedIndividuals: number = 0;
 
-const vaccinationObject = {
-  firstVaccinationDate,
+// Validar primera fecha
+const firstDate = new Date(firstVaccinationDate);
+if (isNaN(firstDate.getTime())) {
+  throw new Error("❌ La primera fecha no es válida");
+}
+
+// Declarar fuera para poder usar después
+let secondDate: Date | null = null;
+
+// Validar segunda fecha solo si existe
+if (secondVaccinationDate) {
+  secondDate = new Date(secondVaccinationDate);
+
+  if (isNaN(secondDate.getTime())) {
+    throw new Error("❌ La segunda fecha no es válida");
+  }
+
+  if (firstDate.getFullYear() !== secondDate.getFullYear()) {
+    throw new Error("❌ Las fechas no son del mismo año");
+  }
+
+  if (secondDate <= firstDate) {
+    throw new Error("❌ La segunda fecha debe ser mayor que la primera");
+  }
+}
+
+console.log("✅ Fechas válidas");
+
+// Crear objeto final
+const vaccinationObject: {
+  firstVaccinationDate: Date;
+  firstvaccinatedIndividuals: number;
+  secondVaccinationDate: Date | null;
+  secondvaccinatedIndividuals: number;
+} = {
+  firstVaccinationDate: firstDate,
   firstvaccinatedIndividuals,
-  secondVaccinationDate,
+  secondVaccinationDate: secondDate,
   secondvaccinatedIndividuals
 };
+
 
 const round2 = (num: number) => Math.round(num * 100) / 100;
 

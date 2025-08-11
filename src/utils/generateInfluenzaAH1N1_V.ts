@@ -19,9 +19,9 @@ export default function generateinfluenzaAH1N1_V(
   suceptiblesIniciales: number,
   ajustePoblacional: Record<number, number>,
   vaccinationObject: {
-    firstVaccinationDate: string;
+    firstVaccinationDate: Date;
     firstvaccinatedIndividuals: number;
-    secondVaccinationDate: string;
+    secondVaccinationDate: Date | null;
     secondvaccinatedIndividuals: number;
   }
 ) {
@@ -29,7 +29,6 @@ export default function generateinfluenzaAH1N1_V(
   const isLeap = (y: number) => y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
   const diasEnAnio = isLeap(year) ? 366 : 365;
 
-  const parseDate = (dateStr: string) => (dateStr ? new Date(dateStr) : null);
   const dayOfYear = (date: Date | null) =>
     date
       ? Math.floor(
@@ -37,30 +36,18 @@ export default function generateinfluenzaAH1N1_V(
         ) + 1
       : null;
 
-  const firstVaccinationDate = parseDate(
+  const firstVaccinationDayOfYear = dayOfYear(
     vaccinationObject.firstVaccinationDate
   );
-  const secondVaccinationDate = parseDate(
+  const secondVaccinationDayOfYear = dayOfYear(
     vaccinationObject.secondVaccinationDate
   );
 
-  if (
-    firstVaccinationDate &&
-    secondVaccinationDate &&
-    secondVaccinationDate < firstVaccinationDate
-  ) {
-    throw new Error(
-      "La segunda fecha de vacunación no puede ser menor que la primera."
-    );
-  }
-
-  const firstVaccinationDayOfYear = dayOfYear(firstVaccinationDate);
-  const secondVaccinationDayOfYear = dayOfYear(secondVaccinationDate);
-
-  const porcentajeFirstDay = firstVaccinationDate
+  const porcentajeFirstDay = vaccinationObject.firstVaccinationDate
     ? vaccinationObject.firstvaccinatedIndividuals / suceptiblesIniciales
     : 0;
-  const porcentajeSecondDay = secondVaccinationDate
+
+  const porcentajeSecondDay = vaccinationObject.secondVaccinationDate
     ? (vaccinationObject.secondvaccinatedIndividuals +
         vaccinationObject.firstvaccinatedIndividuals) /
       suceptiblesIniciales
@@ -100,8 +87,7 @@ export default function generateinfluenzaAH1N1_V(
     Acumulado: 0,
     "Casos Nuevos": 0,
     "λ (Transmisibilidad)":
-      Ro * gamma -
-      Ro * gamma * getPorcentajeVacunacion(1) * vaccinationProtection,
+      Ro * gamma - Ro * gamma * getPorcentajeVacunacion(1) * vaccinationProtection,
   });
 
   for (let i = 1; i < diasEnAnio; i++) {
@@ -111,21 +97,14 @@ export default function generateinfluenzaAH1N1_V(
     const semanaActual = dia % 7 === 0 ? dia / 7 : null;
     const Fcol = semanaActual ? ajustePoblacional[semanaActual] ?? 0 : 0;
     const lambda =
-      Ro * gamma -
-      Ro * gamma * getPorcentajeVacunacion(dia) * vaccinationProtection;
+      Ro * gamma - Ro * gamma * getPorcentajeVacunacion(dia) * vaccinationProtection;
 
     const susceptiblesFactor =
-      prev["λ (Transmisibilidad)"] *
-      prev.Infectivos *
-      (prev.Suceptibles / prev.N);
+      prev["λ (Transmisibilidad)"] * prev.Infectivos * (prev.Suceptibles / prev.N);
     const Suceptibles = prev.Suceptibles - susceptiblesFactor - prev.F;
-    const Expuestos =
-      prev.Expuestos + susceptiblesFactor - prev.Expuestos * epsilon;
+    const Expuestos = prev.Expuestos + susceptiblesFactor - prev.Expuestos * epsilon;
     const Infectivos =
-      prev.Infectivos +
-      Fcol +
-      prev.Expuestos * epsilon -
-      prev.Infectivos * gamma;
+      prev.Infectivos + Fcol + prev.Expuestos * epsilon - prev.Infectivos * gamma;
     const Recuperados = prev.Recuperados + prev.Infectivos * gamma;
     const Mortalidad = prev.Infectivos * alpha;
     const N = Suceptibles + Expuestos + Infectivos + Recuperados;
