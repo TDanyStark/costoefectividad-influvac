@@ -1,8 +1,13 @@
 import ajustePoblacional from '@/utils/ajustepoblacional';
+
 import generateinfluenzaAH1N1 from "@/utils/generateinfluenzaAH1N1";
 import generateinfluenzaAH1N1_V from "@/utils/generateInfluenzaAH1N1_V";
+
 import generateinfluenzaAH3N2 from "@/utils/generateinfluenzaAH3N2";
 import generateinfluenzaAH3N2_V from "@/utils/generateinfluenzaAH3N2_V";
+
+import generateInfluenzaBVictoria from "@/utils/generateInfluenzaBVictoria";
+import generateInfluenzaBVictoria_V from "@/utils/generateInfluenzaBVictoria_V";
 
 const population = 5000;
 const averageDaysOffWork = 2;
@@ -64,3 +69,5 @@ const influenzaAH1N1_V = generateinfluenzaAH1N1_V(population, ajustePoblacionalR
 const influenzaAH3N2 = generateinfluenzaAH3N2(population, ajustePoblacionalResult["A H3N2"]);
 const influenzaAH3N2_V = generateinfluenzaAH3N2_V(population, ajustePoblacionalResult["A H3N2"], vaccinationObject);
 
+const influenzaBVictoria = generateInfluenzaBVictoria(population, ajustePoblacionalResult["B Victoria"]);
+const influenzaBVictoria_V = generateInfluenzaBVictoria_V(population, ajustePoblacionalResult["B Victoria"], vaccinationObject);
