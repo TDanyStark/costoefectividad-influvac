@@ -2,7 +2,7 @@
 // Componente de formulario usando solo clases de Tailwind, sin JS ni CSS adicional
 ---
 
-<div class="max-w-xl bg-white">
+<div class="max-w-2xl bg-white">
   <div class="bg-brown-influvac text-white text-center px-6 py-6">
     <h1 class="text-xl font-semibold tracking-wide">PARÁMETROS DEL MODELO</h1>
   </div>
@@ -11,7 +11,7 @@
     <!-- Parámetros Básicos -->
     <div>
       <div class="flex flex-col gap-2">
-        <label for="numEmpleados" class="text-sm font-semibold text-slate-700"
+        <label for="numEmpleados" class=" font-semibold text-slate-700"
           >Número de Empleados
           <span class="text-red-500">*</span>
         </label>
@@ -21,7 +21,7 @@
           type="number"
           required
           value="5000"
-          class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+          class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
         />
       </div>
     </div>
@@ -31,7 +31,7 @@
         <div class="flex flex-col gap-2">
           <label
             for="fecha1Vacunacion"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Fecha 1 de Vacunación <span class="text-red-500">*</span></label
           >
           <input
@@ -40,13 +40,13 @@
             type="date"
             required
             value="2025-05-30"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
           />
         </div>
         <div class="flex flex-col gap-2">
           <label
             for="numeroDeVacunados1"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Número de Vacunados 1 <span class="text-red-500">*</span></label
           >
           <input
@@ -55,7 +55,7 @@
             type="number"
             required
             value="2000"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
           />
         </div>
       </div>
@@ -63,20 +63,20 @@
         <div class="flex flex-col gap-2">
           <label
             for="fecha2Vacunacion"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Fecha 2 de Vacunación</label
           >
           <input
             id="fecha2Vacunacion"
             name="fecha2Vacunacion"
             type="date"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
           />
         </div>
         <div class="flex flex-col gap-2">
           <label
             for="numeroDeVacunados2"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Número de Vacunados 2</label
           >
           <input
@@ -84,7 +84,7 @@
             name="numeroDeVacunados2"
             type="number"
             value="0"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
           />
         </div>
       </div>
@@ -93,7 +93,7 @@
     <!-- Parámetros Financieros -->
     <div>
       <div
-        class="bg-blue-influvac text-white font-semibold text-sm tracking-wide px-6 py-3 -mx-8 mb-3 mt-4"
+        class="bg-blue-influvac text-white font-semibold  tracking-wide px-6 py-3 -mx-8 mb-3"
       >
         PARÁMETROS FINANCIEROS
       </div>
@@ -101,14 +101,14 @@
       <div class="flex flex-col gap-2 mb-6">
         <label
           for="calculoProductividad"
-          class="text-sm font-semibold text-slate-700"
+          class=" font-semibold text-slate-700"
           >Cálculo de Productividad/Persona</label
         >
         <select
           id="calculoProductividad"
           name="calculoProductividad"
           required
-          class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+          class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
         >
           <option value="promedio_empresarial">Promedio empresarial</option>
           <option value="productividad_individual"
@@ -121,14 +121,14 @@
         <div class="flex flex-col gap-2">
           <label
             for="ventaNeta2022"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Venta Neta (ultimo año)</label
           >
           <div
             class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
           >
             <span
-              class="px-3 flex items-center text-slate-500 font-semibold text-sm"
+              class="px-3 flex items-center text-slate-500 font-semibold"
               >$</span
             >
             <input
@@ -137,37 +137,28 @@
               type="text"
               inputmode="decimal"
               data-thousands
-              data-decimals="0"
               required
               value="4388774488000"
-              class="w-full bg-transparent px-2 py-3 text-sm focus:outline-none"
+              class="w-full bg-transparent px-2 py-3  focus:outline-none"
             />
           </div>
         </div>
         <div class="flex flex-col gap-2">
           <label
             for="indicadorProductividad"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Indicador de Productividad por Empleado</label
           >
           <div
-            class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
+            class="flex rounded-lg"
           >
             <span
-              class="px-3 flex items-center text-slate-500 font-semibold text-sm"
+              class="px-3 flex items-center text-slate-500 font-semibold "
               >$</span
             >
-            <input
-              id="indicadorProductividad"
-              name="indicadorProductividad"
-              type="text"
-              inputmode="decimal"
-              data-thousands
-              data-decimals="2"
-              required
-              value="73146241.47"
-              class="w-full bg-transparent px-2 py-3 text-sm focus:outline-none"
-            />
+            <div class="px-2 py-3 flex items-center text-slate-500 ">
+              73.146.241,47
+            </div>
           </div>
         </div>
       </div>
@@ -176,14 +167,14 @@
         <div class="flex flex-col gap-2">
           <label
             for="salarioPromedio"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Salario Promedio de los Colaboradores</label
           >
           <div
             class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
           >
             <span
-              class="px-3 flex items-center text-slate-500 font-semibold text-sm"
+              class="px-3 flex items-center text-slate-500 font-semibold "
               >$</span
             >
             <input
@@ -192,24 +183,23 @@
               type="text"
               inputmode="decimal"
               data-thousands
-              data-decimals="0"
               required
               value="6000000"
-              class="w-full bg-transparent px-2 py-3 text-sm focus:outline-none"
+              class="w-full bg-transparent px-2 py-3  focus:outline-none"
             />
           </div>
         </div>
         <div class="flex flex-col gap-2">
           <label
             for="precioVacunacion"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Precio Vacunación Influenza</label
           >
           <div
             class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
           >
             <span
-              class="px-3 flex items-center text-slate-500 font-semibold text-sm"
+              class="px-3 flex items-center text-slate-500 font-semibold "
               >$</span
             >
             <input
@@ -218,10 +208,9 @@
               type="text"
               inputmode="decimal"
               data-thousands
-              data-decimals="0"
               required
               value="55000"
-              class="w-full bg-transparent px-2 py-3 text-sm focus:outline-none"
+              class="w-full bg-transparent px-2 py-3  focus:outline-none"
             />
           </div>
         </div>
@@ -231,7 +220,7 @@
     <!-- Parámetros Operacionales -->
     <div>
       <div
-        class="bg-blue-influvac text-white font-semibold text-sm tracking-wide px-6 py-3 -mx-8 mb-6"
+        class="bg-blue-influvac text-white font-semibold  tracking-wide px-6 py-3 -mx-8 mb-3"
       >
         PARÁMETROS OPERACIONALES
       </div>
@@ -240,14 +229,14 @@
         <div class="flex flex-col gap-2">
           <label
             for="nivelExposicion"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Nivel de Exposición al Público</label
           >
           <select
             id="nivelExposicion"
             name="nivelExposicion"
             required
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
           >
             <option value="1">Bajo</option>
             <option value="2" selected>Medio</option>
@@ -257,7 +246,7 @@
         <div class="flex flex-col gap-2">
           <label
             for="diasIncapacidad"
-            class="text-sm font-semibold text-slate-700"
+            class=" font-semibold text-slate-700"
             >Días de Incapacidad Promedio</label
           >
           <input
@@ -268,7 +257,7 @@
             min="1"
             max="30"
             value="5"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
           />
         </div>
       </div>
@@ -280,13 +269,13 @@
     >
       <button
         type="submit"
-        class="inline-flex justify-center rounded-lg bg-brown-influvac px-8 py-3 text-sm font-semibold tracking-wide text-white shadow-md transition hover:shadow-lg hover:shadow-brown-influvac focus:outline-none focus:ring-4 focus:ring-brown-influvac/40"
+        class="inline-flex justify-center rounded-lg bg-brown-influvac px-8 py-3  font-semibold tracking-wide text-white shadow-md transition hover:shadow-lg hover:shadow-brown-influvac focus:outline-none focus:ring-4 focus:ring-brown-influvac/40"
       >
         Calcular Modelo
       </button>
       <button
         type="reset"
-        class="inline-flex justify-center rounded-lg bg-slate-600 px-8 py-3 text-sm font-semibold tracking-wide text-white shadow-md transition hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-300"
+        class="inline-flex justify-center rounded-lg bg-slate-600 px-8 py-3  font-semibold tracking-wide text-white shadow-md transition hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-300"
       >
         Limpiar Formulario
       </button>
@@ -297,72 +286,78 @@
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const locale = "es-CO";
-    const form = document.getElementById("modelParametersForm");
+    const form = document.getElementById("modelParametersForm") as HTMLFormElement;
     if (!form) return;
-    const inputs = form.querySelectorAll("input[data-thousands]");
+    const inputs = form.querySelectorAll("input[data-thousands]") as NodeListOf<HTMLInputElement>;
 
-    function toNumberString(str: string, decimals: number) {
-      if (!str) return "";
-      // Eliminar cualquier caracter excepto dígitos, coma y punto
-      let cleaned = str.replace(/[^0-9,\.]/g, "");
-      // Detectar el separador decimal: si hay ambos, el último símbolo entre coma/punto será decimal
-      const lastComma = cleaned.lastIndexOf(",");
-      const lastDot = cleaned.lastIndexOf(".");
-      let decimalIndex = Math.max(lastComma, lastDot);
-      let intPart,
-        decPart = "";
-      if (decimalIndex > -1) {
-        intPart = cleaned.slice(0, decimalIndex).replace(/[^0-9]/g, "");
-        decPart = cleaned.slice(decimalIndex + 1).replace(/[^0-9]/g, "");
-      } else {
-        intPart = cleaned.replace(/[^0-9]/g, "");
+    // Función para formatear número con separador de miles
+    function formatWithThousands(value: string): string {
+      // Remover todo excepto números
+      let numericValue = value.replace(/[^\d]/g, '');
+      
+      // Si está vacío, retornar vacío
+      if (!numericValue) return '';
+      
+      // Formatear con separadores de miles (puntos cada 3 dígitos desde la derecha)
+      return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    // Función para obtener valor numérico sin formato
+    function getNumericValue(value: string): string {
+      // Remover solo los puntos (separadores de miles)
+      return value.replace(/\./g, '');
+    }
+
+    // Aplicar formato inicial a todos los inputs
+    inputs.forEach(input => {
+      if (input.value) {
+        input.value = formatWithThousands(input.value);
       }
-      if (decimals === 0) return intPart;
-      if (decPart.length > decimals) decPart = decPart.slice(0, decimals);
-      return decPart ? intPart + "." + decPart : intPart;
-    }
 
-    function formatVisible(numberString: string, decimals: number) {
-      if (!numberString) return "";
-      const num = Number(numberString);
-      if (isNaN(num)) return "";
-      return new Intl.NumberFormat(locale, {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      }).format(num);
-    }
+      // Evento para formatear mientras se escribe
+      input.addEventListener('input', (e) => {
+        const target = e.target as HTMLInputElement;
+        const cursorPosition = target.selectionStart || 0;
+        const oldValue = target.value;
+        
+        // Permitir solo números
+        let cleanValue = oldValue.replace(/[^\d]/g, '');
+        
+        const newValue = formatWithThousands(cleanValue);
+        target.value = newValue;
+        
+        // Mantener la posición del cursor aproximadamente
+        const lengthDiff = newValue.length - oldValue.length;
+        const newCursorPosition = Math.max(0, cursorPosition + lengthDiff);
+        target.setSelectionRange(newCursorPosition, newCursorPosition);
+      });
 
-    inputs.forEach((inp) => {
-      const input = inp as HTMLInputElement;
-      const decimals = parseInt(input.dataset.decimals || "0", 10);
-      function reformat() {
-        const numStr = toNumberString(input.value, decimals);
-        if (numStr === "") {
-          input.dataset.rawNumber = "";
-          input.value = "";
-          return;
+      // Evento para limpiar formato al hacer focus (opcional)
+      input.addEventListener('focus', (e) => {
+        const target = e.target as HTMLInputElement;
+        // Mantener formato pero seleccionar todo para fácil edición
+        target.select();
+      });
+
+      // Evento para formatear al perder focus
+      input.addEventListener('blur', (e) => {
+        const target = e.target as HTMLInputElement;
+        if (target.value) {
+          target.value = formatWithThousands(target.value);
         }
-        input.dataset.rawNumber = numStr; // Guardar valor limpio
-        const selectionEnd = input.selectionEnd;
-        input.value = formatVisible(numStr, decimals);
-        // Intentar mantener el cursor al final (simplificado)
-        input.setSelectionRange(input.value.length, input.value.length);
-      }
-      input.addEventListener("input", reformat);
-      input.addEventListener("blur", reformat);
-      // Formatear inicial
-      reformat();
-    });
-
-    // Antes de enviar, reemplazar el valor visible por el valor numérico crudo (sin separadores)
-    form.addEventListener("submit", () => {
-      inputs.forEach((inp) => {
-        const input = inp as HTMLInputElement;
-        const decimals = parseInt(input.dataset.decimals || "0", 10);
-        const raw =
-          input.dataset.rawNumber || toNumberString(input.value, decimals);
-        input.value = raw; // backend / cálculo recibe valor estándar con punto decimal
       });
     });
+
+    // Agregar función para obtener valores sin formato antes de enviar el formulario
+    form.addEventListener('submit', (e) => {
+      // Temporalmente remover formato para envío
+      inputs.forEach(input => {
+        if (input.value) {
+          input.setAttribute('data-original-value', input.value);
+          input.value = getNumericValue(input.value);
+        }
+      });
+    });
+
   });
 </script>
