@@ -8,7 +8,7 @@ type Linaje =
 
 export default function ajustePoblacional(
   poblacion: number,
-  expo: number
+  levelOfPublicExposure: number
 ) {
 
   // 1. Cálculo simplificado de casos importados
@@ -51,7 +51,7 @@ export default function ajustePoblacional(
   );
 
   // 5. Cálculo eficiente del resumen
-  const multiplicador = expo || 1;
+  const multiplicador = levelOfPublicExposure || 1;
   const casosResumen: Record<Linaje, Record<number, number>> = {
     "A H1N1": {},
     "A H3N2": {},

@@ -1,4 +1,4 @@
-import ajustePoblacional from '@/utils/ajustepoblacional';
+import ajustePoblacional from '@/utils/ajustePoblacional';
 
 import generateinfluenzaAH1N1 from "@/utils/generateinfluenzaAH1N1";
 import generateinfluenzaAH1N1_V from "@/utils/generateInfluenzaAH1N1_V";
@@ -15,14 +15,14 @@ import generateInfluenzaBYamagata_V from "@/utils/generateInfluenzaBYamagata_V";
 
 // No vacunal
 import generateNoVacunal from "@/utils/generateNoVacunal";
-import generateNoVacunal_V from "@/utils/generateNoVacunal_V";
 
 const population = 5000;
-const averageDaysOffWork = 2;
+const levelOfPublicExposure = 2; // bajo = 1 medio = 2 alto = 3
 const firstVaccinationDate: string = "2025-05-30";
 const firstvaccinatedIndividuals: number = 2000;
 const secondVaccinationDate: string = ""; // opcional
 const secondvaccinatedIndividuals: number = 0;
+const averageDaysOffWork = 5;
 
 // Validar primera fecha
 const firstDate = new Date(firstVaccinationDate);
@@ -50,8 +50,6 @@ if (secondVaccinationDate) {
   }
 }
 
-console.log("✅ Fechas válidas");
-
 // Crear objeto final
 const vaccinationObject: {
   firstVaccinationDate: Date;
@@ -66,9 +64,7 @@ const vaccinationObject: {
 };
 
 
-const round2 = (num: number) => Math.round(num * 100) / 100;
-
-const ajustePoblacionalResult = ajustePoblacional(population, averageDaysOffWork);
+const ajustePoblacionalResult = ajustePoblacional(population, levelOfPublicExposure);
 
 const influenzaAH1N1 = generateinfluenzaAH1N1(population, ajustePoblacionalResult["A H1N1"]);
 const influenzaAH1N1_V = generateinfluenzaAH1N1_V(population, ajustePoblacionalResult["A H1N1"], vaccinationObject);
@@ -86,4 +82,69 @@ const influenzaBYamagata_V = generateInfluenzaBYamagata_V(population, ajustePobl
 
 
 const noVacunal = generateNoVacunal(population, ajustePoblacionalResult["No vacunal"]);
-const noVacunal_V = generateNoVacunal_V(population, ajustePoblacionalResult["No vacunal"], vaccinationObject);
+
+// Sumar "Casos Nuevos" de cada serie
+type SerieItem = { [k: string]: any; "Casos Nuevos": number };
+const sumCasosNuevos = (serie: Array<SerieItem>) => serie.reduce((acc, item) => acc + (item["Casos Nuevos"] || 0), 0);
+
+const totalCasosNuevosInfluenzaAH1N1 = sumCasosNuevos(influenzaAH1N1);
+const totalCasosNuevosInfluenzaAH1N1_V = sumCasosNuevos(influenzaAH1N1_V);
+
+const totalCasosNuevosInfluenzaAH3N2 = sumCasosNuevos(influenzaAH3N2);
+const totalCasosNuevosInfluenzaAH3N2_V = sumCasosNuevos(influenzaAH3N2_V);
+
+const totalCasosNuevosInfluenzaBVictoria = sumCasosNuevos(influenzaBVictoria);
+const totalCasosNuevosInfluenzaBVictoria_V = sumCasosNuevos(influenzaBVictoria_V);
+
+const totalCasosNuevosInfluenzaBYamagata = sumCasosNuevos(influenzaBYamagata);
+const totalCasosNuevosInfluenzaBYamagata_V = sumCasosNuevos(influenzaBYamagata_V);
+
+const totalCasosNuevosNoVacunal = sumCasosNuevos(noVacunal);
+
+// Totales agrupados por condición de vacunación
+const totalCasosNuevosVacunados =
+  totalCasosNuevosInfluenzaAH1N1_V +
+  totalCasosNuevosInfluenzaAH3N2_V +
+  totalCasosNuevosInfluenzaBVictoria_V +
+  totalCasosNuevosInfluenzaBYamagata_V +
+  totalCasosNuevosNoVacunal;
+
+const totalCasosNuevosNoVacunados =
+  totalCasosNuevosInfluenzaAH1N1 +
+  totalCasosNuevosInfluenzaAH3N2 +
+  totalCasosNuevosInfluenzaBVictoria +
+  totalCasosNuevosInfluenzaBYamagata +
+  totalCasosNuevosNoVacunal;
+
+// Sintomáticos (redondeados a enteros)
+const symptomaticVacunados = Math.round(totalCasosNuevosVacunados * 0.84);
+const symptomaticNoVacunados = Math.round(totalCasosNuevosNoVacunados * 0.84);
+
+// Días de incapacidad (redondeados)
+const sickDaysVacunados = Math.round(symptomaticVacunados * 0.4865 * averageDaysOffWork);
+const sickDaysNoVacunados = Math.round(symptomaticNoVacunados * 0.4865 * averageDaysOffWork);
+
+// Hospitalizaciones (redondeados)
+const hospitalizationVacunados = Math.round(symptomaticVacunados * 0.0154);
+const hospitalizationNoVacunados = Math.round(symptomaticNoVacunados * 0.0154);
+
+// Mortalidad (redondeados)
+const mortalityVacunados = Math.round(symptomaticVacunados * 0.00127);
+const mortalityNoVacunados = Math.round(symptomaticNoVacunados * 0.00127);
+
+console.log({
+  "vacunados":{
+    "nuevos": totalCasosNuevosVacunados,
+    "symptomatic": symptomaticVacunados,
+    "sickDays": sickDaysVacunados,
+    "hospitalization": hospitalizationVacunados,
+    "mortality": mortalityVacunados,
+  },
+  "noVacunados": {
+    "nuevos": totalCasosNuevosNoVacunados,
+    "symptomatic": symptomaticNoVacunados,
+    "sickDays": sickDaysNoVacunados,
+    "hospitalization": hospitalizationNoVacunados,
+    "mortality": mortalityNoVacunados
+  }
+});

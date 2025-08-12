@@ -28,7 +28,7 @@ export default function generateInfluenzaBYamagata_V(
   const year = new Date().getFullYear();
   const isLeap = (y: number) => y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
   const diasEnAnio = isLeap(year) ? 366 : 365;
-  const vaccinationProtection = 0.517;
+  const vaccinationProtection = 0.534;
 
   const dayOfYear = (date: Date | null) =>
     date
