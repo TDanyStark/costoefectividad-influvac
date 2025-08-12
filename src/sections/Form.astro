@@ -328,17 +328,5 @@
       });
     });
 
-    // Manejar el submit del formulario
-    form.addEventListener("submit", (e) => {
-      // Temporalmente remover formato para envío
-      inputs.forEach((input) => {
-        if (input.value) {
-          input.setAttribute("data-original-value", input.value);
-          input.value = getNumericValue(input.value);
-        }
-      });
-      
-      // El ViewManager manejará el evento submit
-    });
   });
 </script>

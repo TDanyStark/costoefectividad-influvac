@@ -354,6 +354,11 @@ import Form from "@/sections/Form.astro";
         // Actualizar vista actual
         this.currentView = viewId;
 
+        // Actualizar logo según la vista
+        if ((window as any).updateLogo) {
+          (window as any).updateLogo(viewId);
+        }
+
         // Cargar contenido específico de la vista si es necesario
         this.loadViewContent(viewId);
       }
@@ -449,8 +454,8 @@ import Form from "@/sections/Form.astro";
     document.addEventListener("DOMContentLoaded", () => {
       new ViewManager();
       
-      // Función para actualizar el logo dinámicamente
-      function updateLogo() {
+      // Función para actualizar el logo dinámicamente según la vista
+      function updateLogo(currentView: string) {
         const logo = document.getElementById('dynamic-logo') as HTMLImageElement;
         if (!logo) return;
 
@@ -459,51 +464,19 @@ import Form from "@/sections/Form.astro";
         
         if (!whiteLogo || !colorLogo) return;
 
-        // Obtener el elemento principal para analizar el fondo
-        const mainContainer = document.getElementById('main-container');
-        if (!mainContainer) return;
-
-        const computedStyle = window.getComputedStyle(mainContainer);
-        const backgroundImage = computedStyle.backgroundImage;
-        
-        // Lista de fondos que necesitan logo blanco (fondos oscuros)
-        const darkBackgrounds = ['banner1.webp','banner5.webp', 'banner4.webp', 'banner6.webp', 'banner7.webp'];
-        
-        // Lista de fondos que necesitan logo de color (fondos claros)  
-        const lightBackgrounds = ['banner2.webp', 'banner3.webp'];
-        
-        // Determinar si el fondo actual es claro u oscuro
-        const isDarkBackground = darkBackgrounds.some(bg => backgroundImage.includes(bg));
-        const isLightBackground = lightBackgrounds.some(bg => backgroundImage.includes(bg));
-        
-        if (isDarkBackground) {
+        // Vista 1: logo blanco, Vistas 2, 3, 4: logo de color
+        if (currentView === 'view1') {
           logo.src = whiteLogo;
-        } else if (isLightBackground) {
+        } else {
           logo.src = colorLogo;
         }
-        // Si no se puede determinar, mantener el logo actual
       }
 
-      // Observer para detectar cambios en el background del contenedor principal
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && 
-              (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
-            updateLogo();
-          }
-        });
-      });
+      // Hacer la función updateLogo accesible globalmente para que ViewManager la pueda usar
+      (window as any).updateLogo = updateLogo;
 
-      const mainContainer = document.getElementById('main-container');
-      if (mainContainer) {
-        observer.observe(mainContainer, { 
-          attributes: true, 
-          attributeFilter: ['style', 'class'] 
-        });
-      }
-
-      // Ejecutar al cargar la página
-      updateLogo();
+      // Inicializar con vista 1 (logo blanco)
+      updateLogo('view1');
     });
   </script>
 
