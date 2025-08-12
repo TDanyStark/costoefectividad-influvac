@@ -1,6 +1,7 @@
 import { URL_BASE } from "@/variables";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Grafic from "./Grafic";
 
 function System() {
   const [vista, setVista] = useState(1);
@@ -24,7 +25,7 @@ function System() {
       {vista === 1 && <h2>Página 1</h2>}
       {vista === 2 && <h2>Página 2</h2>}
       {vista === 3 && <h2>Página 3</h2>}
-      {vista === 4 && <h2>Página 4</h2>}
+      {vista === 4 && <Grafic />}
 
       <div style={{ marginTop: "20px" }}>
         <button onClick={() => cambiarVista(1)}>Ir a Página 1</button>

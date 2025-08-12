@@ -148,3 +148,6 @@ console.log({
     "mortality": mortalityNoVacunados
   }
 });
+
+// GRAFICO
+// recorrer influenzaAH1N1 y devolver un array de objetos con los infectados, 
