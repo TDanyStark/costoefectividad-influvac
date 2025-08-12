@@ -257,14 +257,6 @@
       </div>
     </form>
   </div>
-  <div class="flex-1 flex items-center justify-center">
-    <div class="flex flex-col gap-8">
-      <button class="bg-blue-influvac font-bold text-3xl py-2 px-6 rounded-full text-white">IMPACTO <br> PRESUPUESTAL</button>
-      <button class="bg-blue-influvac font-bold text-3xl py-2 px-6 rounded-full text-white">COSTO - BENEFICIO <br> COSTO - EFECTIVIDAD</button>
-      <button class="bg-blue-influvac font-bold text-3xl py-2 px-6 rounded-full text-white">CASOS <br> DE INFLUENZA</button>
-    </div>
-
-  </div>
 </div>
 
 <script>
@@ -273,6 +265,7 @@
       "modelParametersForm"
     ) as HTMLFormElement;
     if (!form) return;
+    
     const inputs = form.querySelectorAll(
       "input[data-thousands]"
     ) as NodeListOf<HTMLInputElement>;
@@ -335,7 +328,7 @@
       });
     });
 
-    // Agregar función para obtener valores sin formato antes de enviar el formulario
+    // Manejar el submit del formulario
     form.addEventListener("submit", (e) => {
       // Temporalmente remover formato para envío
       inputs.forEach((input) => {
@@ -344,6 +337,8 @@
           input.value = getNumericValue(input.value);
         }
       });
+      
+      // El ViewManager manejará el evento submit
     });
   });
 </script>

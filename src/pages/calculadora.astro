@@ -7,14 +7,374 @@ import Form from "@/sections/Form.astro";
 
 <Layout>
   <main
-    class="min-h-screen flex flex-col overflow-clip"
+    id="main-container"
+    class="min-h-screen flex flex-col overflow-clip transition-all duration-500"
     style={`background-image: url('${URL_BASE}/img/bg/banner2.webp'); background-size: cover; background-position: center;`}
   >
     <Header />
-    <section
-      class="w-6xl max-w-full mx-auto p-4 flex-1 flex items-center"
-    >
-      <Form />
+
+    <!-- Contenedor de vistas -->
+    <section class="w-6xl max-w-full mx-auto p-4 flex-1">
+      
+      <!-- Vista 1: Formulario de Parámetros + Navegación -->
+      <div id="view1" class="view-content active w-full flex items-center">
+        <div class="flex gap-8 w-full">
+          <!-- Formulario -->
+          <div class="max-w-2xl">
+            <Form />
+          </div>
+          
+          <!-- Botones de navegación -->
+          <div class="flex-1 flex items-center justify-center">
+            <div class="flex flex-col gap-8">
+              <button 
+                class="bg-blue-influvac font-bold text-3xl py-6 px-8 rounded-full text-white view-nav-btn transition-all duration-300 hover:bg-blue-influvac/90 hover:scale-105 shadow-lg"
+                data-view="view2"
+                data-bg="banner3"
+              >
+                IMPACTO <br> PRESUPUESTAL
+              </button>
+              <button 
+                class="bg-blue-influvac font-bold text-3xl py-6 px-8 rounded-full text-white view-nav-btn transition-all duration-300 hover:bg-blue-influvac/90 hover:scale-105 shadow-lg"
+                data-view="view3"
+                data-bg="banner4"
+              >
+                COSTO - BENEFICIO <br> COSTO - EFECTIVIDAD
+              </button>
+              <button 
+                class="bg-blue-influvac font-bold text-3xl py-6 px-8 rounded-full text-white view-nav-btn transition-all duration-300 hover:bg-blue-influvac/90 hover:scale-105 shadow-lg"
+                data-view="view4"
+                data-bg="banner5"
+              >
+                CASOS <br> DE INFLUENZA
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista 2: Impacto Presupuestal -->
+      <div id="view2" class="view-content hidden w-full">
+        <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-8 max-w-4xl mx-auto">
+          <div class="bg-brown-influvac text-white text-center px-6 py-6 rounded-t-lg">
+            <h2 class="text-xl font-semibold tracking-wide">IMPACTO PRESUPUESTAL</h2>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-blue-50 p-6 rounded-lg text-center">
+                <h3 class="font-semibold text-blue-influvac mb-2">Ahorro Total</h3>
+                <p id="resultado-ahorro-total" class="text-3xl font-bold text-gray-800">-</p>
+                <span class="text-sm text-gray-600">Pesos colombianos</span>
+              </div>
+              <div class="bg-green-50 p-6 rounded-lg text-center">
+                <h3 class="font-semibold text-green-600 mb-2">ROI</h3>
+                <p id="resultado-roi" class="text-3xl font-bold text-gray-800">-</p>
+                <span class="text-sm text-gray-600">Retorno de inversión</span>
+              </div>
+            </div>
+            <div class="mt-8 flex justify-center">
+              <button 
+                class="bg-brown-influvac text-white px-6 py-3 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn"
+                data-view="view1"
+                data-bg="banner2"
+              >
+                ← Volver a Parámetros
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista 3: Costo-Beneficio / Costo-Efectividad -->
+      <div id="view3" class="view-content hidden w-full">
+        <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-8 max-w-6xl mx-auto">
+          <div class="bg-brown-influvac text-white text-center px-6 py-6 rounded-t-lg">
+            <h2 class="text-xl font-semibold tracking-wide">COSTO - BENEFICIO / COSTO - EFECTIVIDAD</h2>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              <div class="bg-purple-50 p-6 rounded-lg text-center">
+                <h3 class="font-semibold text-purple-600 mb-2">Ratio Costo-Beneficio</h3>
+                <p id="resultado-costo-beneficio" class="text-2xl font-bold text-gray-800">-</p>
+              </div>
+              <div class="bg-orange-50 p-6 rounded-lg text-center">
+                <h3 class="font-semibold text-orange-600 mb-2">Costo por Caso Evitado</h3>
+                <p id="resultado-costo-caso-evitado" class="text-2xl font-bold text-gray-800">-</p>
+              </div>
+              <div class="bg-teal-50 p-6 rounded-lg text-center">
+                <h3 class="font-semibold text-teal-600 mb-2">Efectividad (%)</h3>
+                <p id="resultado-efectividad" class="text-2xl font-bold text-gray-800">-</p>
+              </div>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+              <h3 class="font-semibold mb-4 text-center">Análisis Temporal</h3>
+              <div id="chart-temporal" class="h-64 flex items-center justify-center text-gray-500">
+                Gráfico temporal se cargará aquí
+              </div>
+            </div>
+            <div class="flex justify-center">
+              <button 
+                class="bg-brown-influvac text-white px-6 py-3 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn"
+                data-view="view1"
+                data-bg="banner2"
+              >
+                ← Volver a Parámetros
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista 4: Casos de Influenza -->
+      <div id="view4" class="view-content hidden w-full">
+        <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-8 max-w-6xl mx-auto">
+          <div class="bg-brown-influvac text-white text-center px-6 py-6 rounded-t-lg">
+            <h2 class="text-xl font-semibold tracking-wide">CASOS DE INFLUENZA</h2>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div class="bg-red-50 p-4 rounded-lg text-center">
+                <h3 class="font-semibold text-red-600 mb-2">A(H1N1)</h3>
+                <p id="casos-h1n1" class="text-xl font-bold text-gray-800">-</p>
+                <span class="text-xs text-gray-600">casos evitados</span>
+              </div>
+              <div class="bg-blue-50 p-4 rounded-lg text-center">
+                <h3 class="font-semibold text-blue-600 mb-2">A(H3N2)</h3>
+                <p id="casos-h3n2" class="text-xl font-bold text-gray-800">-</p>
+                <span class="text-xs text-gray-600">casos evitados</span>
+              </div>
+              <div class="bg-green-50 p-4 rounded-lg text-center">
+                <h3 class="font-semibold text-green-600 mb-2">B Victoria</h3>
+                <p id="casos-b-victoria" class="text-xl font-bold text-gray-800">-</p>
+                <span class="text-xs text-gray-600">casos evitados</span>
+              </div>
+              <div class="bg-yellow-50 p-4 rounded-lg text-center">
+                <h3 class="font-semibold text-yellow-600 mb-2">B Yamagata</h3>
+                <p id="casos-b-yamagata" class="text-xl font-bold text-gray-800">-</p>
+                <span class="text-xs text-gray-600">casos evitados</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4 text-center">Distribución por Tipo de Virus</h3>
+                <div id="chart-distribucion" class="h-64 flex items-center justify-center text-gray-500">
+                  Gráfico de distribución se cargará aquí
+                </div>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4 text-center">Evolución Temporal</h3>
+                <div id="chart-evolucion" class="h-64 flex items-center justify-center text-gray-500">
+                  Gráfico de evolución se cargará aquí
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center">
+              <button 
+                class="bg-brown-influvac text-white px-6 py-3 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn"
+                data-view="view1"
+                data-bg="banner2"
+              >
+                ← Volver a Parámetros
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
   </main>
+
+  <script>
+    class ViewManager {
+      private currentView: string = 'view1';
+      private formData: any = null;
+      private mainContainer: HTMLElement | null = null;
+
+      constructor() {
+        this.mainContainer = document.getElementById('main-container');
+        this.initializeNavigation();
+        this.initializeFormHandler();
+        this.initializeCustomEvents();
+      }
+
+      private initializeNavigation(): void {
+        const navButtons = document.querySelectorAll('.view-nav-btn');
+        
+        navButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            const target = e.target as HTMLButtonElement;
+            const viewId = target.getAttribute('data-view');
+            const bgImage = target.getAttribute('data-bg');
+            
+            if (viewId) {
+              this.switchView(viewId, bgImage);
+            }
+          });
+        });
+      }
+
+      private initializeFormHandler(): void {
+        const form = document.getElementById('modelParametersForm') as HTMLFormElement;
+        if (form) {
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleFormSubmit(form);
+          });
+        }
+      }
+
+      private initializeCustomEvents(): void {
+        // Escuchar eventos personalizados del formulario
+        document.addEventListener('switchToView', (e: any) => {
+          const { viewId } = e.detail;
+          let bgImage = 'banner2'; // default
+          
+          // Determinar el fondo basado en la vista
+          switch (viewId) {
+            case 'view2':
+              bgImage = 'banner3';
+              break;
+            case 'view3':
+              bgImage = 'banner4';
+              break;
+            case 'view4':
+              bgImage = 'banner5';
+              break;
+          }
+          
+          this.switchView(viewId, bgImage);
+        });
+      }
+
+      private switchView(viewId: string, bgImage?: string | null): void {
+        // Cambiar fondo si se especifica
+        if (bgImage && this.mainContainer) {
+          const urlBase = (window as any).URL_BASE || '';
+          this.mainContainer.style.backgroundImage = `url('${urlBase}/img/bg/${bgImage}.webp')`;
+        }
+
+        // Ocultar vista actual
+        const currentViewElement = document.getElementById(this.currentView);
+        if (currentViewElement) {
+          currentViewElement.classList.add('hidden');
+          currentViewElement.classList.remove('active');
+        }
+
+        // Mostrar nueva vista
+        const newViewElement = document.getElementById(viewId);
+        if (newViewElement) {
+          newViewElement.classList.remove('hidden');
+          newViewElement.classList.add('active');
+        }
+        
+        // Actualizar vista actual
+        this.currentView = viewId;
+
+        // Cargar contenido específico de la vista si es necesario
+        this.loadViewContent(viewId);
+      }
+
+      private handleFormSubmit(form: HTMLFormElement): void {
+        // Recopilar datos del formulario
+        this.formData = new FormData(form);
+        
+        // Realizar cálculos
+        this.calculateResults();
+        
+        // No cambiar de vista automáticamente, dejar que el usuario elija
+        console.log('Formulario procesado. Datos listos para visualización.');
+      }
+
+      private calculateResults(): void {
+        // Simular cálculos - aquí integrarías tu lógica de cálculo real
+        setTimeout(() => {
+          // Resultados para Vista 2 (Impacto Presupuestal)
+          const ahorroTotal = document.getElementById('resultado-ahorro-total');
+          const roi = document.getElementById('resultado-roi');
+          if (ahorroTotal) ahorroTotal.textContent = '$2,500,000,000';
+          if (roi) roi.textContent = '320%';
+
+          // Resultados para Vista 3 (Costo-Beneficio)
+          const costoBeneficio = document.getElementById('resultado-costo-beneficio');
+          const costoCasoEvitado = document.getElementById('resultado-costo-caso-evitado');
+          const efectividad = document.getElementById('resultado-efectividad');
+          if (costoBeneficio) costoBeneficio.textContent = '3.2:1';
+          if (costoCasoEvitado) costoCasoEvitado.textContent = '$125,000';
+          if (efectividad) efectividad.textContent = '85%';
+
+          // Resultados para Vista 4 (Casos)
+          const casosH1N1 = document.getElementById('casos-h1n1');
+          const casosH3N2 = document.getElementById('casos-h3n2');
+          const casosBVictoria = document.getElementById('casos-b-victoria');
+          const casosBYamagata = document.getElementById('casos-b-yamagata');
+          if (casosH1N1) casosH1N1.textContent = '45';
+          if (casosH3N2) casosH3N2.textContent = '38';
+          if (casosBVictoria) casosBVictoria.textContent = '32';
+          if (casosBYamagata) casosBYamagata.textContent = '33';
+
+        }, 500);
+      }
+
+      private loadViewContent(viewId: string): void {
+        switch (viewId) {
+          case 'view3':
+            this.loadChartsView3();
+            break;
+          case 'view4':
+            this.loadChartsView4();
+            break;
+        }
+      }
+
+      private loadChartsView3(): void {
+        // Cargar gráficos para vista de Costo-Beneficio
+        const chartTemporal = document.getElementById('chart-temporal');
+        if (chartTemporal) {
+          chartTemporal.innerHTML = '<p class="text-center text-sm text-gray-500">Análisis temporal cargado</p>';
+        }
+      }
+
+      private loadChartsView4(): void {
+        // Cargar gráficos para vista de Casos
+        const chartDistribucion = document.getElementById('chart-distribucion');
+        const chartEvolucion = document.getElementById('chart-evolucion');
+        
+        if (chartDistribucion) {
+          chartDistribucion.innerHTML = '<p class="text-center text-sm text-gray-500">Distribución por virus cargada</p>';
+        }
+        
+        if (chartEvolucion) {
+          chartEvolucion.innerHTML = '<p class="text-center text-sm text-gray-500">Evolución temporal cargada</p>';
+        }
+      }
+    }
+
+    // Hacer URL_BASE disponible globalmente para el script
+    (window as any).URL_BASE = document.querySelector('meta[name="url-base"]')?.getAttribute('content') || '/apps/abbott/costoefectividad-influvac';
+
+    // Inicializar el manejador de vistas cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', () => {
+      new ViewManager();
+    });
+  </script>
+
+  <style>
+    .view-content {
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .view-content.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .view-content.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .view-nav-btn {
+      transition: all 0.3s ease;
+    }
+  </style>
 </Layout>
