@@ -9,6 +9,14 @@ import generateinfluenzaAH3N2_V from "@/utils/generateinfluenzaAH3N2_V";
 import generateInfluenzaBVictoria from "@/utils/generateInfluenzaBVictoria";
 import generateInfluenzaBVictoria_V from "@/utils/generateInfluenzaBVictoria_V";
 
+// B Yamagata
+import generateInfluenzaBYamagata from "@/utils/generateInfluenzaBYamagata";
+import generateInfluenzaBYamagata_V from "@/utils/generateInfluenzaBYamagata_V";
+
+// No vacunal
+import generateNoVacunal from "@/utils/generateNoVacunal";
+import generateNoVacunal_V from "@/utils/generateNoVacunal_V";
+
 const population = 5000;
 const averageDaysOffWork = 2;
 const firstVaccinationDate: string = "2025-05-30";
@@ -71,3 +79,11 @@ const influenzaAH3N2_V = generateinfluenzaAH3N2_V(population, ajustePoblacionalR
 
 const influenzaBVictoria = generateInfluenzaBVictoria(population, ajustePoblacionalResult["B Victoria"]);
 const influenzaBVictoria_V = generateInfluenzaBVictoria_V(population, ajustePoblacionalResult["B Victoria"], vaccinationObject);
+
+
+const influenzaBYamagata = generateInfluenzaBYamagata(population, ajustePoblacionalResult["B Yamagata"]);
+const influenzaBYamagata_V = generateInfluenzaBYamagata_V(population, ajustePoblacionalResult["B Yamagata"], vaccinationObject);
+
+
+const noVacunal = generateNoVacunal(population, ajustePoblacionalResult["No vacunal"]);
+const noVacunal_V = generateNoVacunal_V(population, ajustePoblacionalResult["No vacunal"], vaccinationObject);
