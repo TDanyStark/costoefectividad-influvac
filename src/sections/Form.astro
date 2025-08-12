@@ -2,329 +2,317 @@
 // Componente de formulario usando solo clases de Tailwind, sin JS ni CSS adicional
 ---
 
-<div class="max-w-2xl bg-white">
-  <div class="bg-brown-influvac text-white text-center px-6 py-6">
-    <h1 class="text-xl font-semibold tracking-wide">PARÁMETROS DEL MODELO</h1>
-  </div>
-
-  <form class="px-8 py-4 space-y-4" id="modelParametersForm">
-    <!-- Parámetros Básicos -->
-    <div>
-      <div class="flex flex-col gap-2">
-        <label for="numEmpleados" class=" font-semibold text-slate-700"
-          >Número de Empleados
-          <span class="text-red-500">*</span>
-        </label>
-        <input
-          id="numEmpleados"
-          name="numEmpleados"
-          type="number"
-          required
-          value="5000"
-          class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
-        />
-      </div>
+<div class="flex gap-8 w-full">
+  <div class="max-w-2xl bg-white">
+    <div class="bg-brown-influvac text-white text-center px-6 py-6">
+      <h1 class="text-xl font-semibold tracking-wide">PARÁMETROS DEL MODELO</h1>
     </div>
 
-    <div class="grid gap-6 md:grid-cols-2">
-      <div class="space-y-4">
+    <form class="px-8 py-4 space-y-4" id="modelParametersForm">
+      <!-- Parámetros Básicos -->
+      <div>
         <div class="flex flex-col gap-2">
-          <label
-            for="fecha1Vacunacion"
-            class=" font-semibold text-slate-700"
-            >Fecha 1 de Vacunación <span class="text-red-500">*</span></label
-          >
+          <label for="numEmpleados" class="font-semibold text-slate-700"
+            >Número de Empleados
+            <span class="text-red-500">*</span>
+          </label>
           <input
-            id="fecha1Vacunacion"
-            name="fecha1Vacunacion"
-            type="date"
-            required
-            value="2025-05-30"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
-          />
-        </div>
-        <div class="flex flex-col gap-2">
-          <label
-            for="numeroDeVacunados1"
-            class=" font-semibold text-slate-700"
-            >Número de Vacunados 1 <span class="text-red-500">*</span></label
-          >
-          <input
-            id="numeroDeVacunados1"
-            name="numeroDeVacunados1"
+            id="numEmpleados"
+            name="numEmpleados"
             type="number"
             required
-            value="2000"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            value="5000"
+            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
           />
         </div>
       </div>
-      <div class="space-y-4">
-        <div class="flex flex-col gap-2">
-          <label
-            for="fecha2Vacunacion"
-            class=" font-semibold text-slate-700"
-            >Fecha 2 de Vacunación</label
-          >
-          <input
-            id="fecha2Vacunacion"
-            name="fecha2Vacunacion"
-            type="date"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
-          />
-        </div>
-        <div class="flex flex-col gap-2">
-          <label
-            for="numeroDeVacunados2"
-            class=" font-semibold text-slate-700"
-            >Número de Vacunados 2</label
-          >
-          <input
-            id="numeroDeVacunados2"
-            name="numeroDeVacunados2"
-            type="number"
-            value="0"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
-          />
-        </div>
-      </div>
-    </div>
 
-    <!-- Parámetros Financieros -->
-    <div>
-      <div
-        class="bg-blue-influvac text-white font-semibold  tracking-wide px-6 py-3 -mx-8 mb-3"
-      >
-        PARÁMETROS FINANCIEROS
-      </div>
-
-      <div class="flex flex-col gap-2 mb-6">
-        <label
-          for="calculoProductividad"
-          class=" font-semibold text-slate-700"
-          >Cálculo de Productividad/Persona</label
-        >
-        <select
-          id="calculoProductividad"
-          name="calculoProductividad"
-          required
-          class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
-        >
-          <option value="promedio_empresarial">Promedio empresarial</option>
-          <option value="productividad_individual"
-            >Productividad Individual</option
-          >
-        </select>
-      </div>
-
-      <div class="grid gap-6 md:grid-cols-2 mb-6">
-        <div class="flex flex-col gap-2">
-          <label
-            for="ventaNeta2022"
-            class=" font-semibold text-slate-700"
-            >Venta Neta (ultimo año)</label
-          >
-          <div
-            class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
-          >
-            <span
-              class="px-3 flex items-center text-slate-500 font-semibold"
-              >$</span
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="space-y-4">
+          <div class="flex flex-col gap-2">
+            <label for="fecha1Vacunacion" class="font-semibold text-slate-700"
+              >Fecha 1 de Vacunación <span class="text-red-500">*</span></label
             >
             <input
-              id="ventaNeta"
-              name="ventaNeta"
-              type="text"
-              inputmode="decimal"
-              data-thousands
+              id="fecha1Vacunacion"
+              name="fecha1Vacunacion"
+              type="date"
               required
-              value="4388774488000"
-              class="w-full bg-transparent px-2 py-3  focus:outline-none"
+              value="2025-05-30"
+              class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="numeroDeVacunados1" class="font-semibold text-slate-700"
+              >Número de Vacunados 1 <span class="text-red-500">*</span></label
+            >
+            <input
+              id="numeroDeVacunados1"
+              name="numeroDeVacunados1"
+              type="number"
+              required
+              value="2000"
+              class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
             />
           </div>
         </div>
-        <div class="flex flex-col gap-2">
-          <label
-            for="indicadorProductividad"
-            class=" font-semibold text-slate-700"
-            >Indicador de Productividad por Empleado</label
-          >
-          <div
-            class="flex rounded-lg"
-          >
-            <span
-              class="px-3 flex items-center text-slate-500 font-semibold "
-              >$</span
+        <div class="space-y-4">
+          <div class="flex flex-col gap-2">
+            <label for="fecha2Vacunacion" class="font-semibold text-slate-700"
+              >Fecha 2 de Vacunación</label
             >
-            <div class="px-2 py-3 flex items-center text-slate-500 ">
-              73.146.241,47
+            <input
+              id="fecha2Vacunacion"
+              name="fecha2Vacunacion"
+              type="date"
+              class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="numeroDeVacunados2" class="font-semibold text-slate-700"
+              >Número de Vacunados 2</label
+            >
+            <input
+              id="numeroDeVacunados2"
+              name="numeroDeVacunados2"
+              type="number"
+              value="0"
+              class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Parámetros Financieros -->
+      <div>
+        <div
+          class="bg-blue-influvac text-white font-semibold tracking-wide px-6 py-3 -mx-8 mb-3"
+        >
+          PARÁMETROS FINANCIEROS
+        </div>
+
+        <div class="flex flex-col gap-2 mb-6">
+          <label for="calculoProductividad" class="font-semibold text-slate-700"
+            >Cálculo de Productividad/Persona</label
+          >
+          <select
+            id="calculoProductividad"
+            name="calculoProductividad"
+            required
+            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+          >
+            <option value="promedio_empresarial">Promedio empresarial</option>
+            <option value="productividad_individual"
+              >Productividad Individual</option
+            >
+          </select>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2 mb-6">
+          <div class="flex flex-col gap-2">
+            <label for="ventaNeta2022" class="font-semibold text-slate-700"
+              >Venta Neta (ultimo año)</label
+            >
+            <div
+              class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
+            >
+              <span class="px-3 flex items-center text-slate-500 font-semibold"
+                >$</span
+              >
+              <input
+                id="ventaNeta"
+                name="ventaNeta"
+                type="text"
+                inputmode="decimal"
+                data-thousands
+                required
+                value="4388774488000"
+                class="w-full bg-transparent px-2 py-3 focus:outline-none"
+              />
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label
+              for="indicadorProductividad"
+              class="font-semibold text-slate-700"
+              >Indicador de Productividad por Empleado</label
+            >
+            <div class="flex rounded-lg">
+              <span class="px-3 flex items-center text-slate-500 font-semibold"
+                >$</span
+              >
+              <div class="px-2 py-3 flex items-center text-slate-500">
+                73.146.241,47
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label for="salarioPromedio" class="font-semibold text-slate-700"
+              >Salario Promedio de los Colaboradores</label
+            >
+            <div
+              class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
+            >
+              <span class="px-3 flex items-center text-slate-500 font-semibold"
+                >$</span
+              >
+              <input
+                id="salarioPromedio"
+                name="salarioPromedio"
+                type="text"
+                inputmode="decimal"
+                data-thousands
+                required
+                value="6000000"
+                class="w-full bg-transparent px-2 py-3 focus:outline-none"
+              />
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="precioVacunacion" class="font-semibold text-slate-700"
+              >Precio Vacunación Influenza</label
+            >
+            <div
+              class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
+            >
+              <span class="px-3 flex items-center text-slate-500 font-semibold"
+                >$</span
+              >
+              <input
+                id="precioVacunacion"
+                name="precioVacunacion"
+                type="text"
+                inputmode="decimal"
+                data-thousands
+                required
+                value="55000"
+                class="w-full bg-transparent px-2 py-3 focus:outline-none"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div class="grid gap-6 md:grid-cols-2">
-        <div class="flex flex-col gap-2">
-          <label
-            for="salarioPromedio"
-            class=" font-semibold text-slate-700"
-            >Salario Promedio de los Colaboradores</label
-          >
-          <div
-            class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
-          >
-            <span
-              class="px-3 flex items-center text-slate-500 font-semibold "
-              >$</span
-            >
-            <input
-              id="salarioPromedio"
-              name="salarioPromedio"
-              type="text"
-              inputmode="decimal"
-              data-thousands
-              required
-              value="6000000"
-              class="w-full bg-transparent px-2 py-3  focus:outline-none"
-            />
-          </div>
+      <!-- Parámetros Operacionales -->
+      <div>
+        <div
+          class="bg-blue-influvac text-white font-semibold tracking-wide px-6 py-3 -mx-8 mb-3"
+        >
+          PARÁMETROS OPERACIONALES
         </div>
-        <div class="flex flex-col gap-2">
-          <label
-            for="precioVacunacion"
-            class=" font-semibold text-slate-700"
-            >Precio Vacunación Influenza</label
-          >
-          <div
-            class="flex rounded-lg border-2 border-slate-200 bg-slate-50 focus-within:border-blue-influvac focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-influvac/40"
-          >
-            <span
-              class="px-3 flex items-center text-slate-500 font-semibold "
-              >$</span
+
+        <div class="grid gap-6 md:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label for="nivelExposicion" class="font-semibold text-slate-700"
+              >Nivel de Exposición al Público</label
+            >
+            <select
+              id="nivelExposicion"
+              name="nivelExposicion"
+              required
+              class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
+            >
+              <option value="1">Bajo</option>
+              <option value="2" selected>Medio</option>
+              <option value="3">Alto</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="diasIncapacidad" class="font-semibold text-slate-700"
+              >Días de Incapacidad Promedio</label
             >
             <input
-              id="precioVacunacion"
-              name="precioVacunacion"
-              type="text"
-              inputmode="decimal"
-              data-thousands
+              id="diasIncapacidad"
+              name="diasIncapacidad"
+              type="number"
               required
-              value="55000"
-              class="w-full bg-transparent px-2 py-3  focus:outline-none"
+              min="1"
+              max="30"
+              value="5"
+              class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
             />
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Parámetros Operacionales -->
-    <div>
+      <!-- Botones -->
       <div
-        class="bg-blue-influvac text-white font-semibold  tracking-wide px-6 py-3 -mx-8 mb-3"
+        class="flex flex-col sm:flex-row gap-4 justify-center pt-6 border-t border-slate-200"
       >
-        PARÁMETROS OPERACIONALES
+        <button
+          type="submit"
+          class="inline-flex justify-center rounded-lg bg-brown-influvac px-8 py-3 font-semibold tracking-wide text-white shadow-md transition hover:shadow-lg hover:shadow-brown-influvac focus:outline-none focus:ring-4 focus:ring-brown-influvac/40"
+        >
+          Calcular Modelo
+        </button>
+        <button
+          type="reset"
+          class="inline-flex justify-center rounded-lg bg-slate-600 px-8 py-3 font-semibold tracking-wide text-white shadow-md transition hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-300"
+        >
+          Limpiar Formulario
+        </button>
       </div>
-
-      <div class="grid gap-6 md:grid-cols-2">
-        <div class="flex flex-col gap-2">
-          <label
-            for="nivelExposicion"
-            class=" font-semibold text-slate-700"
-            >Nivel de Exposición al Público</label
-          >
-          <select
-            id="nivelExposicion"
-            name="nivelExposicion"
-            required
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
-          >
-            <option value="1">Bajo</option>
-            <option value="2" selected>Medio</option>
-            <option value="3">Alto</option>
-          </select>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label
-            for="diasIncapacidad"
-            class=" font-semibold text-slate-700"
-            >Días de Incapacidad Promedio</label
-          >
-          <input
-            id="diasIncapacidad"
-            name="diasIncapacidad"
-            type="number"
-            required
-            min="1"
-            max="30"
-            value="5"
-            class="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3  focus:border-blue-influvac focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-influvac/40"
-          />
-        </div>
-      </div>
+    </form>
+  </div>
+  <div class="flex-1 flex items-center justify-center">
+    <div class="flex flex-col gap-8">
+      <button class="bg-blue-influvac font-bold text-3xl py-2 px-6 rounded-full text-white">IMPACTO <br> PRESUPUESTAL</button>
+      <button class="bg-blue-influvac font-bold text-3xl py-2 px-6 rounded-full text-white">COSTO - BENEFICIO <br> COSTO - EFECTIVIDAD</button>
+      <button class="bg-blue-influvac font-bold text-3xl py-2 px-6 rounded-full text-white">CASOS <br> DE INFLUENZA</button>
     </div>
 
-    <!-- Botones -->
-    <div
-      class="flex flex-col sm:flex-row gap-4 justify-center pt-6 border-t border-slate-200"
-    >
-      <button
-        type="submit"
-        class="inline-flex justify-center rounded-lg bg-brown-influvac px-8 py-3  font-semibold tracking-wide text-white shadow-md transition hover:shadow-lg hover:shadow-brown-influvac focus:outline-none focus:ring-4 focus:ring-brown-influvac/40"
-      >
-        Calcular Modelo
-      </button>
-      <button
-        type="reset"
-        class="inline-flex justify-center rounded-lg bg-slate-600 px-8 py-3  font-semibold tracking-wide text-white shadow-md transition hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-300"
-      >
-        Limpiar Formulario
-      </button>
-    </div>
-  </form>
+  </div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("modelParametersForm") as HTMLFormElement;
+    const form = document.getElementById(
+      "modelParametersForm"
+    ) as HTMLFormElement;
     if (!form) return;
-    const inputs = form.querySelectorAll("input[data-thousands]") as NodeListOf<HTMLInputElement>;
+    const inputs = form.querySelectorAll(
+      "input[data-thousands]"
+    ) as NodeListOf<HTMLInputElement>;
 
     // Función para formatear número con separador de miles
     function formatWithThousands(value: string): string {
       // Remover todo excepto números
-      let numericValue = value.replace(/[^\d]/g, '');
-      
+      let numericValue = value.replace(/[^\d]/g, "");
+
       // Si está vacío, retornar vacío
-      if (!numericValue) return '';
-      
+      if (!numericValue) return "";
+
       // Formatear con separadores de miles (puntos cada 3 dígitos desde la derecha)
-      return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     // Función para obtener valor numérico sin formato
     function getNumericValue(value: string): string {
       // Remover solo los puntos (separadores de miles)
-      return value.replace(/\./g, '');
+      return value.replace(/\./g, "");
     }
 
     // Aplicar formato inicial a todos los inputs
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
       if (input.value) {
         input.value = formatWithThousands(input.value);
       }
 
       // Evento para formatear mientras se escribe
-      input.addEventListener('input', (e) => {
+      input.addEventListener("input", (e) => {
         const target = e.target as HTMLInputElement;
         const cursorPosition = target.selectionStart || 0;
         const oldValue = target.value;
-        
+
         // Permitir solo números
-        let cleanValue = oldValue.replace(/[^\d]/g, '');
-        
+        let cleanValue = oldValue.replace(/[^\d]/g, "");
+
         const newValue = formatWithThousands(cleanValue);
         target.value = newValue;
-        
+
         // Mantener la posición del cursor aproximadamente
         const lengthDiff = newValue.length - oldValue.length;
         const newCursorPosition = Math.max(0, cursorPosition + lengthDiff);
@@ -332,14 +320,14 @@
       });
 
       // Evento para limpiar formato al hacer focus (opcional)
-      input.addEventListener('focus', (e) => {
+      input.addEventListener("focus", (e) => {
         const target = e.target as HTMLInputElement;
         // Mantener formato pero seleccionar todo para fácil edición
         target.select();
       });
 
       // Evento para formatear al perder focus
-      input.addEventListener('blur', (e) => {
+      input.addEventListener("blur", (e) => {
         const target = e.target as HTMLInputElement;
         if (target.value) {
           target.value = formatWithThousands(target.value);
@@ -348,15 +336,14 @@
     });
 
     // Agregar función para obtener valores sin formato antes de enviar el formulario
-    form.addEventListener('submit', (e) => {
+    form.addEventListener("submit", (e) => {
       // Temporalmente remover formato para envío
-      inputs.forEach(input => {
+      inputs.forEach((input) => {
         if (input.value) {
-          input.setAttribute('data-original-value', input.value);
+          input.setAttribute("data-original-value", input.value);
           input.value = getNumericValue(input.value);
         }
       });
     });
-
   });
 </script>
