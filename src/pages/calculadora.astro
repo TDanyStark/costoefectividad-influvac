@@ -439,6 +439,8 @@ import BackIcon from "@/icons/BackIcon.astro";
     private currentView: string = "view1";
     private formData: any = null;
     private mainContainer: HTMLElement | null = null;
+    private chartNoVacunar: any = null;
+    private chartVacunacionTetravalente: any = null;
     
     // Variables del formulario
     private formVariables = {
@@ -466,6 +468,8 @@ import BackIcon from "@/icons/BackIcon.astro";
       this.initializeNavigation();
       this.initializeFormHandler();
       this.initializeCustomEvents();
+      // Inicializar con valores por defecto del formulario
+      this.initializeFormDefaults();
       // mostrar por consola los valores del formulario
       this.logFormValues();
     }
@@ -494,7 +498,76 @@ import BackIcon from "@/icons/BackIcon.astro";
           e.preventDefault();
           this.handleFormSubmit(form);
         });
+        
+        // Agregar event listeners para actualizar productividad en tiempo real
+        this.initializeProductivityUpdaters(form);
       }
+    }
+
+    private initializeProductivityUpdaters(form: HTMLFormElement): void {
+      // Función auxiliar para limpiar valores numéricos (remover puntos separadores)
+      const cleanNumericValue = (value: string): number => {
+        return parseInt(value.replace(/\./g, '')) || 0;
+      };
+
+      const updateProductivity = () => {
+        const numEmpleadosInput = form.querySelector('[name="numEmpleados"]') as HTMLInputElement;
+        const ventaNetaInput = form.querySelector('[name="ventaNeta"]') as HTMLInputElement;
+        const calculoProductividadSelect = form.querySelector('[name="calculoProductividad"]') as HTMLSelectElement;
+        const productivityDisplay = document.querySelector('#indicadorProductividad div.px-2') as HTMLElement;
+
+        if (numEmpleadosInput && ventaNetaInput && calculoProductividadSelect && productivityDisplay) {
+          const numEmpleados = cleanNumericValue(numEmpleadosInput.value || '0');
+          const ventaNeta = cleanNumericValue(ventaNetaInput.value || '0');
+          const tipoCalculo = calculoProductividadSelect.value;
+          
+          let indicadorProductividad = 0;
+          
+          if (tipoCalculo === "productividad_individual") {
+            // Si es productividad individual, el valor es igual al ingresado en ventaNeta
+            indicadorProductividad = ventaNeta;
+          } else {
+            // Si es promedio empresarial, calcular como antes
+            if (numEmpleados > 0) {
+              indicadorProductividad = (ventaNeta / numEmpleados) / 12; // 12 meses del año
+            }
+          }
+          
+          // Actualizar las variables internas
+          this.formVariables.numEmpleados = numEmpleados;
+          this.formVariables.ventaNeta = ventaNeta;
+          this.formVariables.calculoProductividad = tipoCalculo;
+          this.formVariables.indicadorProductividad = indicadorProductividad;
+          
+          // Actualizar la visualización
+          productivityDisplay.textContent = indicadorProductividad.toLocaleString('es-CO', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+        }
+      };
+
+      // Agregar event listeners a los campos relevantes
+      const numEmpleadosInput = form.querySelector('[name="numEmpleados"]') as HTMLInputElement;
+      const ventaNetaInput = form.querySelector('[name="ventaNeta"]') as HTMLInputElement;
+      const calculoProductividadSelect = form.querySelector('[name="calculoProductividad"]') as HTMLSelectElement;
+
+      if (numEmpleadosInput) {
+        numEmpleadosInput.addEventListener('input', updateProductivity);
+        numEmpleadosInput.addEventListener('change', updateProductivity);
+      }
+
+      if (ventaNetaInput) {
+        ventaNetaInput.addEventListener('input', updateProductivity);
+        ventaNetaInput.addEventListener('change', updateProductivity);
+      }
+
+      if (calculoProductividadSelect) {
+        calculoProductividadSelect.addEventListener('change', updateProductivity);
+      }
+
+      // Llamar una vez para inicializar
+      updateProductivity();
     }
 
     private initializeCustomEvents(): void {
@@ -521,7 +594,58 @@ import BackIcon from "@/icons/BackIcon.astro";
       });
     }
 
+    private initializeFormDefaults(): void {
+      // Función auxiliar para limpiar valores numéricos (remover puntos separadores)
+      const cleanNumericValue = (value: string): number => {
+        return parseInt(value.replace(/\./g, '')) || 0;
+      };
+
+      // Obtener el formulario
+      const form = document.getElementById("modelParametersForm") as HTMLFormElement;
+      if (!form) return;
+
+      // Extraer valores por defecto de los elementos del formulario
+      const numEmpleadosInput = form.querySelector('[name="numEmpleados"]') as HTMLInputElement;
+      const fecha1VacunacionInput = form.querySelector('[name="fecha1Vacunacion"]') as HTMLInputElement;
+      const numeroDeVacunados1Input = form.querySelector('[name="numeroDeVacunados1"]') as HTMLInputElement;
+      const fecha2VacunacionInput = form.querySelector('[name="fecha2Vacunacion"]') as HTMLInputElement;
+      const numeroDeVacunados2Input = form.querySelector('[name="numeroDeVacunados2"]') as HTMLInputElement;
+      const calculoProductividadSelect = form.querySelector('[name="calculoProductividad"]') as HTMLSelectElement;
+      const ventaNetaInput = form.querySelector('[name="ventaNeta"]') as HTMLInputElement;
+      const salarioPromedioInput = form.querySelector('[name="salarioPromedio"]') as HTMLInputElement;
+      const precioVacunacionInput = form.querySelector('[name="precioVacunacion"]') as HTMLInputElement;
+      const nivelExposicionSelect = form.querySelector('[name="nivelExposicion"]') as HTMLSelectElement;
+      const diasIncapacidadInput = form.querySelector('[name="diasIncapacidad"]') as HTMLInputElement;
+
+      // Asignar valores por defecto a las variables
+      this.formVariables.numEmpleados = cleanNumericValue(numEmpleadosInput?.value || '0');
+      this.formVariables.fecha1Vacunacion = fecha1VacunacionInput?.value || '';
+      this.formVariables.numeroDeVacunados1 = cleanNumericValue(numeroDeVacunados1Input?.value || '0');
+      this.formVariables.fecha2Vacunacion = fecha2VacunacionInput?.value || '';
+      this.formVariables.numeroDeVacunados2 = cleanNumericValue(numeroDeVacunados2Input?.value || '0');
+      this.formVariables.calculoProductividad = calculoProductividadSelect?.value || '';
+      this.formVariables.ventaNeta = cleanNumericValue(ventaNetaInput?.value || '0');
+      this.formVariables.salarioPromedio = cleanNumericValue(salarioPromedioInput?.value || '0');
+      this.formVariables.precioVacunacion = cleanNumericValue(precioVacunacionInput?.value || '0');
+      this.formVariables.nivelExposicion = parseInt(nivelExposicionSelect?.value || '1');
+      this.formVariables.diasIncapacidad = parseInt(diasIncapacidadInput?.value || '0');
+
+      // Calcular indicador de productividad según el tipo
+      if (this.formVariables.calculoProductividad === "productividad_individual") {
+        this.formVariables.indicadorProductividad = this.formVariables.ventaNeta;
+      } else {
+        this.formVariables.indicadorProductividad = this.formVariables.numEmpleados > 0 
+          ? (this.formVariables.ventaNeta / this.formVariables.numEmpleados ) / 12 //12 meses del año
+          : 0;
+      }
+    }
+
     private switchView(viewId: string, bgImage?: string | null): void {
+      // Limpiar gráficos si estamos saliendo de la vista 4
+      if (this.currentView === "view4") {
+        this.cleanupCharts();
+      }
+
       // Hacer scroll suave hacia arriba
       window.scrollTo({
         top: 0,
@@ -595,39 +719,21 @@ import BackIcon from "@/icons/BackIcon.astro";
       this.formVariables.salarioPromedio = cleanNumericValue(this.formData.get('salarioPromedio') || '0');
       this.formVariables.precioVacunacion = cleanNumericValue(this.formData.get('precioVacunacion') || '0');
 
-      // Calcular indicador de productividad
-      this.formVariables.indicadorProductividad = this.formVariables.numEmpleados > 0 
-        ? this.formVariables.ventaNeta / this.formVariables.numEmpleados 
-        : 0;
-
+      // Calcular indicador de productividad según el tipo
+      if (this.formVariables.calculoProductividad === "productividad_individual") {
+        this.formVariables.indicadorProductividad = this.formVariables.ventaNeta;
+      } else {
+        this.formVariables.indicadorProductividad = this.formVariables.numEmpleados > 0 
+          ? (this.formVariables.ventaNeta / this.formVariables.numEmpleados )/ 12
+          : 0;
+      }
       // Extraer valores operacionales
       this.formVariables.nivelExposicion = parseInt(this.formData.get('nivelExposicion') || '1');
       this.formVariables.diasIncapacidad = parseInt(this.formData.get('diasIncapacidad') || '0');
     }
 
     private logFormValues(): void {
-      console.log('=== VALORES DEL FORMULARIO ===');
-      console.log('📊 Parámetros Básicos:');
-      console.log(`  • Número de Empleados: ${this.formVariables.numEmpleados.toLocaleString('es-CO')}`);
-      console.log(`  • Fecha 1 de Vacunación: ${this.formVariables.fecha1Vacunacion}`);
-      console.log(`  • Número de Vacunados 1: ${this.formVariables.numeroDeVacunados1.toLocaleString('es-CO')}`);
-      console.log(`  • Fecha 2 de Vacunación: ${this.formVariables.fecha2Vacunacion || 'No especificada'}`);
-      console.log(`  • Número de Vacunados 2: ${this.formVariables.numeroDeVacunados2.toLocaleString('es-CO')}`);
-      
-      console.log('💰 Parámetros Financieros:');
-      console.log(`  • Cálculo de Productividad: ${this.formVariables.calculoProductividad}`);
-      console.log(`  • Venta Neta: $${this.formVariables.ventaNeta.toLocaleString('es-CO')}`);
-      console.log(`  • Indicador de Productividad: $${this.formVariables.indicadorProductividad.toLocaleString('es-CO', { maximumFractionDigits: 2 })}`);
-      console.log(`  • Salario Promedio: $${this.formVariables.salarioPromedio.toLocaleString('es-CO')}`);
-      console.log(`  • Precio Vacunación: $${this.formVariables.precioVacunacion.toLocaleString('es-CO')}`);
-      
-      console.log('⚙️ Parámetros Operacionales:');
-      const nivelExposicionTexto = this.formVariables.nivelExposicion === 1 ? 'Bajo' : 
-                                   this.formVariables.nivelExposicion === 2 ? 'Medio' : 'Alto';
-      console.log(`  • Nivel de Exposición: ${nivelExposicionTexto} (${this.formVariables.nivelExposicion})`);
-      console.log(`  • Días de Incapacidad Promedio: ${this.formVariables.diasIncapacidad}`);
-      
-      console.log('=== FIN VALORES DEL FORMULARIO ===\n');
+      console.log(this.formVariables);
     }
 
     private calculateResults(): void {
@@ -723,7 +829,29 @@ import BackIcon from "@/icons/BackIcon.astro";
       checkChart();
     }
 
+    private cleanupCharts(): void {
+      // Destruir gráficos existentes para evitar memory leaks
+      if (this.chartNoVacunar) {
+        this.chartNoVacunar.destroy();
+        this.chartNoVacunar = null;
+      }
+      if (this.chartVacunacionTetravalente) {
+        this.chartVacunacionTetravalente.destroy();
+        this.chartVacunacionTetravalente = null;
+      }
+    }
+
     private createInfluenzaCharts(): void {
+      // Destruir gráficos existentes si los hay
+      if (this.chartNoVacunar) {
+        this.chartNoVacunar.destroy();
+        this.chartNoVacunar = null;
+      }
+      if (this.chartVacunacionTetravalente) {
+        this.chartVacunacionTetravalente.destroy();
+        this.chartVacunacionTetravalente = null;
+      }
+
       // Generar datos para 365 días
       const days = Array.from({ length: 365 }, (_, i) => i + 1);
 
@@ -811,7 +939,7 @@ import BackIcon from "@/icons/BackIcon.astro";
         "chart-no-vacunar"
       ) as HTMLCanvasElement;
       if (ctx1) {
-        new (window as any).Chart(ctx1, {
+        this.chartNoVacunar = new (window as any).Chart(ctx1, {
           type: "line",
           data: {
             labels: days,
@@ -875,7 +1003,7 @@ import BackIcon from "@/icons/BackIcon.astro";
         "chart-vacunacion-tetravalente"
       ) as HTMLCanvasElement;
       if (ctx2) {
-        new (window as any).Chart(ctx2, {
+        this.chartVacunacionTetravalente = new (window as any).Chart(ctx2, {
           type: "line",
           data: {
             labels: days,

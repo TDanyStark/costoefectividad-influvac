@@ -110,7 +110,7 @@
 
         <div class="grid gap-6 md:grid-cols-2 mb-6">
           <div class="flex flex-col gap-2">
-            <label for="ventaNeta2022" class="font-semibold text-slate-700"
+            <label for="ventaNeta2022" class="font-semibold text-slate-700" id="ventaNetaLabel"
               >Venta Neta (ultimo año)</label
             >
             <div
@@ -137,7 +137,7 @@
               class="font-semibold text-slate-700"
               >Indicador de Productividad por Empleado</label
             >
-            <div class="flex rounded-lg">
+            <div class="flex rounded-lg" id="indicadorProductividad">
               <span class="px-3 flex items-center text-slate-500 font-semibold"
                 >$</span
               >
@@ -270,6 +270,24 @@
       "input[data-thousands]"
     ) as NodeListOf<HTMLInputElement>;
 
+    const calculoProductividadSelect = document.getElementById("calculoProductividad") as HTMLSelectElement;
+    const ventaNetaLabel = document.getElementById("ventaNetaLabel") as HTMLLabelElement;
+
+    // Función para actualizar la etiqueta del campo según el tipo de cálculo
+    function updateVentaNetaLabel(): void {
+      if (calculoProductividadSelect.value === "productividad_individual") {
+        ventaNetaLabel.textContent = "Productividad Individual";
+      } else {
+        ventaNetaLabel.textContent = "Venta Neta (ultimo año)";
+      }
+    }
+
+    // Inicializar la etiqueta correcta
+    updateVentaNetaLabel();
+
+    // Escuchar cambios en el select de cálculo de productividad
+    calculoProductividadSelect.addEventListener("change", updateVentaNetaLabel);
+
     // Función para formatear número con separador de miles
     function formatWithThousands(value: string): string {
       // Remover todo excepto números
@@ -337,6 +355,14 @@
             input.value = formatWithThousands(input.value);
           }
         });
+        const productivityDisplay = document.querySelector(
+          "#indicadorProductividad div.px-2"
+        ) as HTMLElement;
+        if (productivityDisplay) {
+          productivityDisplay.textContent = "73.146.241,47";
+        }
+        // Restaurar la etiqueta correcta después del reset
+        updateVentaNetaLabel();
       }, 0);
     });
 
