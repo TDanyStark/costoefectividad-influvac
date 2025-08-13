@@ -499,6 +499,12 @@ import BackIcon from "@/icons/BackIcon.astro";
     }
 
     private switchView(viewId: string, bgImage?: string | null): void {
+      // Hacer scroll suave hacia arriba
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
       // Cambiar fondo si se especifica
       if (bgImage && this.mainContainer) {
         const urlBase = URL_BASE || "";
