@@ -244,9 +244,9 @@
       >
         <button
           type="submit"
-          class="inline-flex justify-center rounded-lg bg-brown-influvac px-8 py-3 font-semibold tracking-wide text-white shadow-md transition hover:shadow-lg hover:shadow-brown-influvac focus:outline-none focus:ring-4 focus:ring-brown-influvac/40"
+          class="inline-flex justify-center rounded-lg bg-blue-influvac px-8 py-3 font-semibold tracking-wide text-white shadow-md transition hover:bg-blue-influvac/90 focus:outline-none focus:ring-4 focus:ring-blue-influvac/40"
         >
-          Calcular Modelo
+          Calcular Resultados
         </button>
         <button
           type="reset"
@@ -326,6 +326,18 @@
           target.value = formatWithThousands(target.value);
         }
       });
+    });
+
+    // Evento para reset del formulario
+    form.addEventListener("reset", () => {
+      // Usar setTimeout para que el reset se complete primero
+      setTimeout(() => {
+        inputs.forEach((input) => {
+          if (input.value) {
+            input.value = formatWithThousands(input.value);
+          }
+        });
+      }, 0);
     });
 
   });

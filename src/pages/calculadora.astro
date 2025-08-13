@@ -439,12 +439,35 @@ import BackIcon from "@/icons/BackIcon.astro";
     private currentView: string = "view1";
     private formData: any = null;
     private mainContainer: HTMLElement | null = null;
+    
+    // Variables del formulario
+    private formVariables = {
+      // Parámetros Básicos
+      numEmpleados: 0,
+      fecha1Vacunacion: '',
+      numeroDeVacunados1: 0,
+      fecha2Vacunacion: '',
+      numeroDeVacunados2: 0,
+      
+      // Parámetros Financieros
+      calculoProductividad: '',
+      ventaNeta: 0,
+      indicadorProductividad: 0,
+      salarioPromedio: 0,
+      precioVacunacion: 0,
+      
+      // Parámetros Operacionales
+      nivelExposicion: 1,
+      diasIncapacidad: 0
+    };
 
     constructor() {
       this.mainContainer = document.getElementById("main-container");
       this.initializeNavigation();
       this.initializeFormHandler();
       this.initializeCustomEvents();
+      // mostrar por consola los valores del formulario
+      this.logFormValues();
     }
 
     private initializeNavigation(): void {
@@ -537,6 +560,12 @@ import BackIcon from "@/icons/BackIcon.astro";
     private handleFormSubmit(form: HTMLFormElement): void {
       // Recopilar datos del formulario
       this.formData = new FormData(form);
+      
+      // Extraer y procesar valores del formulario
+      this.extractFormValues();
+      
+      // Mostrar valores en consola
+      this.logFormValues();
 
       // Realizar cálculos
       this.calculateResults();
@@ -545,13 +574,81 @@ import BackIcon from "@/icons/BackIcon.astro";
       console.log("Formulario procesado. Datos listos para visualización.");
     }
 
+    private extractFormValues(): void {
+      if (!this.formData) return;
+
+      // Función auxiliar para limpiar valores numéricos (remover puntos separadores)
+      const cleanNumericValue = (value: string): number => {
+        return parseInt(value.replace(/\./g, '')) || 0;
+      };
+
+      // Extraer valores básicos
+      this.formVariables.numEmpleados = cleanNumericValue(this.formData.get('numEmpleados') || '0');
+      this.formVariables.fecha1Vacunacion = this.formData.get('fecha1Vacunacion') || '';
+      this.formVariables.numeroDeVacunados1 = cleanNumericValue(this.formData.get('numeroDeVacunados1') || '0');
+      this.formVariables.fecha2Vacunacion = this.formData.get('fecha2Vacunacion') || '';
+      this.formVariables.numeroDeVacunados2 = cleanNumericValue(this.formData.get('numeroDeVacunados2') || '0');
+
+      // Extraer valores financieros
+      this.formVariables.calculoProductividad = this.formData.get('calculoProductividad') || '';
+      this.formVariables.ventaNeta = cleanNumericValue(this.formData.get('ventaNeta') || '0');
+      this.formVariables.salarioPromedio = cleanNumericValue(this.formData.get('salarioPromedio') || '0');
+      this.formVariables.precioVacunacion = cleanNumericValue(this.formData.get('precioVacunacion') || '0');
+
+      // Calcular indicador de productividad
+      this.formVariables.indicadorProductividad = this.formVariables.numEmpleados > 0 
+        ? this.formVariables.ventaNeta / this.formVariables.numEmpleados 
+        : 0;
+
+      // Extraer valores operacionales
+      this.formVariables.nivelExposicion = parseInt(this.formData.get('nivelExposicion') || '1');
+      this.formVariables.diasIncapacidad = parseInt(this.formData.get('diasIncapacidad') || '0');
+    }
+
+    private logFormValues(): void {
+      console.log('=== VALORES DEL FORMULARIO ===');
+      console.log('📊 Parámetros Básicos:');
+      console.log(`  • Número de Empleados: ${this.formVariables.numEmpleados.toLocaleString('es-CO')}`);
+      console.log(`  • Fecha 1 de Vacunación: ${this.formVariables.fecha1Vacunacion}`);
+      console.log(`  • Número de Vacunados 1: ${this.formVariables.numeroDeVacunados1.toLocaleString('es-CO')}`);
+      console.log(`  • Fecha 2 de Vacunación: ${this.formVariables.fecha2Vacunacion || 'No especificada'}`);
+      console.log(`  • Número de Vacunados 2: ${this.formVariables.numeroDeVacunados2.toLocaleString('es-CO')}`);
+      
+      console.log('💰 Parámetros Financieros:');
+      console.log(`  • Cálculo de Productividad: ${this.formVariables.calculoProductividad}`);
+      console.log(`  • Venta Neta: $${this.formVariables.ventaNeta.toLocaleString('es-CO')}`);
+      console.log(`  • Indicador de Productividad: $${this.formVariables.indicadorProductividad.toLocaleString('es-CO', { maximumFractionDigits: 2 })}`);
+      console.log(`  • Salario Promedio: $${this.formVariables.salarioPromedio.toLocaleString('es-CO')}`);
+      console.log(`  • Precio Vacunación: $${this.formVariables.precioVacunacion.toLocaleString('es-CO')}`);
+      
+      console.log('⚙️ Parámetros Operacionales:');
+      const nivelExposicionTexto = this.formVariables.nivelExposicion === 1 ? 'Bajo' : 
+                                   this.formVariables.nivelExposicion === 2 ? 'Medio' : 'Alto';
+      console.log(`  • Nivel de Exposición: ${nivelExposicionTexto} (${this.formVariables.nivelExposicion})`);
+      console.log(`  • Días de Incapacidad Promedio: ${this.formVariables.diasIncapacidad}`);
+      
+      console.log('=== FIN VALORES DEL FORMULARIO ===\n');
+    }
+
     private calculateResults(): void {
-      // Simular cálculos - aquí integrarías tu lógica de cálculo real
+      console.log('🔄 Iniciando cálculos con las variables del formulario...');
+      
+      // Usar las variables del formulario para los cálculos
+      const totalVacunados = this.formVariables.numeroDeVacunados1 + this.formVariables.numeroDeVacunados2;
+      const porcentajeVacunacion = (totalVacunados / this.formVariables.numEmpleados) * 100;
+      const costoTotalVacunacion = totalVacunados * this.formVariables.precioVacunacion;
+      
+      console.log('📊 Cálculos realizados:');
+      console.log(`  • Total de Vacunados: ${totalVacunados.toLocaleString('es-CO')}`);
+      console.log(`  • Porcentaje de Vacunación: ${porcentajeVacunacion.toFixed(2)}%`);
+      console.log(`  • Costo Total de Vacunación: $${costoTotalVacunacion.toLocaleString('es-CO')}`);
+      
+      // Simular cálculos más complejos - aquí integrarías tu lógica de cálculo real
       setTimeout(() => {
         // Resultados para Vista 2 (Impacto Presupuestal)
         const ahorroTotal = document.getElementById("resultado-ahorro-total");
         const roi = document.getElementById("resultado-roi");
-        if (ahorroTotal) ahorroTotal.textContent = "$2,500,000,000";
+        if (ahorroTotal) ahorroTotal.textContent = `$${(costoTotalVacunacion * 2.5).toLocaleString('es-CO')}`;
         if (roi) roi.textContent = "320%";
 
         // Resultados para Vista 3 (Costo-Beneficio)
@@ -563,7 +660,7 @@ import BackIcon from "@/icons/BackIcon.astro";
         );
         const efectividad = document.getElementById("resultado-efectividad");
         if (costoBeneficio) costoBeneficio.textContent = "3.2:1";
-        if (costoCasoEvitado) costoCasoEvitado.textContent = "$125,000";
+        if (costoCasoEvitado) costoCasoEvitado.textContent = `$${(costoTotalVacunacion / Math.max(totalVacunados * 0.1, 1)).toLocaleString('es-CO')}`;
         if (efectividad) efectividad.textContent = "85%";
 
         // Resultados para Vista 4 (Casos)
@@ -571,14 +668,29 @@ import BackIcon from "@/icons/BackIcon.astro";
         const casosH3N2 = document.getElementById("casos-h3n2");
         const casosBVictoria = document.getElementById("casos-b-victoria");
         const casosBYamagata = document.getElementById("casos-b-yamagata");
-        if (casosH1N1) casosH1N1.textContent = "45";
-        if (casosH3N2) casosH3N2.textContent = "38";
-        if (casosBVictoria) casosBVictoria.textContent = "32";
-        if (casosBYamagata) casosBYamagata.textContent = "33";
+        
+        // Calcular casos basados en el nivel de exposición y número de empleados
+        const factorExposicion = this.formVariables.nivelExposicion;
+        const baseCase = Math.round((this.formVariables.numEmpleados - totalVacunados) * 0.01 * factorExposicion);
+        
+        if (casosH1N1) casosH1N1.textContent = Math.round(baseCase * 1.2).toString();
+        if (casosH3N2) casosH3N2.textContent = Math.round(baseCase * 1.0).toString();
+        if (casosBVictoria) casosBVictoria.textContent = Math.round(baseCase * 0.8).toString();
+        if (casosBYamagata) casosBYamagata.textContent = Math.round(baseCase * 0.9).toString();
+        
+        console.log('✅ Cálculos completados y resultados actualizados en las vistas.');
       }, 500);
     }
 
     private loadViewContent(viewId: string): void {
+      // Mostrar las variables actuales cuando se carga una vista
+      if (this.formVariables.numEmpleados > 0) {
+        console.log(`🔄 Cargando contenido para ${viewId} con variables actualizadas:`);
+        console.log(`  • Empleados: ${this.formVariables.numEmpleados.toLocaleString('es-CO')}`);
+        console.log(`  • Total Vacunados: ${(this.formVariables.numeroDeVacunados1 + this.formVariables.numeroDeVacunados2).toLocaleString('es-CO')}`);
+        console.log(`  • Costo Total: $${((this.formVariables.numeroDeVacunados1 + this.formVariables.numeroDeVacunados2) * this.formVariables.precioVacunacion).toLocaleString('es-CO')}`);
+      }
+      
       switch (viewId) {
         case "view3":
           this.loadChartsView3();
@@ -840,8 +952,7 @@ import BackIcon from "@/icons/BackIcon.astro";
       }
     }
   }
-
-  // Inicializar el manejador de vistas cuando el DOM esté listo
+  
   document.addEventListener("DOMContentLoaded", () => {
     new ViewManager();
   });
