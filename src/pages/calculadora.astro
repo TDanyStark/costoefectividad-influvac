@@ -487,8 +487,6 @@ import BackIcon from "@/icons/BackIcon.astro";
       this.populateFormFromVariables();
       // Inicializar el form handler DESPUÉS de poblar el formulario
       this.initializeFormHandler();
-      // mostrar por consola los valores del formulario
-      this.logFormValues(); 
     }
 
     private initializeFormElements(): void {
@@ -810,10 +808,6 @@ import BackIcon from "@/icons/BackIcon.astro";
       // Extraer valores operacionales
       this.formVariables.nivelExposicion = this.nivelExposicionSelect ? parseInt(this.nivelExposicionSelect.value || '1') : 1;
       this.formVariables.diasIncapacidad = this.diasIncapacidadInput ? parseInt(this.diasIncapacidadInput.value || '0') : 0;
-    }
-
-    private logFormValues(): void {
-      console.log(this.formVariables);
     }
 
     private calculateResults(): void {
