@@ -1,0 +1,175 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { URL_BASE } from "@/variables";
+import Header from "@/components/Header.astro";
+import HomeIcon from "@/icons/HomeIcon.astro";
+---
+
+<Layout>
+  <main
+    id="main-container"
+    class="min-h-screen flex flex-col overflow-clip transition-all duration-500 bg-white"
+    style={`background-image: url('${URL_BASE}/img/bg/banner4.webp'); background-size: cover; background-position: center;`}
+  >
+    <Header logo={`/img/logoabbott_color.webp`} />
+    <section class="w-6xl max-w-full mx-auto p-4 pb-10 flex-1">
+      <div id="view3" class="view-content w-full">
+        <!-- Main Content -->
+        <div class="max-w-3xl">
+          <!-- Comparison Table -->
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+            <!-- Table Header -->
+            <div
+              class="grid grid-cols-3 bg-ochre-influvac text-white font-bold"
+            >
+              <div class="p-3"></div>
+              <div class="p-3 text-center border-r border-ochre-influvac">
+                NO VACUNAR
+              </div>
+              <div class="p-3 text-center">VACUNACIÓN TETRAVALENTE</div>
+            </div>
+
+            <!-- Table Rows -->
+            <div class="divide-y divide-gray-200">
+              <!-- Row 1: Costo de la vacunación -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Costo de la vacunación
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  $ 0,00
+                </div>
+                <div class="p-3 text-center">$ 110.000.000</div>
+              </div>
+
+              <!-- Row 2: Pérdidas Operativas -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Pérdidas Operativas
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  $ 5.137.144.420
+                </div>
+                <div class="p-3 text-center">$ 1.762.745.634</div>
+              </div>
+
+              <!-- Row 3: Cobertura vacunal -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Cobertura vacunal
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">0%</div>
+                <div class="p-3 text-center">40,00%</div>
+              </div>
+
+              <!-- Row 4: Casos de influenza -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Casos de influenza
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">999</div>
+                <div class="p-3 text-center">344</div>
+              </div>
+
+              <!-- Row 5: Casos sintomáticos -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Casos sintomáticos
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">839</div>
+                <div class="p-3 text-center">288</div>
+              </div>
+
+              <!-- Row 6: Sujetos incapacitados -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Sujetos incapacitados
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">408</div>
+                <div class="p-3 text-center">140</div>
+              </div>
+
+              <!-- Row 7: Días de incapacidad -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Días de incapacidad
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">2041</div>
+                <div class="p-3 text-center">703</div>
+              </div>
+
+              <!-- Row 8: Hospitalización -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Hospitalización
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">12</div>
+                <div class="p-3 text-center">4</div>
+              </div>
+
+              <!-- Row 9: Mortalidad -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                >
+                  Mortalidad
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">1</div>
+                <div class="p-3 text-center">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-full flex justify-between items-end">
+          <!-- Impact Information -->
+          <div
+            class="bg-brown-influvac bg-opacity-90 text-white p-6 rounded-lg shadow-lg w-3xl max-full"
+          >
+            <div class="space-y-2">
+              <p class="text-lg">
+                <span class="font-bold">Impacto presupuestal:</span> $3.264.398.785
+                al año en ahorro
+              </p>
+              <p class="text-lg">
+                <span class="font-bold">Costo-beneficio:</span> Por cada $1 invertido
+                en vacunación, se recuperan <span
+                  class="font-bold text-yellow-300">$30,7</span
+                >
+              </p>
+              <p class="text-lg">
+                <span class="font-bold">ICER:</span> Por cada día de incapacidad
+                evitado por la vacunación se obtiene un ahorro de <span
+                  class="font-bold text-yellow-300">$2.436.118</span
+                >
+              </p>
+            </div>
+          </div>
+          <div>
+            <a
+              href={URL_BASE}
+              class="block bg-brown-influvac text-white p-2 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors border border-white cursor-pointer"
+            >
+              <HomeIcon />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
