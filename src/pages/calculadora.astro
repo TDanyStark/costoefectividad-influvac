@@ -1,14 +1,14 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
 import { URL_BASE } from "@/variables";
 import Form from "@/sections/Form.astro";
+import BackIcon from "@/icons/BackIcon.astro";
 ---
 
 <Layout>
   <main
     id="main-container"
-    class="min-h-screen flex flex-col overflow-clip transition-all duration-500"
+    class="min-h-screen flex flex-col overflow-clip transition-all duration-500 bg-ochre-influvac"
     style={`background-image: url('${URL_BASE}/img/bg/banner2.webp'); background-size: cover; background-position: center;`}
   >
     <header class="p-4 md:p-8">
@@ -65,47 +65,173 @@ import Form from "@/sections/Form.astro";
 
       <!-- Vista 2: Impacto Presupuestal -->
       <div id="view2" class="view-content hidden w-full">
-        <div
-          class="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-8 max-w-4xl mx-auto"
-        >
-          <div
-            class="bg-brown-influvac text-white text-center px-6 py-6 rounded-t-lg"
-          >
-            <h2 class="text-xl font-semibold tracking-wide">
-              IMPACTO PRESUPUESTAL
-            </h2>
-          </div>
-          <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="bg-blue-50 p-6 rounded-lg text-center">
-                <h3 class="font-semibold text-blue-influvac mb-2">
-                  Ahorro Total
-                </h3>
-                <p
-                  id="resultado-ahorro-total"
-                  class="text-3xl font-bold text-gray-800"
+        <!-- Main Content Container -->
+        <div class="max-w-3xl">
+          <!-- Comparison Table -->
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+            <!-- Table Header -->
+            <div class="grid grid-cols-3 bg-orange-500 text-white font-bold">
+              <div class="p-3"></div>
+              <div class="p-3 text-center border-r border-orange-400">
+                NO VACUNAR
+              </div>
+              <div class="p-3 text-center">VACUNACIÓN TETRAVALENTE</div>
+            </div>
+
+            <!-- Table Rows -->
+            <div class="divide-y divide-gray-200">
+              <!-- Row 1 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
                 >
-                  -
-                </p>
-                <span class="text-sm text-gray-600">Pesos colombianos</span>
+                  Población Vacunada
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">0</div>
+                <div class="p-3 text-center">2000</div>
               </div>
-              <div class="bg-green-50 p-6 rounded-lg text-center">
-                <h3 class="font-semibold text-green-600 mb-2">ROI</h3>
-                <p id="resultado-roi" class="text-3xl font-bold text-gray-800">
-                  -
-                </p>
-                <span class="text-sm text-gray-600">Retorno de inversión</span>
+
+              <!-- Row 2 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Porcentaje de vacunación
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  0,00%
+                </div>
+                <div class="p-3 text-center">40,00%</div>
+              </div>
+
+              <!-- Row 3 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Costo de la vacunación
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  $ 0,00
+                </div>
+                <div class="p-3 text-center">$ 110.000.000</div>
+              </div>
+
+              <!-- Row 4 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Empleados con incapacidad médica
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">408</div>
+                <div class="p-3 text-center">140</div>
+              </div>
+
+              <!-- Row 5 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Días de incapacidad médica
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">2040</div>
+                <div class="p-3 text-center">700</div>
+              </div>
+
+              <!-- Row 6 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Salarios pagados en ausentismo
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  $ 163.200.000
+                </div>
+                <div class="p-3 text-center">$ 56.000.000</div>
+              </div>
+
+              <!-- Row 7 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Pérdida de productividad
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  $ 4.973.944.420
+                </div>
+                <div class="p-3 text-center">$ 1.706.745.634</div>
+              </div>
+
+              <!-- Row 8 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Gastos de vacunación
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">$ 0</div>
+                <div class="p-3 text-center">$ 110.000.000</div>
+              </div>
+
+              <!-- Row 9 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Pérdidas Operativas
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  $ 5.137.144.420
+                </div>
+                <div class="p-3 text-center">$ 1.762.745.634</div>
+              </div>
+
+              <!-- Row 10 -->
+              <div class="grid grid-cols-3 hover:bg-gray-50">
+                <div
+                  class="p-3 font-medium bg-orange-100 border-r border-gray-200"
+                >
+                  Impacto presupuestal
+                </div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  $ 5.137.144.420
+                </div>
+                <div class="p-3 text-center">$ 1.872.745.634</div>
+              </div>
+
+              <!-- Savings Row -->
+              <div class="grid grid-cols-3 bg-orange-50 font-bold">
+                <div
+                  class="p-3 bg-orange-200 border-r border-gray-200 text-center"
+                >
+                  Ahorro:
+                </div>
+                <div class="p-3 text-center border-r border-gray-200"></div>
+                <div class="p-3 text-center text-green-600">
+                  $ 3.264.398.785
+                </div>
               </div>
             </div>
-            <div class="mt-8 flex justify-center">
-              <button
-                class="bg-brown-influvac text-white px-6 py-3 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn"
-                data-view="view1"
-                data-bg="banner2"
-              >
-                ← Volver a Parámetros
-              </button>
-            </div>
+          </div>
+        </div>
+        <div class="w-full flex justify-between">
+          <div
+            class="bg-brown-influvac bg-opacity-90 text-white p-6 rounded-lg shadow-lg max-w-3xl"
+          >
+            <p class="text-lg leading-relaxed">
+              La inversión en vacunación para 2000 trabajadores es de
+              $110.000.000, lo que cubre al 40,0% de los colaboradores. Este
+              nivel de protección evita que 268 personas se enfermen y reduce en
+              1340 el número de "PTE".
+            </p>
+          </div>
+          <div>
+            <button class="bg-brown-influvac text-white px-4 py-2 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn" data-view="view1" data-bg="banner2">
+              <BackIcon />
+            </button>
           </div>
         </div>
       </div>
@@ -267,6 +393,7 @@ import Form from "@/sections/Form.astro";
   </main>
 
   <script>
+    import { URL_BASE } from "@/variables";
     class ViewManager {
       private currentView: string = "view1";
       private formData: any = null;
@@ -310,6 +437,7 @@ import Form from "@/sections/Form.astro";
       private initializeCustomEvents(): void {
         // Escuchar eventos personalizados del formulario
         document.addEventListener("switchToView", (e: any) => {
+          console.log("Cambiando a la vista:", e.detail.viewId);
           const { viewId } = e.detail;
           let bgImage = "banner2"; // default
 
@@ -333,7 +461,7 @@ import Form from "@/sections/Form.astro";
       private switchView(viewId: string, bgImage?: string | null): void {
         // Cambiar fondo si se especifica
         if (bgImage && this.mainContainer) {
-          const urlBase = (window as any).URL_BASE || "";
+          const urlBase = URL_BASE || "";
           this.mainContainer.style.backgroundImage = `url('${urlBase}/img/bg/${bgImage}.webp')`;
         }
 
@@ -354,10 +482,7 @@ import Form from "@/sections/Form.astro";
         // Actualizar vista actual
         this.currentView = viewId;
 
-        // Actualizar logo según la vista
-        if ((window as any).updateLogo) {
-          (window as any).updateLogo(viewId);
-        }
+        this.updateLogo(viewId);
 
         // Cargar contenido específico de la vista si es necesario
         this.loadViewContent(viewId);
@@ -442,41 +567,30 @@ import Form from "@/sections/Form.astro";
             '<p class="text-center text-sm text-gray-500">Evolución temporal cargada</p>';
         }
       }
-    }
 
-    // Hacer URL_BASE disponible globalmente para el script
-    (window as any).URL_BASE =
-      document
-        .querySelector('meta[name="url-base"]')
-        ?.getAttribute("content") || "/apps/abbott/costoefectividad-influvac";
-
-    // Inicializar el manejador de vistas cuando el DOM esté listo
-    document.addEventListener("DOMContentLoaded", () => {
-      new ViewManager();
-      
-      // Función para actualizar el logo dinámicamente según la vista
-      function updateLogo(currentView: string) {
-        const logo = document.getElementById('dynamic-logo') as HTMLImageElement;
+      private updateLogo(currentView: string): void {
+        const logo = document.getElementById(
+          "dynamic-logo"
+        ) as HTMLImageElement;
         if (!logo) return;
 
-        const whiteLogo = logo.getAttribute('data-white-logo');
-        const colorLogo = logo.getAttribute('data-color-logo');
-        
+        const whiteLogo = logo.getAttribute("data-white-logo");
+        const colorLogo = logo.getAttribute("data-color-logo");
+
         if (!whiteLogo || !colorLogo) return;
 
         // Vista 1: logo blanco, Vistas 2, 3, 4: logo de color
-        if (currentView === 'view1') {
+        if (currentView === "view1") {
           logo.src = whiteLogo;
         } else {
           logo.src = colorLogo;
         }
       }
+    }
 
-      // Hacer la función updateLogo accesible globalmente para que ViewManager la pueda usar
-      (window as any).updateLogo = updateLogo;
-
-      // Inicializar con vista 1 (logo blanco)
-      updateLogo('view1');
+    // Inicializar el manejador de vistas cuando el DOM esté listo
+    document.addEventListener("DOMContentLoaded", () => {
+      new ViewManager();
     });
   </script>
 
