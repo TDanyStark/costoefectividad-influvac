@@ -1,9 +1,17 @@
 ---
 import { URL_BASE } from '@/variables';
+
+interface Props{
+  logo?: string
+}
+
+const {logo} = Astro.props
+
+
 ---
 
 <header class="p-4 md:p-8">
   <div class="max-w-7xl mx-auto">
-    <img class="w-52 h-auto" src={`${URL_BASE}/img/logoabbott_white.webp`} alt="Logo de Abbott">
+    <img class="w-52 h-auto" src={`${logo ? URL_BASE + logo : URL_BASE + '/img/logoabbott_white.webp'}`} alt="Logo de Abbott">
   </div>
 </header>
