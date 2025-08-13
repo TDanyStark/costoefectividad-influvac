@@ -15,13 +15,13 @@ import BackIcon from "@/icons/BackIcon.astro";
       <div class="max-w-7xl mx-auto">
         <a href={URL_BASE}>
           <img
-          id="dynamic-logo"
-          class="w-52 h-auto"
-          src={`${URL_BASE}/img/logoabbott_white.webp`}
-          alt="Logo de Abbott"
-          data-white-logo={`${URL_BASE}/img/logoabbott_white.webp`}
-          data-color-logo={`${URL_BASE}/img/logoabbott_color.webp`}
-        />
+            id="dynamic-logo"
+            class="w-52 h-auto"
+            src={`${URL_BASE}/img/logoabbott_white.webp`}
+            alt="Logo de Abbott"
+            data-white-logo={`${URL_BASE}/img/logoabbott_white.webp`}
+            data-color-logo={`${URL_BASE}/img/logoabbott_color.webp`}
+          />
         </a>
       </div>
     </header>
@@ -49,14 +49,14 @@ import BackIcon from "@/icons/BackIcon.astro";
               <button
                 class="bg-blue-influvac font-bold text-3xl py-6 px-8 rounded-full text-white view-nav-btn transition-all duration-300 hover:bg-blue-influvac/90 hover:scale-105 shadow-lg cursor-pointer"
                 data-view="view3"
-                data-bg="banner4"
+                data-bg="banner5"
               >
                 COSTO - BENEFICIO <br /> COSTO - EFECTIVIDAD
               </button>
               <button
                 class="bg-blue-influvac font-bold text-3xl py-6 px-8 rounded-full text-white view-nav-btn transition-all duration-300 hover:bg-blue-influvac/90 hover:scale-105 shadow-lg cursor-pointer"
                 data-view="view4"
-                data-bg="banner5"
+                data-bg="banner6"
               >
                 CASOS <br /> DE INFLUENZA
               </button>
@@ -246,16 +246,13 @@ import BackIcon from "@/icons/BackIcon.astro";
 
       <!-- Vista 3: Costo-Beneficio / Costo-Efectividad -->
       <div id="view3" class="view-content hidden w-full">
-        <!-- Main Content -->
         <div class="max-w-3xl">
-          <!-- Comparison Table -->
-          <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+          <!-- Primera tabla: Costos -->
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4">
             <!-- Table Header -->
-            <div
-              class="grid grid-cols-3 bg-ochre-influvac text-white font-bold"
-            >
+            <div class="grid grid-cols-3 bg-blue-influvac text-white font-bold">
               <div class="p-3"></div>
-              <div class="p-3 text-center border-r border-ochre-influvac">
+              <div class="p-3 text-center border-r border-white">
                 NO VACUNAR
               </div>
               <div class="p-3 text-center">VACUNACIÓN TETRAVALENTE</div>
@@ -264,9 +261,9 @@ import BackIcon from "@/icons/BackIcon.astro";
             <!-- Table Rows -->
             <div class="divide-y divide-gray-200">
               <!-- Row 1: Costo de la vacunación -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
+              <div class="grid grid-cols-3">
                 <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                  class="p-3 font-medium bg-blue-influvac/20 border-r border-gray-200"
                 >
                   Costo de la vacunación
                 </div>
@@ -276,120 +273,103 @@ import BackIcon from "@/icons/BackIcon.astro";
                 <div class="p-3 text-center">$ 110.000.000</div>
               </div>
 
-              <!-- Row 2: Pérdidas Operativas -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
+              <!-- Row 2: Gasto Total -->
+              <div class="grid grid-cols-3">
                 <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                  class="p-3 font-medium bg-blue-influvac/20 border-r border-gray-200"
                 >
-                  Pérdidas Operativas
+                  Gasto Total
                 </div>
                 <div class="p-3 text-center border-r border-gray-200">
                   $ 5.137.144.420
                 </div>
-                <div class="p-3 text-center">$ 1.762.745.634</div>
+                <div class="p-3 text-center">$ 1.872.745.634</div>
               </div>
 
-              <!-- Row 3: Cobertura vacunal -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
+              <!-- Row especial: Relación costo-beneficio -->
+              <div class="grid grid-cols-3 bg-blue-influvac/10">
                 <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                  class="col-span-2 p-3 font-bold text-center border-r border-gray-200 text-lg"
                 >
-                  Cobertura vacunal
+                  Relación costo - beneficio
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">0%</div>
-                <div class="p-3 text-center">40,00%</div>
+                <div class="p-3 text-center font-bold text-lg">30,68</div>
               </div>
+            </div>
+          </div>
 
-              <!-- Row 4: Casos de influenza -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
+          <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+            <p class="text-lg leading-relaxed text-gray-800">
+              <span
+                >Por cada <strong>$1</strong> invertido en la vacunación, se ahorran
+                <strong>$30,68</strong></span
+              > para la empresa.
+            </p>
+          </div>
+
+          <!-- Segunda tabla: Resultados clínicos -->
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+            <!-- Table Header -->
+            <div class="grid grid-cols-3 bg-blue-influvac text-white font-bold">
+              <div class="p-3"></div>
+              <div class="p-3 text-center border-r border-white">
+                NO VACUNAR
+              </div>
+              <div class="p-3 text-center">VACUNACIÓN TETRAVALENTE</div>
+            </div>
+
+            <!-- Table Rows -->
+            <div class="divide-y divide-gray-200">
+              <!-- Row 1: Gasto Total -->
+              <div class="grid grid-cols-3">
                 <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                  class="p-3 font-medium bg-blue-influvac/20 border-r border-gray-200"
                 >
-                  Casos de influenza
+                  Gasto Total
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">999</div>
-                <div class="p-3 text-center">344</div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  $ 5.137.144.419,73
+                </div>
+                <div class="p-3 text-center">$ 1.872.745.634,22</div>
               </div>
 
-              <!-- Row 5: Casos sintomáticos -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
+              <!-- Row 2: Días de incapacidad -->
+              <div class="grid grid-cols-3">
                 <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
-                >
-                  Casos sintomáticos
-                </div>
-                <div class="p-3 text-center border-r border-gray-200">839</div>
-                <div class="p-3 text-center">288</div>
-              </div>
-
-              <!-- Row 6: Sujetos incapacitados -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
-                <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
-                >
-                  Sujetos incapacitados
-                </div>
-                <div class="p-3 text-center border-r border-gray-200">408</div>
-                <div class="p-3 text-center">140</div>
-              </div>
-
-              <!-- Row 7: Días de incapacidad -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
-                <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                  class="p-3 font-medium bg-blue-influvac/20 border-r border-gray-200"
                 >
                   Días de incapacidad
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">2041</div>
-                <div class="p-3 text-center">703</div>
+                <div class="p-3 text-center border-r border-gray-200">
+                  2.040,00
+                </div>
+                <div class="p-3 text-center">700,00</div>
               </div>
 
-              <!-- Row 8: Hospitalización -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
+              <!-- Row especial: ICER -->
+              <div class="grid grid-cols-3 bg-blue-influvac/10">
                 <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
+                  class="col-span-2 p-3 font-bold text-center border-r border-gray-200 text-lg"
                 >
-                  Hospitalización
+                  Relación costo-eficacia incremental (ICER)
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">12</div>
-                <div class="p-3 text-center">4</div>
-              </div>
-
-              <!-- Row 9: Mortalidad -->
-              <div class="grid grid-cols-3 hover:bg-gray-50">
-                <div
-                  class="p-3 font-medium bg-ochre-influvac/20 border-r border-gray-200"
-                >
-                  Mortalidad
+                <div class="p-3 text-center font-bold text-lg">
+                  $ 2.436.118,50
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">1</div>
-                <div class="p-3 text-center">0</div>
               </div>
             </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <p class="text-lg leading-relaxed text-gray-800">
+              <span
+                >Por cada día de incapacidad evitado por la vacunación, se
+                obtiene un ahorro de <strong>$2.436.118</strong></span
+              >
+            </p>
           </div>
         </div>
-        <div class="w-full flex justify-between items-end">
-          <!-- Impact Information -->
-          <div class="bg-brown-influvac bg-opacity-90 text-white p-6 rounded-lg shadow-lg w-3xl max-full">
-            <div class="space-y-2">
-              <p class="text-lg">
-                <span class="font-bold">Impacto presupuestal:</span> $3.264.398.785
-                al año en ahorro
-              </p>
-              <p class="text-lg">
-                <span class="font-bold">Costo-beneficio:</span> Por cada $1 invertido
-                en vacunación, se recuperan <span
-                  class="font-bold text-yellow-300">$30,7</span
-                >
-              </p>
-              <p class="text-lg">
-                <span class="font-bold">ICER:</span> Por cada día de incapacidad
-                evitado por la vacunación se obtiene un ahorro de <span
-                  class="font-bold text-yellow-300">$2.436.118</span
-                >
-              </p>
-            </div>
-          </div>
+        <div class="w-full flex justify-end">
           <div>
             <button
               class="bg-brown-influvac text-white p-2 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn border border-white cursor-pointer"
@@ -404,90 +384,54 @@ import BackIcon from "@/icons/BackIcon.astro";
 
       <!-- Vista 4: Casos de Influenza -->
       <div id="view4" class="view-content hidden w-full">
-        <div
-          class="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-8 max-w-6xl mx-auto"
-        >
-          <div
-            class="bg-brown-influvac text-white text-center px-6 py-6 rounded-t-lg"
-          >
-            <h2 class="text-xl font-semibold tracking-wide">
-              CASOS DE INFLUENZA
-            </h2>
-          </div>
-          <div class="p-6">
-            <div
-              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
-            >
-              <div class="bg-red-50 p-4 rounded-lg text-center">
-                <h3 class="font-semibold text-red-600 mb-2">A(H1N1)</h3>
-                <p id="casos-h1n1" class="text-xl font-bold text-gray-800">-</p>
-                <span class="text-xs text-gray-600">casos evitados</span>
-              </div>
-              <div class="bg-blue-50 p-4 rounded-lg text-center">
-                <h3 class="font-semibold text-blue-600 mb-2">A(H3N2)</h3>
-                <p id="casos-h3n2" class="text-xl font-bold text-gray-800">-</p>
-                <span class="text-xs text-gray-600">casos evitados</span>
-              </div>
-              <div class="bg-green-50 p-4 rounded-lg text-center">
-                <h3 class="font-semibold text-green-600 mb-2">B Victoria</h3>
-                <p
-                  id="casos-b-victoria"
-                  class="text-xl font-bold text-gray-800"
-                >
-                  -
-                </p>
-                <span class="text-xs text-gray-600">casos evitados</span>
-              </div>
-              <div class="bg-yellow-50 p-4 rounded-lg text-center">
-                <h3 class="font-semibold text-yellow-600 mb-2">B Yamagata</h3>
-                <p
-                  id="casos-b-yamagata"
-                  class="text-xl font-bold text-gray-800"
-                >
-                  -
-                </p>
-                <span class="text-xs text-gray-600">casos evitados</span>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <h3 class="font-semibold mb-4 text-center">
-                  Distribución por Tipo de Virus
-                </h3>
-                <div
-                  id="chart-distribucion"
-                  class="h-64 flex items-center justify-center text-gray-500"
-                >
-                  Gráfico de distribución se cargará aquí
-                </div>
-              </div>
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <h3 class="font-semibold mb-4 text-center">
-                  Evolución Temporal
-                </h3>
-                <div
-                  id="chart-evolucion"
-                  class="h-64 flex items-center justify-center text-gray-500"
-                >
-                  Gráfico de evolución se cargará aquí
-                </div>
-              </div>
-            </div>
-            <div class="flex justify-center">
-              <button
-                class="bg-brown-influvac text-white px-6 py-3 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn"
-                data-view="view1"
-                data-bg="banner2"
+        <div class="flex gap-8 items-end ">
+          <div class="flex-1 flex flex-col gap-6">
+            <!-- Primer título y gráfica -->
+            <div class="bg-white rounded-lg shadow-lg p-6 flex-1">
+              <h3
+                class="text-2xl font-bold text-ochre-influvac mb-4 text-center"
               >
-                ← Volver a Parámetros
-              </button>
+                NO VACUNAR
+              </h3>
+              <div class="h-full">
+                <canvas id="chart-no-vacunar" class="w-full h-full max-h-64"
+                ></canvas>
+              </div>
             </div>
+
+            <!-- Segundo título y gráfica -->
+            <div class="bg-white rounded-lg shadow-lg p-6 flex-1">
+              <h3
+                class="text-2xl font-bold text-ochre-influvac mb-4 text-center"
+              >
+                VACUNACIÓN TETRAVALENTE
+              </h3>
+              <div class="h-full">
+                <canvas
+                  id="chart-vacunacion-tetravalente"
+                  class="w-full h-full max-h-64"></canvas>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button
+              class="bg-brown-influvac text-white p-2 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn border border-white cursor-pointer"
+              data-view="view1"
+              data-bg="banner2"
+            >
+              <BackIcon />
+            </button>
           </div>
         </div>
+
+        <!-- Botón de regreso -->
       </div>
     </section>
   </main>
 </Layout>
+
+<script is:inline src="/apps/abbott/costoefectividad-influvac/js/chart.js"
+></script>
 
 <script>
   import { URL_BASE } from "@/variables";
@@ -650,17 +594,226 @@ import BackIcon from "@/icons/BackIcon.astro";
 
     private loadChartsView4(): void {
       // Cargar gráficos para vista de Casos
-      const chartDistribucion = document.getElementById("chart-distribucion");
-      const chartEvolucion = document.getElementById("chart-evolucion");
+      // Esperar a que Chart.js esté disponible
+      const checkChart = () => {
+        if (typeof (window as any).Chart !== "undefined") {
+          this.createInfluenzaCharts();
+        } else {
+          setTimeout(checkChart, 100);
+        }
+      };
+      checkChart();
+    }
 
-      if (chartDistribucion) {
-        chartDistribucion.innerHTML =
-          '<p class="text-center text-sm text-gray-500">Distribución por virus cargada</p>';
+    private createInfluenzaCharts(): void {
+      // Generar datos para 365 días
+      const days = Array.from({ length: 365 }, (_, i) => i + 1);
+
+      // Datos simulados para diferentes cepas de influenza
+      const activosData = days.map((day) =>
+        Math.max(0, Math.sin(day * 0.02) * 15 + Math.random() * 5)
+      );
+      const ah1n1Data = days.map((day) =>
+        Math.max(0, Math.sin(day * 0.015) * 12 + Math.random() * 3)
+      );
+      const ah3n2Data = days.map((day) =>
+        Math.max(0, Math.sin(day * 0.025) * 10 + Math.random() * 4)
+      );
+      const victoriaData = days.map((day) =>
+        Math.max(0, Math.sin(day * 0.018) * 8 + Math.random() * 2)
+      );
+      const yamagataData = days.map((day) =>
+        Math.max(0, Math.sin(day * 0.022) * 6 + Math.random() * 3)
+      );
+
+      // Datos para sin vacunar (valores más altos)
+      const noVacunarData = {
+        activos: activosData.map((val) => val * 2.5),
+        ah1n1: ah1n1Data.map((val) => val * 2.2),
+        ah3n2: ah3n2Data.map((val) => val * 2.8),
+        victoria: victoriaData.map((val) => val * 2.3),
+        yamagata: yamagataData.map((val) => val * 2.6),
+      };
+
+      // Datos para vacunación (valores reducidos)
+      const vacunacionData = {
+        activos: activosData.map((val) => val * 0.8),
+        ah1n1: ah1n1Data.map((val) => val * 0.7),
+        ah3n2: ah3n2Data.map((val) => val * 0.9),
+        victoria: victoriaData.map((val) => val * 0.6),
+        yamagata: yamagataData.map((val) => val * 0.8),
+      };
+
+      // Configuración común para ambas gráficas
+      const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "bottom" as const,
+            labels: {
+              usePointStyle: true,
+              padding: 15,
+              font: {
+                size: 11,
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Días del año",
+              font: {
+                size: 12,
+                weight: "bold",
+              },
+            },
+            ticks: {
+              maxTicksLimit: 12,
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Número de casos",
+              font: {
+                size: 12,
+                weight: "bold",
+              },
+            },
+            beginAtZero: true,
+          },
+        },
+      };
+
+      // Crear gráfica "No Vacunar"
+      const ctx1 = document.getElementById(
+        "chart-no-vacunar"
+      ) as HTMLCanvasElement;
+      if (ctx1) {
+        new (window as any).Chart(ctx1, {
+          type: "line",
+          data: {
+            labels: days,
+            datasets: [
+              {
+                label: "Activos",
+                data: noVacunarData.activos,
+                borderColor: "#FF6B6B",
+                backgroundColor: "#FF6B6B20",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "AH1N1",
+                data: noVacunarData.ah1n1,
+                borderColor: "#4ECDC4",
+                backgroundColor: "#4ECDC420",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "AH3N2",
+                data: noVacunarData.ah3n2,
+                borderColor: "#45B7D1",
+                backgroundColor: "#45B7D120",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "Victoria",
+                data: noVacunarData.victoria,
+                borderColor: "#F7DC6F",
+                backgroundColor: "#F7DC6F20",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "Yamagata",
+                data: noVacunarData.yamagata,
+                borderColor: "#BB8FCE",
+                backgroundColor: "#BB8FCE20",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "No Vacunal",
+                data: days.map(() => 0), // Sin datos para esta serie en "No Vacunar"
+                borderColor: "#E8E8E8",
+                backgroundColor: "#E8E8E820",
+                tension: 0.3,
+                fill: true,
+              },
+            ],
+          },
+          options: commonOptions,
+        });
       }
 
-      if (chartEvolucion) {
-        chartEvolucion.innerHTML =
-          '<p class="text-center text-sm text-gray-500">Evolución temporal cargada</p>';
+      // Crear gráfica "Vacunación Tetravalente"
+      const ctx2 = document.getElementById(
+        "chart-vacunacion-tetravalente"
+      ) as HTMLCanvasElement;
+      if (ctx2) {
+        new (window as any).Chart(ctx2, {
+          type: "line",
+          data: {
+            labels: days,
+            datasets: [
+              {
+                label: "Activos",
+                data: vacunacionData.activos,
+                borderColor: "#FF6B6B",
+                backgroundColor: "#FF6B6B20",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "AH1N1",
+                data: vacunacionData.ah1n1,
+                borderColor: "#4ECDC4",
+                backgroundColor: "#4ECDC420",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "AH3N2",
+                data: vacunacionData.ah3n2,
+                borderColor: "#45B7D1",
+                backgroundColor: "#45B7D120",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "Victoria",
+                data: vacunacionData.victoria,
+                borderColor: "#F7DC6F",
+                backgroundColor: "#F7DC6F20",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "Yamagata",
+                data: vacunacionData.yamagata,
+                borderColor: "#BB8FCE",
+                backgroundColor: "#BB8FCE20",
+                tension: 0.3,
+                fill: true,
+              },
+              {
+                label: "No Vacunal",
+                data: days.map(() => Math.random() * 2), // Datos mínimos para población no vacunada
+                borderColor: "#E8E8E8",
+                backgroundColor: "#E8E8E820",
+                tension: 0.3,
+                fill: true,
+              },
+            ],
+          },
+          options: commonOptions,
+        });
       }
     }
 
@@ -674,7 +827,7 @@ import BackIcon from "@/icons/BackIcon.astro";
       if (!whiteLogo || !colorLogo) return;
 
       // Vista 1: logo blanco, Vistas 2, 3, 4: logo de color
-      if (currentView === "view1") {
+      if (currentView === "view1" || currentView === "view4") {
         logo.src = whiteLogo;
       } else {
         logo.src = colorLogo;
