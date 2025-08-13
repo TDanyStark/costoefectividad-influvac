@@ -511,10 +511,64 @@ import BackIcon from "@/icons/BackIcon.astro";
     }
 
     private initializeFormVariables(): void {
-      // Copiar valores por defecto al estado actual
-      this.formVariables = {
-        ...this.defaultFormVariables
-      };
+      console.log('🔄 Inicializando formVariables...');
+      
+      // Intentar cargar valores desde localStorage
+      const savedFormData = this.loadFromLocalStorage();
+      
+      if (savedFormData) {
+        console.log('📁 Cargando valores desde localStorage:', savedFormData);
+        this.formVariables = savedFormData;
+      } else {
+        console.log('📝 Usando valores por defecto');
+        // Copiar valores por defecto al estado actual
+        this.formVariables = {
+          ...this.defaultFormVariables
+        };
+      }
+      
+      console.log('✅ formVariables inicializado:', this.formVariables);
+    }
+
+    private loadFromLocalStorage(): any {
+      try {
+        const savedData = localStorage.getItem('influvac-form-data');
+        if (savedData) {
+          const parsedData = JSON.parse(savedData);
+          // Validar que el objeto tenga la estructura esperada
+          if (this.isValidFormData(parsedData)) {
+            return parsedData;
+          } else {
+            console.warn('⚠️ Datos de localStorage inválidos, usando valores por defecto');
+            localStorage.removeItem('influvac-form-data'); // Limpiar datos corruptos
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error al cargar desde localStorage:', error);
+        localStorage.removeItem('influvac-form-data'); // Limpiar datos corruptos
+      }
+      return null;
+    }
+
+    private saveToLocalStorage(): void {
+      try {
+        const dataToSave = JSON.stringify(this.formVariables);
+        localStorage.setItem('influvac-form-data', dataToSave);
+        console.log('💾 Datos guardados en localStorage');
+      } catch (error) {
+        console.error('❌ Error al guardar en localStorage:', error);
+      }
+    }
+
+    private isValidFormData(data: any): boolean {
+      // Verificar que el objeto tenga las propiedades básicas esperadas
+      const requiredProps = [
+        'numEmpleados', 'fecha1Vacunacion', 'numeroDeVacunados1',
+        'calculoProductividad', 'ventaNeta', 'salarioPromedio',
+        'precioVacunacion', 'nivelExposicion', 'diasIncapacidad'
+      ];
+      
+      return requiredProps.every(prop => data.hasOwnProperty(prop));
     }
 
     private initializeFormElements(): void {
@@ -601,10 +655,12 @@ import BackIcon from "@/icons/BackIcon.astro";
         this.numEmpleadosInput.addEventListener('input', () => {
           this.formVariables.numEmpleados = cleanNumericValue(this.numEmpleadosInput?.value || '0');
           updateProductivity();
+          this.saveToLocalStorage();
         });
         this.numEmpleadosInput.addEventListener('change', () => {
           this.formVariables.numEmpleados = cleanNumericValue(this.numEmpleadosInput?.value || '0');
           updateProductivity();
+          this.saveToLocalStorage();
         });
       }
 
@@ -612,10 +668,12 @@ import BackIcon from "@/icons/BackIcon.astro";
         this.ventaNetaInput.addEventListener('input', () => {
           this.formVariables.ventaNeta = cleanNumericValue(this.ventaNetaInput?.value || '0');
           updateProductivity();
+          this.saveToLocalStorage();
         });
         this.ventaNetaInput.addEventListener('change', () => {
           this.formVariables.ventaNeta = cleanNumericValue(this.ventaNetaInput?.value || '0');
           updateProductivity();
+          this.saveToLocalStorage();
         });
       }
 
@@ -623,6 +681,7 @@ import BackIcon from "@/icons/BackIcon.astro";
         this.calculoProductividadSelect.addEventListener('change', () => {
           this.formVariables.calculoProductividad = this.calculoProductividadSelect?.value || 'promedio_empresarial';
           updateProductivity();
+          this.saveToLocalStorage();
         });
       }
 
@@ -630,48 +689,56 @@ import BackIcon from "@/icons/BackIcon.astro";
       if (this.fecha1VacunacionInput) {
         this.fecha1VacunacionInput.addEventListener('change', () => {
           this.formVariables.fecha1Vacunacion = this.fecha1VacunacionInput?.value || '';
+          this.saveToLocalStorage();
         });
       }
 
       if (this.numeroDeVacunados1Input) {
         this.numeroDeVacunados1Input.addEventListener('input', () => {
           this.formVariables.numeroDeVacunados1 = cleanNumericValue(this.numeroDeVacunados1Input?.value || '0');
+          this.saveToLocalStorage();
         });
       }
 
       if (this.fecha2VacunacionInput) {
         this.fecha2VacunacionInput.addEventListener('change', () => {
           this.formVariables.fecha2Vacunacion = this.fecha2VacunacionInput?.value || '';
+          this.saveToLocalStorage();
         });
       }
 
       if (this.numeroDeVacunados2Input) {
         this.numeroDeVacunados2Input.addEventListener('input', () => {
           this.formVariables.numeroDeVacunados2 = cleanNumericValue(this.numeroDeVacunados2Input?.value || '0');
+          this.saveToLocalStorage();
         });
       }
 
       if (this.salarioPromedioInput) {
         this.salarioPromedioInput.addEventListener('input', () => {
           this.formVariables.salarioPromedio = cleanNumericValue(this.salarioPromedioInput?.value || '0');
+          this.saveToLocalStorage();
         });
       }
 
       if (this.precioVacunacionInput) {
         this.precioVacunacionInput.addEventListener('input', () => {
           this.formVariables.precioVacunacion = cleanNumericValue(this.precioVacunacionInput?.value || '0');
+          this.saveToLocalStorage();
         });
       }
 
       if (this.nivelExposicionSelect) {
         this.nivelExposicionSelect.addEventListener('change', () => {
           this.formVariables.nivelExposicion = parseInt(this.nivelExposicionSelect?.value || '1');
+          this.saveToLocalStorage();
         });
       }
 
       if (this.diasIncapacidadInput) {
         this.diasIncapacidadInput.addEventListener('input', () => {
           this.formVariables.diasIncapacidad = parseInt(this.diasIncapacidadInput?.value || '0');
+          this.saveToLocalStorage();
         });
       }
 
@@ -793,6 +860,10 @@ import BackIcon from "@/icons/BackIcon.astro";
       this.formVariables = {
         ...this.defaultFormVariables
       };
+      
+      // Limpiar localStorage para volver a los valores por defecto
+      localStorage.removeItem('influvac-form-data');
+      console.log('🗑️ localStorage limpiado');
       
       console.log('📝 Estado del formulario reseteado:', this.formVariables);
       
