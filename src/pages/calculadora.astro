@@ -457,7 +457,28 @@ import BackIcon from "@/icons/BackIcon.astro";
     private diasIncapacidadInput: HTMLInputElement | null = null;
     private productivityDisplay: HTMLElement | null = null;
     
-    // Variables del formulario
+    // Variables por defecto del formulario (nunca cambian)
+    private defaultFormVariables = {
+      // Parámetros Básicos
+      numEmpleados: 5000,
+      fecha1Vacunacion: "2025-05-30",
+      numeroDeVacunados1: 2000,
+      fecha2Vacunacion: '',
+      numeroDeVacunados2: 0,
+      
+      // Parámetros Financieros
+      calculoProductividad: "promedio_empresarial",
+      ventaNeta: 4388774488000,
+      indicadorProductividad: 73146241.47,
+      salarioPromedio: 6000000,
+      precioVacunacion: 55000,
+      
+      // Parámetros Operacionales
+      nivelExposicion: 2,
+      diasIncapacidad: 5
+    };
+    
+    // Variables del formulario (estado actual - se modifica)
     private formVariables = {
       // Parámetros Básicos
       numEmpleados: 5000,
@@ -483,9 +504,7 @@ import BackIcon from "@/icons/BackIcon.astro";
       this.initializeFormElements();
       this.initializeNavigation();
       this.initializeCustomEvents();
-      // Poblar formulario con valores de formVariables ANTES de inicializar los event listeners
       this.populateFormFromVariables();
-      // Inicializar el form handler DESPUÉS de poblar el formulario
       this.initializeFormHandler();
     }
 
@@ -549,47 +568,102 @@ import BackIcon from "@/icons/BackIcon.astro";
       };
 
       const updateProductivity = () => {
-        if (this.numEmpleadosInput && this.ventaNetaInput && this.calculoProductividadSelect) {
-          const numEmpleados = cleanNumericValue(this.numEmpleadosInput.value || '0');
-          const ventaNeta = cleanNumericValue(this.ventaNetaInput.value || '0');
-          const tipoCalculo = this.calculoProductividadSelect.value;
-          
-          let indicadorProductividad = 0;
-          
-          if (tipoCalculo === "productividad_individual") {
-            // Si es productividad individual, el valor es igual al ingresado en ventaNeta
-            indicadorProductividad = ventaNeta;
-          } else {
-            // Si es promedio empresarial, calcular como antes
-            if (numEmpleados > 0) {
-              indicadorProductividad = (ventaNeta / numEmpleados) / 12; // 12 meses del año
-            }
+        let indicadorProductividad = 0;
+        
+        if (this.formVariables.calculoProductividad === "productividad_individual") {
+          // Si es productividad individual, el valor es igual al ingresado en ventaNeta
+          indicadorProductividad = this.formVariables.ventaNeta;
+        } else {
+          // Si es promedio empresarial, calcular como antes
+          if (this.formVariables.numEmpleados > 0) {
+            indicadorProductividad = (this.formVariables.ventaNeta / this.formVariables.numEmpleados) / 12; // 12 meses del año
           }
-          
-          // Actualizar las variables internas
-          this.formVariables.numEmpleados = numEmpleados;
-          this.formVariables.ventaNeta = ventaNeta;
-          this.formVariables.calculoProductividad = tipoCalculo;
-          this.formVariables.indicadorProductividad = indicadorProductividad;
-          
-          // Actualizar la visualización usando el método centralizado
-          this.updateProductivityDisplay();
         }
+        
+        // Actualizar solo el indicador de productividad
+        this.formVariables.indicadorProductividad = indicadorProductividad;
+        
+        // Actualizar la visualización usando el método centralizado
+        this.updateProductivityDisplay();
       };
 
       // Agregar event listeners a los campos relevantes
       if (this.numEmpleadosInput) {
-        this.numEmpleadosInput.addEventListener('input', updateProductivity);
-        this.numEmpleadosInput.addEventListener('change', updateProductivity);
+        this.numEmpleadosInput.addEventListener('input', () => {
+          this.formVariables.numEmpleados = cleanNumericValue(this.numEmpleadosInput?.value || '0');
+          updateProductivity();
+        });
+        this.numEmpleadosInput.addEventListener('change', () => {
+          this.formVariables.numEmpleados = cleanNumericValue(this.numEmpleadosInput?.value || '0');
+          updateProductivity();
+        });
       }
 
       if (this.ventaNetaInput) {
-        this.ventaNetaInput.addEventListener('input', updateProductivity);
-        this.ventaNetaInput.addEventListener('change', updateProductivity);
+        this.ventaNetaInput.addEventListener('input', () => {
+          this.formVariables.ventaNeta = cleanNumericValue(this.ventaNetaInput?.value || '0');
+          updateProductivity();
+        });
+        this.ventaNetaInput.addEventListener('change', () => {
+          this.formVariables.ventaNeta = cleanNumericValue(this.ventaNetaInput?.value || '0');
+          updateProductivity();
+        });
       }
 
       if (this.calculoProductividadSelect) {
-        this.calculoProductividadSelect.addEventListener('change', updateProductivity);
+        this.calculoProductividadSelect.addEventListener('change', () => {
+          this.formVariables.calculoProductividad = this.calculoProductividadSelect?.value || 'promedio_empresarial';
+          updateProductivity();
+        });
+      }
+
+      // Agregar listeners para otros campos del formulario
+      if (this.fecha1VacunacionInput) {
+        this.fecha1VacunacionInput.addEventListener('change', () => {
+          this.formVariables.fecha1Vacunacion = this.fecha1VacunacionInput?.value || '';
+        });
+      }
+
+      if (this.numeroDeVacunados1Input) {
+        this.numeroDeVacunados1Input.addEventListener('input', () => {
+          this.formVariables.numeroDeVacunados1 = cleanNumericValue(this.numeroDeVacunados1Input?.value || '0');
+        });
+      }
+
+      if (this.fecha2VacunacionInput) {
+        this.fecha2VacunacionInput.addEventListener('change', () => {
+          this.formVariables.fecha2Vacunacion = this.fecha2VacunacionInput?.value || '';
+        });
+      }
+
+      if (this.numeroDeVacunados2Input) {
+        this.numeroDeVacunados2Input.addEventListener('input', () => {
+          this.formVariables.numeroDeVacunados2 = cleanNumericValue(this.numeroDeVacunados2Input?.value || '0');
+        });
+      }
+
+      if (this.salarioPromedioInput) {
+        this.salarioPromedioInput.addEventListener('input', () => {
+          this.formVariables.salarioPromedio = cleanNumericValue(this.salarioPromedioInput?.value || '0');
+        });
+      }
+
+      if (this.precioVacunacionInput) {
+        this.precioVacunacionInput.addEventListener('input', () => {
+          this.formVariables.precioVacunacion = cleanNumericValue(this.precioVacunacionInput?.value || '0');
+        });
+      }
+
+      if (this.nivelExposicionSelect) {
+        this.nivelExposicionSelect.addEventListener('change', () => {
+          this.formVariables.nivelExposicion = parseInt(this.nivelExposicionSelect?.value || '1');
+        });
+      }
+
+      if (this.diasIncapacidadInput) {
+        this.diasIncapacidadInput.addEventListener('input', () => {
+          this.formVariables.diasIncapacidad = parseInt(this.diasIncapacidadInput?.value || '0');
+        });
       }
 
       // Llamar una vez para inicializar
@@ -621,9 +695,9 @@ import BackIcon from "@/icons/BackIcon.astro";
 
       // Escuchar evento de reset del formulario
       document.addEventListener("formReset", () => {
-        console.log("🔄 Formulario reseteado, repoblando con valores de formVariables...");
+        console.log("🔄 Formulario reseteado, restaurando valores por defecto...");
         setTimeout(() => {
-          this.populateFormFromVariables();
+          this.resetFormToDefaults();
         }, 100); // Pequeño delay para asegurar que el reset se complete
       });
     }
@@ -648,11 +722,8 @@ import BackIcon from "@/icons/BackIcon.astro";
       // Verificar que los elementos existan antes de poblarlos
       if (!this.form) return;
 
-      console.log(this.formVariables);
-
       // Poblar campos básicos
       if (this.numEmpleadosInput) {
-        console.log(`Poblando numEmpleados con valor: ${this.formVariables.numEmpleados}`);
         this.numEmpleadosInput.value = this.formVariables.numEmpleados.toString();
       }
 
@@ -706,6 +777,20 @@ import BackIcon from "@/icons/BackIcon.astro";
       console.log('✅ Formulario poblado con valores de formVariables');
     }
 
+    private resetFormToDefaults(): void {
+      console.log('🔄 Reseteando formVariables a valores por defecto...');
+      
+      // Copiar valores por defecto al estado actual
+      this.formVariables = {
+        ...this.defaultFormVariables
+      };
+      
+      console.log('📝 Estado del formulario reseteado:', this.formVariables);
+      
+      // Poblar el formulario con los valores reseteados
+      this.populateFormFromVariables();
+    }
+
     private updateProductivityDisplay(): void {
       if (this.productivityDisplay) {
         this.productivityDisplay.textContent = this.formVariables.indicadorProductividad.toLocaleString('es-CO', {
@@ -757,17 +842,9 @@ import BackIcon from "@/icons/BackIcon.astro";
     }
 
     private handleFormSubmit(): void {
-      // Recopilar datos del formulario
-      if (this.form) {
-        this.formData = new FormData(this.form);
-      }
-      
-      // Extraer y procesar valores del formulario
+      // Asegurar que los valores finales estén sincronizados
       this.extractFormValues();
       
-      // Mostrar valores en consola
-      this.logFormValues();
-
       // Realizar cálculos
       this.calculateResults();
 
@@ -776,38 +853,17 @@ import BackIcon from "@/icons/BackIcon.astro";
     }
 
     private extractFormValues(): void {
-      if (!this.formData) return;
-
-      // Función auxiliar para limpiar valores numéricos (remover puntos separadores)
-      const cleanNumericValue = (value: string): number => {
-        return parseInt(value.replace(/\./g, '')) || 0;
-      };
-
-      // Extraer valores usando las referencias directas a los elementos
-      this.formVariables.numEmpleados = this.numEmpleadosInput ? cleanNumericValue(this.numEmpleadosInput.value || '0') : 0;
-      this.formVariables.fecha1Vacunacion = this.fecha1VacunacionInput?.value || '';
-      this.formVariables.numeroDeVacunados1 = this.numeroDeVacunados1Input ? cleanNumericValue(this.numeroDeVacunados1Input.value || '0') : 0;
-      this.formVariables.fecha2Vacunacion = this.fecha2VacunacionInput?.value || '';
-      this.formVariables.numeroDeVacunados2 = this.numeroDeVacunados2Input ? cleanNumericValue(this.numeroDeVacunados2Input.value || '0') : 0;
-
-      // Extraer valores financieros
-      this.formVariables.calculoProductividad = this.calculoProductividadSelect?.value || '';
-      this.formVariables.ventaNeta = this.ventaNetaInput ? cleanNumericValue(this.ventaNetaInput.value || '0') : 0;
-      this.formVariables.salarioPromedio = this.salarioPromedioInput ? cleanNumericValue(this.salarioPromedioInput.value || '0') : 0;
-      this.formVariables.precioVacunacion = this.precioVacunacionInput ? cleanNumericValue(this.precioVacunacionInput.value || '0') : 0;
-
-      // Calcular indicador de productividad según el tipo
+      // Las variables ya se actualizan en tiempo real con los event listeners
+      // Solo necesitamos asegurar que el indicador de productividad esté actualizado
       if (this.formVariables.calculoProductividad === "productividad_individual") {
         this.formVariables.indicadorProductividad = this.formVariables.ventaNeta;
       } else {
         this.formVariables.indicadorProductividad = this.formVariables.numEmpleados > 0 
-          ? (this.formVariables.ventaNeta / this.formVariables.numEmpleados )/ 12
+          ? (this.formVariables.ventaNeta / this.formVariables.numEmpleados) / 12
           : 0;
       }
       
-      // Extraer valores operacionales
-      this.formVariables.nivelExposicion = this.nivelExposicionSelect ? parseInt(this.nivelExposicionSelect.value || '1') : 1;
-      this.formVariables.diasIncapacidad = this.diasIncapacidadInput ? parseInt(this.diasIncapacidadInput.value || '0') : 0;
+      console.log('📊 Variables del formulario actualizadas:', this.formVariables);
     }
 
     private calculateResults(): void {
