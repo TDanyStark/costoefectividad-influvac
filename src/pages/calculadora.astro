@@ -481,22 +481,22 @@ import BackIcon from "@/icons/BackIcon.astro";
     // Variables del formulario (estado actual - se modifica)
     private formVariables = {
       // Parámetros Básicos
-      numEmpleados: 5000,
-      fecha1Vacunacion: "2025-05-30",
-      numeroDeVacunados1: 2000,
+      numEmpleados: 0,
+      fecha1Vacunacion: "",
+      numeroDeVacunados1: 0,
       fecha2Vacunacion: '',
       numeroDeVacunados2: 0,
       
       // Parámetros Financieros
-      calculoProductividad: "promedio_empresarial",
-      ventaNeta: 4388774488000,
-      indicadorProductividad: 73146241.47,
-      salarioPromedio: 6000000,
-      precioVacunacion: 55000,
+      calculoProductividad: "",
+      ventaNeta: 0,
+      indicadorProductividad: 0,
+      salarioPromedio: 0,
+      precioVacunacion: 0,
       
       // Parámetros Operacionales
-      nivelExposicion: 2,
-      diasIncapacidad: 5
+      nivelExposicion: 0,
+      diasIncapacidad: 0
     };
 
     constructor() {
@@ -504,8 +504,17 @@ import BackIcon from "@/icons/BackIcon.astro";
       this.initializeFormElements();
       this.initializeNavigation();
       this.initializeCustomEvents();
+      // Inicializar formVariables con los valores por defecto
+      this.initializeFormVariables();
       this.populateFormFromVariables();
       this.initializeFormHandler();
+    }
+
+    private initializeFormVariables(): void {
+      // Copiar valores por defecto al estado actual
+      this.formVariables = {
+        ...this.defaultFormVariables
+      };
     }
 
     private initializeFormElements(): void {
