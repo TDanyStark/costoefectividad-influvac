@@ -670,10 +670,10 @@ export class ViewManager {
       empleadosIncapacidadVacunados * (this.formVariables.salarioPromedio / 30) * 2
     );
 
-    const perdidaProductividadNoVacunados = Math.floor(
+    const perdidaProductividadNoVacunados = Math.round(
       empleadosIncapacidadNoVacunados * (this.formVariables.indicadorProductividad / 30) * this.formVariables.diasIncapacidad
     );
-    const perdidaProductividadVacunados = Math.floor(
+    const perdidaProductividadVacunados = Math.round(
       empleadosIncapacidadVacunados * (this.formVariables.indicadorProductividad / 30) * this.formVariables.diasIncapacidad
     );
 
@@ -694,7 +694,11 @@ export class ViewManager {
       // Costo de la vacunación
       costoTotalVacunacion,
       
-      // Pérdidas Operativas
+      // Pérdidas Operativas (incluye salarios + productividad)
+      perdidasOperativasNoVacunados,
+      perdidasOperativasVacunados,
+      
+      // También guardamos por separado para otros usos
       perdidaProductividadNoVacunados,
       perdidaProductividadVacunados,
       

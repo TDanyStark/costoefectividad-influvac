@@ -213,13 +213,13 @@ import HomeIcon from "@/icons/HomeIcon.astro";
 
       // Actualizar Pérdidas Operativas
       const perdidasNoVacunadosElement = document.getElementById('perdidas-no-vacunados');
-      if (perdidasNoVacunadosElement && data.perdidaProductividadNoVacunados !== undefined) {
-        perdidasNoVacunadosElement.textContent = formatCurrency(data.perdidaProductividadNoVacunados);
+      if (perdidasNoVacunadosElement && data.perdidasOperativasNoVacunados !== undefined) {
+        perdidasNoVacunadosElement.textContent = formatCurrency(data.perdidasOperativasNoVacunados);
       }
 
       const perdidasVacunadosElement = document.getElementById('perdidas-vacunados');
-      if (perdidasVacunadosElement && data.perdidaProductividadVacunados !== undefined) {
-        perdidasVacunadosElement.textContent = formatCurrency(data.perdidaProductividadVacunados);
+      if (perdidasVacunadosElement && data.perdidasOperativasVacunados !== undefined) {
+        perdidasVacunadosElement.textContent = formatCurrency(data.perdidasOperativasVacunados);
       }
 
       // Actualizar Cobertura vacunal
