@@ -19,11 +19,11 @@ import generateNoVacunal from "@/utils/generateNoVacunal";
 import sumarCampoPorDia from "@/utils/sumarCampoPorDia";
 
 const population = 5000;
-const levelOfPublicExposure = 2; // bajo = 1 medio = 2 alto = 3
 const firstVaccinationDate: string = "2025-05-30";
 const firstvaccinatedIndividuals: number = 2000;
 const secondVaccinationDate: string = ""; // opcional
 const secondvaccinatedIndividuals: number = 0;
+const levelOfPublicExposure = 2; // bajo = 1 medio = 2 alto = 3
 const averageDaysOffWork = 5;
 
 const year = new Date(firstVaccinationDate).getFullYear();
