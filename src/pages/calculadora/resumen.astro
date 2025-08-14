@@ -41,7 +41,7 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                 <div class="p-3 text-center border-r border-gray-200">
                   $ 0,00
                 </div>
-                <div class="p-3 text-center">$ 110.000.000</div>
+                <div class="p-3 text-center" id="costo-vacunacion">$ 110.000.000</div>
               </div>
 
               <!-- Row 2: Pérdidas Operativas -->
@@ -51,10 +51,10 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                 >
                   Pérdidas Operativas
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">
+                <div class="p-3 text-center border-r border-gray-200" id="perdidas-no-vacunados">
                   $ 5.137.144.420
                 </div>
-                <div class="p-3 text-center">$ 1.762.745.634</div>
+                <div class="p-3 text-center" id="perdidas-vacunados">$ 1.762.745.634</div>
               </div>
 
               <!-- Row 3: Cobertura vacunal -->
@@ -65,7 +65,7 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                   Cobertura vacunal
                 </div>
                 <div class="p-3 text-center border-r border-gray-200">0%</div>
-                <div class="p-3 text-center">40,00%</div>
+                <div class="p-3 text-center" id="cobertura-vacunal">40,00%</div>
               </div>
 
               <!-- Row 4: Casos de influenza -->
@@ -75,8 +75,8 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                 >
                   Casos de influenza
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">999</div>
-                <div class="p-3 text-center">344</div>
+                <div class="p-3 text-center border-r border-gray-200" id="casos-influenza-no-vacunados">999</div>
+                <div class="p-3 text-center" id="casos-influenza-vacunados">344</div>
               </div>
 
               <!-- Row 5: Casos sintomáticos -->
@@ -86,8 +86,8 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                 >
                   Casos sintomáticos
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">839</div>
-                <div class="p-3 text-center">288</div>
+                <div class="p-3 text-center border-r border-gray-200" id="casos-sintomaticos-no-vacunados">839</div>
+                <div class="p-3 text-center" id="casos-sintomaticos-vacunados">288</div>
               </div>
 
               <!-- Row 6: Sujetos incapacitados -->
@@ -97,8 +97,8 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                 >
                   Sujetos incapacitados
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">408</div>
-                <div class="p-3 text-center">140</div>
+                <div class="p-3 text-center border-r border-gray-200" id="sujetos-incapacitados-no-vacunados">408</div>
+                <div class="p-3 text-center" id="sujetos-incapacitados-vacunados">140</div>
               </div>
 
               <!-- Row 7: Días de incapacidad -->
@@ -108,8 +108,8 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                 >
                   Días de incapacidad
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">2041</div>
-                <div class="p-3 text-center">703</div>
+                <div class="p-3 text-center border-r border-gray-200" id="dias-incapacidad-no-vacunados">2041</div>
+                <div class="p-3 text-center" id="dias-incapacidad-vacunados">703</div>
               </div>
 
               <!-- Row 8: Hospitalización -->
@@ -119,8 +119,8 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                 >
                   Hospitalización
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">12</div>
-                <div class="p-3 text-center">4</div>
+                <div class="p-3 text-center border-r border-gray-200" id="hospitalizacion-no-vacunados">12</div>
+                <div class="p-3 text-center" id="hospitalizacion-vacunados">4</div>
               </div>
 
               <!-- Row 9: Mortalidad -->
@@ -130,8 +130,8 @@ import HomeIcon from "@/icons/HomeIcon.astro";
                 >
                   Mortalidad
                 </div>
-                <div class="p-3 text-center border-r border-gray-200">1</div>
-                <div class="p-3 text-center">0</div>
+                <div class="p-3 text-center border-r border-gray-200" id="mortalidad-no-vacunados">1</div>
+                <div class="p-3 text-center" id="mortalidad-vacunados">0</div>
               </div>
             </div>
           </div>
@@ -143,19 +143,19 @@ import HomeIcon from "@/icons/HomeIcon.astro";
           >
             <div class="space-y-2">
               <p class="text-lg">
-                <span class="font-bold">Impacto presupuestal:</span> $3.264.398.785
+                <span class="font-bold">Impacto presupuestal:</span> <span id="impacto-presupuestal">$3.264.398.785</span>
                 al año en ahorro
               </p>
               <p class="text-lg">
                 <span class="font-bold">Costo-beneficio:</span> Por cada $1 invertido
                 en vacunación, se recuperan <span
-                  class="font-bold text-yellow-300">$30,7</span
+                  class="font-bold text-yellow-300" id="costo-beneficio">$30,7</span
                 >
               </p>
               <p class="text-lg">
                 <span class="font-bold">ICER:</span> Por cada día de incapacidad
                 evitado por la vacunación se obtiene un ahorro de <span
-                  class="font-bold text-yellow-300">$2.436.118</span
+                  class="font-bold text-yellow-300" id="icer-value">$2.436.118</span
                 >
               </p>
             </div>
@@ -173,3 +173,159 @@ import HomeIcon from "@/icons/HomeIcon.astro";
     </section>
   </main>
 </Layout>
+
+<script>
+  // Función para formatear números como moneda colombiana
+  function formatCurrency(amount: number): string {
+    return `$ ${Math.round(amount).toLocaleString("es-CO")}`;
+  }
+
+  // Función para formatear porcentajes
+  function formatPercentage(percentage: number): string {
+    return `${percentage.toFixed(2)}%`;
+  }
+
+  // Función para cargar y aplicar los datos del localStorage
+  function loadAndApplyResumenData(): void {
+    try {
+      const savedData = localStorage.getItem('influvac-resumen-data');
+      
+      if (!savedData) {
+        console.log('No hay datos de resumen guardados en localStorage');
+        return;
+      }
+
+      const data = JSON.parse(savedData);
+      console.log('Datos de resumen cargados:', data);
+
+      // Validar que los datos no sean muy antiguos (más de 1 hora)
+      const oneHour = 60 * 60 * 1000;
+      if (data.timestamp && (Date.now() - data.timestamp) > oneHour) {
+        console.log('Los datos de resumen están desactualizados');
+        return;
+      }
+
+      // Actualizar Costo de la vacunación
+      const costoVacunacionElement = document.getElementById('costo-vacunacion');
+      if (costoVacunacionElement && data.costoTotalVacunacion !== undefined) {
+        costoVacunacionElement.textContent = formatCurrency(data.costoTotalVacunacion);
+      }
+
+      // Actualizar Pérdidas Operativas
+      const perdidasNoVacunadosElement = document.getElementById('perdidas-no-vacunados');
+      if (perdidasNoVacunadosElement && data.perdidaProductividadNoVacunados !== undefined) {
+        perdidasNoVacunadosElement.textContent = formatCurrency(data.perdidaProductividadNoVacunados);
+      }
+
+      const perdidasVacunadosElement = document.getElementById('perdidas-vacunados');
+      if (perdidasVacunadosElement && data.perdidaProductividadVacunados !== undefined) {
+        perdidasVacunadosElement.textContent = formatCurrency(data.perdidaProductividadVacunados);
+      }
+
+      // Actualizar Cobertura vacunal
+      const coberturaVacunalElement = document.getElementById('cobertura-vacunal');
+      if (coberturaVacunalElement && data.porcentajeVacunacion !== undefined) {
+        coberturaVacunalElement.textContent = formatPercentage(data.porcentajeVacunacion);
+      }
+
+      // Actualizar Casos de influenza
+      const casosInfluenzaNoVacunadosElement = document.getElementById('casos-influenza-no-vacunados');
+      if (casosInfluenzaNoVacunadosElement && data.totalCasosNuevosNoVacunados !== undefined) {
+        casosInfluenzaNoVacunadosElement.textContent = data.totalCasosNuevosNoVacunados.toString();
+      }
+
+      const casosInfluenzaVacunadosElement = document.getElementById('casos-influenza-vacunados');
+      if (casosInfluenzaVacunadosElement && data.totalCasosNuevosVacunados !== undefined) {
+        casosInfluenzaVacunadosElement.textContent = data.totalCasosNuevosVacunados.toString();
+      }
+
+      // Actualizar Casos sintomáticos
+      const casosSintomaticosNoVacunadosElement = document.getElementById('casos-sintomaticos-no-vacunados');
+      if (casosSintomaticosNoVacunadosElement && data.symptomaticNoVacunados !== undefined) {
+        casosSintomaticosNoVacunadosElement.textContent = data.symptomaticNoVacunados.toString();
+      }
+
+      const casosSintomaticosVacunadosElement = document.getElementById('casos-sintomaticos-vacunados');
+      if (casosSintomaticosVacunadosElement && data.symptomaticVacunados !== undefined) {
+        casosSintomaticosVacunadosElement.textContent = data.symptomaticVacunados.toString();
+      }
+
+      // Actualizar Sujetos incapacitados
+      const sujetosIncapacitadosNoVacunadosElement = document.getElementById('sujetos-incapacitados-no-vacunados');
+      if (sujetosIncapacitadosNoVacunadosElement && data.sujetosIncapacitadosNoVacunados !== undefined) {
+        sujetosIncapacitadosNoVacunadosElement.textContent = data.sujetosIncapacitadosNoVacunados.toString();
+      }
+
+      const sujetosIncapacitadosVacunadosElement = document.getElementById('sujetos-incapacitados-vacunados');
+      if (sujetosIncapacitadosVacunadosElement && data.sujetosIncapacitadosVacunados !== undefined) {
+        sujetosIncapacitadosVacunadosElement.textContent = data.sujetosIncapacitadosVacunados.toString();
+      }
+
+      // Actualizar Días de incapacidad
+      const diasIncapacidadNoVacunadosElement = document.getElementById('dias-incapacidad-no-vacunados');
+      if (diasIncapacidadNoVacunadosElement && data.sickDaysNoVacunados !== undefined) {
+        diasIncapacidadNoVacunadosElement.textContent = data.sickDaysNoVacunados.toString();
+      }
+
+      const diasIncapacidadVacunadosElement = document.getElementById('dias-incapacidad-vacunados');
+      if (diasIncapacidadVacunadosElement && data.sickDaysVacunados !== undefined) {
+        diasIncapacidadVacunadosElement.textContent = data.sickDaysVacunados.toString();
+      }
+
+      // Actualizar Hospitalización
+      const hospitalizacionNoVacunadosElement = document.getElementById('hospitalizacion-no-vacunados');
+      if (hospitalizacionNoVacunadosElement && data.hospitalizationNoVacunados !== undefined) {
+        hospitalizacionNoVacunadosElement.textContent = data.hospitalizationNoVacunados.toString();
+      }
+
+      const hospitalizacionVacunadosElement = document.getElementById('hospitalizacion-vacunados');
+      if (hospitalizacionVacunadosElement && data.hospitalizationVacunados !== undefined) {
+        hospitalizacionVacunadosElement.textContent = data.hospitalizationVacunados.toString();
+      }
+
+      // Actualizar Mortalidad
+      const mortalidadNoVacunadosElement = document.getElementById('mortalidad-no-vacunados');
+      if (mortalidadNoVacunadosElement && data.mortalityNoVacunados !== undefined) {
+        mortalidadNoVacunadosElement.textContent = data.mortalityNoVacunados.toString();
+      }
+
+      const mortalidadVacunadosElement = document.getElementById('mortalidad-vacunados');
+      if (mortalidadVacunadosElement && data.mortalityVacunados !== undefined) {
+        mortalidadVacunadosElement.textContent = data.mortalityVacunados.toString();
+      }
+
+      // Actualizar sección de Impacto presupuestal
+      const impactoPresupuestalElement = document.getElementById('impacto-presupuestal');
+      if (impactoPresupuestalElement && data.ahorro !== undefined) {
+        impactoPresupuestalElement.textContent = formatCurrency(data.ahorro);
+      }
+
+      // Actualizar Costo-beneficio
+      const costoBeneficioElement = document.getElementById('costo-beneficio');
+      if (costoBeneficioElement && data.relacionCostoBeneficio !== undefined) {
+        costoBeneficioElement.textContent = `$${data.relacionCostoBeneficio.toFixed(1)}`;
+      }
+
+      // Actualizar ICER
+      const icerElement = document.getElementById('icer-value');
+      if (icerElement && data.icer !== undefined) {
+        icerElement.textContent = `$${Math.round(data.icer).toLocaleString("es-CO")}`;
+      }
+
+      console.log('Datos de resumen aplicados correctamente al DOM');
+
+    } catch (error) {
+      console.error('Error al cargar datos de resumen desde localStorage:', error);
+    }
+  }
+
+  // Ejecutar cuando el DOM esté cargado
+  document.addEventListener('DOMContentLoaded', loadAndApplyResumenData);
+
+  // También ejecutar si la página ya está cargada
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadAndApplyResumenData);
+  } else {
+    loadAndApplyResumenData();
+  }
+</script>

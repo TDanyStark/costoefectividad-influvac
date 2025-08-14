@@ -629,6 +629,9 @@ export class ViewManager {
         calculatedResults: this.calculatedResults
       });
 
+      // Guardar resultados para la página de resumen
+      this.saveResultsForResumen(costoTotalVacunacion, totalVacunados, porcentajeVacunacion);
+
       // Actualizar resultados en el DOM
       setTimeout(
         () =>
@@ -641,6 +644,101 @@ export class ViewManager {
       );
     } catch (error) {
       console.error("Error en los cálculos:", error);
+    }
+  }
+
+  private saveResultsForResumen(
+    costoTotalVacunacion: number,
+    totalVacunados: number,
+    porcentajeVacunacion: number
+  ): void {
+    if (!this.calculatedResults) return;
+
+    // Calcular empleados con incapacidad médica
+    const empleadosIncapacidadNoVacunados = Math.floor(
+      this.calculatedResults.sickDaysNoVacunados / this.formVariables.diasIncapacidad
+    );
+    const empleadosIncapacidadVacunados = Math.floor(
+      this.calculatedResults.sickDaysVacunados / this.formVariables.diasIncapacidad
+    );
+
+    // Calcular pérdidas operativas
+    const salariosAusentismoNoVacunados = Math.floor(
+      empleadosIncapacidadNoVacunados * (this.formVariables.salarioPromedio / 30) * 2
+    );
+    const salariosAusentismoVacunados = Math.floor(
+      empleadosIncapacidadVacunados * (this.formVariables.salarioPromedio / 30) * 2
+    );
+
+    const perdidaProductividadNoVacunados = Math.floor(
+      empleadosIncapacidadNoVacunados * (this.formVariables.indicadorProductividad / 30) * this.formVariables.diasIncapacidad
+    );
+    const perdidaProductividadVacunados = Math.floor(
+      empleadosIncapacidadVacunados * (this.formVariables.indicadorProductividad / 30) * this.formVariables.diasIncapacidad
+    );
+
+    const perdidasOperativasNoVacunados = salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
+    const perdidasOperativasVacunados = salariosAusentismoVacunados + perdidaProductividadVacunados;
+
+    const impactoPresupuestalNoVacunados = 0 + perdidasOperativasNoVacunados;
+    const impactoPresupuestalVacunados = costoTotalVacunacion + perdidasOperativasVacunados;
+
+    const ahorro = impactoPresupuestalNoVacunados - impactoPresupuestalVacunados;
+    const relacionCostoBeneficio = ((impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) / costoTotalVacunacion) + 1;
+
+    const diasIncapacidadNoVacunados = empleadosIncapacidadNoVacunados * this.formVariables.diasIncapacidad;
+    const diasIncapacidadVacunados = empleadosIncapacidadVacunados * this.formVariables.diasIncapacidad;
+    const icer = (impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) / (diasIncapacidadNoVacunados - diasIncapacidadVacunados);
+
+    const resumenData = {
+      // Costo de la vacunación
+      costoTotalVacunacion,
+      
+      // Pérdidas Operativas
+      perdidaProductividadNoVacunados,
+      perdidaProductividadVacunados,
+      
+      // Cobertura vacunal
+      porcentajeVacunacion,
+      
+      // Casos de influenza
+      totalCasosNuevosNoVacunados: Math.floor(this.calculatedResults.totalCasosNuevosNoVacunados),
+      totalCasosNuevosVacunados: Math.floor(this.calculatedResults.totalCasosNuevosVacunados),
+      
+      // Casos sintomáticos
+      symptomaticNoVacunados: Math.floor(this.calculatedResults.symptomaticNoVacunados),
+      symptomaticVacunados: Math.floor(this.calculatedResults.symptomaticVacunados),
+      
+      // Sujetos incapacitados
+      sujetosIncapacitadosNoVacunados: empleadosIncapacidadNoVacunados,
+      sujetosIncapacitadosVacunados: empleadosIncapacidadVacunados,
+      
+      // Días de incapacidad
+      sickDaysNoVacunados: Math.round(this.calculatedResults.sickDaysNoVacunados),
+      sickDaysVacunados: Math.round(this.calculatedResults.sickDaysVacunados),
+      
+      // Hospitalización
+      hospitalizationNoVacunados: Math.floor(this.calculatedResults.hospitalizationNoVacunados),
+      hospitalizationVacunados: Math.floor(this.calculatedResults.hospitalizationVacunados),
+      
+      // Mortalidad
+      mortalityNoVacunados: Math.floor(this.calculatedResults.mortalityNoVacunados),
+      mortalityVacunados: Math.floor(this.calculatedResults.mortalityVacunados),
+      
+      // Impacto presupuestal y cálculos finales
+      ahorro,
+      relacionCostoBeneficio,
+      icer,
+      
+      // Timestamp para validar que los datos están actualizados
+      timestamp: Date.now()
+    };
+
+    try {
+      localStorage.setItem('influvac-resumen-data', JSON.stringify(resumenData));
+      console.log('Datos guardados para resumen:', resumenData);
+    } catch (error) {
+      console.error('Error al guardar datos de resumen en localStorage:', error);
     }
   }
 
@@ -708,7 +806,6 @@ export class ViewManager {
       this.calculatedResults.sickDaysVacunados /
         this.formVariables.diasIncapacidad
     );
-    console.log(this.calculatedResults.sickDaysVacunados, empleadosIncapacidadVacunados);
     // Calcular días de incapacidad médica
     const diasIncapacidadNoVacunados =
       empleadosIncapacidadNoVacunados * this.formVariables.diasIncapacidad;
