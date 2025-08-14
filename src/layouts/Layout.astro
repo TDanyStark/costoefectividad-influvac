@@ -7,11 +7,42 @@ import "@/styles/global.css";
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/png" href={`${URL_BASE}/favicon.png`} />
+		
+		<!-- PWA Meta Tags -->
+		<meta name="theme-color" content="#ffffff" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+		<meta name="apple-mobile-web-app-title" content="CE Influvac" />
+		<meta name="description" content="Calculadora de costo efectividad para Influvac Tetra" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="msapplication-config" content="/browserconfig.xml" />
+		<meta name="msapplication-TileColor" content="#ffffff" />
+		<meta name="msapplication-tap-highlight" content="no" />
+
+		<!-- Apple Touch Icons -->
+		<link rel="apple-touch-icon" href={`${URL_BASE}/favicon.png`} />
+		<link rel="apple-touch-icon" sizes="152x152" href={`${URL_BASE}/icons/icon-152x152.png`} />
+		<link rel="apple-touch-icon" sizes="180x180" href={`${URL_BASE}/icons/icon-192x192.png`} />
+
+		<!-- Manifest -->
+		<link rel="manifest" href={`${URL_BASE}/manifest.webmanifest`} />
+
 		<title>Costoefectividad Influvac</title>
 	</head>
 	<body class="font-brandon">
 		<slot />
+		
+		<!-- PWA Registration Script -->
+		<script>
+			if ('serviceWorker' in navigator) {
+				// Register PWA Service Worker
+				navigator.serviceWorker.register('/apps/abbott/costoefectividad-influvac/sw.js', {
+					scope: '/apps/abbott/costoefectividad-influvac/'
+				});
+			}
+		</script>
 	</body>
 </html>

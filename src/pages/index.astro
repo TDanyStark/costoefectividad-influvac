@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt.astro";
 import { URL_BASE } from "@/variables";
 ---
 
@@ -44,4 +45,7 @@ import { URL_BASE } from "@/variables";
 
     </section>
   </main>
+  
+  <!-- PWA Install Prompt -->
+  <PWAInstallPrompt />
 </Layout>

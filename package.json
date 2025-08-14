@@ -6,11 +6,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "pwa:generate-icons": "node generate-icons.js",
+    "pwa:test": "npm run build && npm run preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.12.5",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "workbox-window": "^7.3.0"
   }
 }
