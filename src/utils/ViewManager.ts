@@ -575,7 +575,9 @@ export class ViewManager {
         empleadosIncapacidadVacunados: Math.round(this.calculatedResults.sickDaysVacunados / this.formVariables.diasIncapacidad),
         salarioPromedio: this.formVariables.salarioPromedio,
         indicadorProductividad: this.formVariables.indicadorProductividad,
-        diasIncapacidad: this.formVariables.diasIncapacidad
+        diasIncapacidad: this.formVariables.diasIncapacidad,
+        // Información adicional para depuración
+        calculatedResults: this.calculatedResults
       });
 
       // Actualizar resultados en el DOM
@@ -604,6 +606,9 @@ export class ViewManager {
       totalVacunados,
       porcentajeVacunacion
     );
+
+    // Actualizar vista 3 - Costo-Beneficio / Costo-Efectividad
+    this.updateView3Results(costoTotalVacunacion);
 
     // Mantener las actualizaciones originales para otras vistas si existen
     const updates = [
@@ -790,6 +795,173 @@ export class ViewManager {
         element.textContent = value;
       }
     });
+  }
+
+  private updateView3Results(costoTotalVacunacion: number): void {
+    if (!this.calculatedResults) return;
+
+    const formatCurrency = (amount: number): string => {
+      return `$ ${Math.round(amount).toLocaleString("es-CO")}`;
+    };
+
+    const formatCurrencyWithDecimals = (amount: number): string => {
+      return `$ ${amount.toLocaleString("es-CO", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}`;
+    };
+
+    // Calcular empleados con incapacidad médica (mismos cálculos que vista 2)
+    const empleadosIncapacidadNoVacunados = Math.round(
+      this.calculatedResults.sickDaysNoVacunados /
+        this.formVariables.diasIncapacidad
+    );
+    const empleadosIncapacidadVacunados = Math.round(
+      this.calculatedResults.sickDaysVacunados /
+        this.formVariables.diasIncapacidad
+    );
+
+    // Calcular días de incapacidad médica
+    const diasIncapacidadNoVacunados =
+      empleadosIncapacidadNoVacunados * this.formVariables.diasIncapacidad;
+    const diasIncapacidadVacunados =
+      empleadosIncapacidadVacunados * this.formVariables.diasIncapacidad;
+
+    // Calcular todos los valores intermedios (mismos cálculos que vista 2)
+    const salariosAusentismoNoVacunados = Math.round(
+      empleadosIncapacidadNoVacunados * (this.formVariables.salarioPromedio / 30) * 2
+    );
+    const salariosAusentismoVacunados = Math.round(
+      empleadosIncapacidadVacunados * (this.formVariables.salarioPromedio / 30) * 2
+    );
+
+    const perdidaProductividadNoVacunados = Math.round(
+      empleadosIncapacidadNoVacunados * (this.formVariables.indicadorProductividad / 30) * this.formVariables.diasIncapacidad
+    );
+    const perdidaProductividadVacunados = Math.round(
+      empleadosIncapacidadVacunados * (this.formVariables.indicadorProductividad / 30) * this.formVariables.diasIncapacidad
+    );
+
+    const perdidasOperativasNoVacunados = salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
+    const perdidasOperativasVacunados = salariosAusentismoVacunados + perdidaProductividadVacunados;
+
+    const impactoPresupuestalNoVacunados = 0 + perdidasOperativasNoVacunados;
+    const impactoPresupuestalVacunados = costoTotalVacunacion + perdidasOperativasVacunados;
+
+    // Calcular relación costo-beneficio
+    const relacionCostoBeneficio = ((impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) / costoTotalVacunacion) + 1;
+
+    // Calcular ICER
+    const icer = (impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) / (diasIncapacidadNoVacunados - diasIncapacidadVacunados);
+
+    console.log('Vista 3 - Cálculos:', {
+      impactoPresupuestalNoVacunados,
+      impactoPresupuestalVacunados,
+      relacionCostoBeneficio,
+      diasIncapacidadNoVacunados,
+      diasIncapacidadVacunados,
+      icer,
+      icerFormatted: `$${Math.round(icer).toLocaleString("es-CO")}`
+    });
+
+    // Mapeo de selectores CSS a valores para vista 3
+    const view3Updates = [
+      // Primera tabla - Costo de la vacunación - fila 1
+      {
+        selector: "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(1) > div:nth-child(3)",
+        value: formatCurrency(costoTotalVacunacion),
+      },
+
+      // Primera tabla - Gasto Total - fila 2
+      {
+        selector: "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(2) > div:nth-child(2)",
+        value: formatCurrency(impactoPresupuestalNoVacunados),
+      },
+      {
+        selector: "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(2) > div:nth-child(3)",
+        value: formatCurrency(impactoPresupuestalVacunados),
+      },
+
+      // Primera tabla - Relación costo-beneficio - fila 3
+      {
+        selector: "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(3) > div:nth-child(2)",
+        value: relacionCostoBeneficio.toFixed(2),
+      },
+
+      // Segunda tabla - Gasto Total - fila 1
+      {
+        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(1) > div:nth-child(2)",
+        value: formatCurrencyWithDecimals(impactoPresupuestalNoVacunados),
+      },
+      {
+        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(1) > div:nth-child(3)",
+        value: formatCurrencyWithDecimals(impactoPresupuestalVacunados),
+      },
+
+      // Segunda tabla - Días de incapacidad - fila 2
+      {
+        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(2) > div:nth-child(2)",
+        value: diasIncapacidadNoVacunados.toLocaleString("es-CO", {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+      },
+      {
+        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(2) > div:nth-child(3)",
+        value: diasIncapacidadVacunados.toLocaleString("es-CO", {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+      },
+
+      // Segunda tabla - ICER - fila 3
+      {
+        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(3) > div:nth-child(2)",
+        value: formatCurrencyWithDecimals(icer),
+      },
+    ];
+
+    view3Updates.forEach(({ selector, value }) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.textContent = value;
+      }
+    });
+
+    // Actualizar el texto descriptivo
+    const textElement = document.querySelector('#view3 .bg-white:nth-of-type(2) p span strong:nth-of-type(2)');
+    if (textElement) {
+      textElement.textContent = `$${relacionCostoBeneficio.toFixed(2)}`;
+      console.log('Actualizado texto costo-beneficio:', `$${relacionCostoBeneficio.toFixed(2)}`);
+    } else {
+      console.log('No se encontró el elemento para actualizar el texto costo-beneficio');
+      // Buscar todos los elementos strong en la vista 3 y actualizar el que contiene $30,68
+      const allStrongs = document.querySelectorAll('#view3 strong');
+      allStrongs.forEach((strong, index) => {
+        if (strong.textContent && strong.textContent.includes('$30,68')) {
+          strong.textContent = `$${relacionCostoBeneficio.toFixed(2)}`;
+          console.log(`Actualizado costo-beneficio usando búsqueda por contenido (elemento ${index}):`, `$${relacionCostoBeneficio.toFixed(2)}`);
+        }
+      });
+    }
+
+    // Actualizar el texto descriptivo de la segunda sección con múltiples enfoques
+    const textElement2 = document.querySelector('#view3 .bg-white:nth-of-type(4) p span strong');
+    if (textElement2) {
+      textElement2.textContent = `$${Math.round(icer).toLocaleString("es-CO")}`;
+      console.log('Actualizado texto ICER:', `$${Math.round(icer).toLocaleString("es-CO")}`);
+    } else {
+      console.log('No se encontró el elemento para actualizar el texto ICER');
+      // Intentar con un selector más específico
+      const textElement2Alt = document.querySelector('#view3 .bg-white:last-child p span strong');
+      if (textElement2Alt) {
+        textElement2Alt.textContent = `$${Math.round(icer).toLocaleString("es-CO")}`;
+        console.log('Actualizado texto ICER con selector alternativo:', `$${Math.round(icer).toLocaleString("es-CO")}`);
+      } else {
+        // Buscar todos los elementos strong en la vista 3 y actualizar el que contiene el valor ICER
+        const allStrongs = document.querySelectorAll('#view3 strong');
+        allStrongs.forEach((strong, index) => {
+          if (strong.textContent && strong.textContent.includes('$2.436.118')) {
+            strong.textContent = `$${Math.round(icer).toLocaleString("es-CO")}`;
+            console.log(`Actualizado ICER usando búsqueda por contenido (elemento ${index}):`, `$${Math.round(icer).toLocaleString("es-CO")}`);
+          }
+        });
+      }
+    }
   }
 
   private updateCasesResults(totalVacunados: number): void {
