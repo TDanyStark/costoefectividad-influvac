@@ -1134,7 +1134,7 @@ export class ViewManager {
               backgroundColor: "#FF6B6B20",
               tension: 0.3,
               fill: true,
-              borderWidth: 3,
+              borderWidth: 1,
             },
             {
               label: "A H1N1",
@@ -1143,7 +1143,7 @@ export class ViewManager {
               backgroundColor: "#4ECDC420",
               tension: 0.3,
               fill: false,
-              borderWidth: 2,
+              borderWidth: 1,
             },
             {
               label: "A H3N2",
@@ -1152,7 +1152,7 @@ export class ViewManager {
               backgroundColor: "#45B7D120",
               tension: 0.3,
               fill: false,
-              borderWidth: 2,
+              borderWidth: 1,
             },
             {
               label: "B Victoria",
@@ -1161,7 +1161,7 @@ export class ViewManager {
               backgroundColor: "#F7DC6F20",
               tension: 0.3,
               fill: false,
-              borderWidth: 2,
+              borderWidth: 1,
             },
             {
               label: "B Yamagata",
@@ -1170,7 +1170,7 @@ export class ViewManager {
               backgroundColor: "#BB8FCE20",
               tension: 0.3,
               fill: false,
-              borderWidth: 2,
+              borderWidth: 1,
             },
             {
               label: "No Vacunal",
@@ -1179,7 +1179,7 @@ export class ViewManager {
               backgroundColor: "#95A5A620",
               tension: 0.3,
               fill: false,
-              borderWidth: 2,
+              borderWidth: 1,
             },
           ],
         },
