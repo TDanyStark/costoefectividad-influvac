@@ -1210,23 +1210,21 @@ export class ViewManager {
               },
               ticks: { 
                 maxTicksLimit: 12,
-                callback: function(value: any) {
-                  // Mostrar solo algunos meses para mejor legibilidad
+                autoSkip: true,
+                callback: function(value: any, index: number, ticks: any[]) {
                   const dayNumber = parseInt(value);
-                  if (dayNumber === 1) return 'Ene';
-                  if (dayNumber === 32) return 'Feb';
-                  if (dayNumber === 60) return 'Mar';
-                  if (dayNumber === 91) return 'Abr';
-                  if (dayNumber === 121) return 'May';
-                  if (dayNumber === 152) return 'Jun';
-                  if (dayNumber === 182) return 'Jul';
-                  if (dayNumber === 213) return 'Ago';
-                  if (dayNumber === 244) return 'Sep';
-                  if (dayNumber === 274) return 'Oct';
-                  if (dayNumber === 305) return 'Nov';
-                  if (dayNumber === 335) return 'Dic';
+                  
+                  // Mostrar días cada cierto intervalo para distribuir bien las etiquetas
+                  const interval = Math.ceil(diasEnAnio / 12); // Aproximadamente 12 etiquetas
+                  
+                  if (dayNumber % interval === 0 || dayNumber === 1 || dayNumber === diasEnAnio) {
+                    return dayNumber.toString();
+                  }
+                  
                   return '';
-                }
+                },
+                maxRotation: 45,
+                minRotation: 0
               },
             },
             y: {
