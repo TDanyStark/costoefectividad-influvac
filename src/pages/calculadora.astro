@@ -434,10 +434,10 @@ import BackIcon from "@/icons/BackIcon.astro";
 ></script>
 
 <script>
-  import { ViewManager } from "../utils/ViewManager.ts";
+  import { ViewManagerRefactored } from "@/utils";
 
   document.addEventListener("DOMContentLoaded", () => {
-    new ViewManager();
+    new ViewManagerRefactored();
   });
 </script>
 
