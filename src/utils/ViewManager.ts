@@ -571,6 +571,11 @@ export class ViewManager {
           "$" + costoTotalVacunacion.toLocaleString("es-CO"),
         sickDaysVacunados: this.calculatedResults.sickDaysVacunados,
         sickDaysNoVacunados: this.calculatedResults.sickDaysNoVacunados,
+        empleadosIncapacidadNoVacunados: Math.round(this.calculatedResults.sickDaysNoVacunados / this.formVariables.diasIncapacidad),
+        empleadosIncapacidadVacunados: Math.round(this.calculatedResults.sickDaysVacunados / this.formVariables.diasIncapacidad),
+        salarioPromedio: this.formVariables.salarioPromedio,
+        indicadorProductividad: this.formVariables.indicadorProductividad,
+        diasIncapacidad: this.formVariables.diasIncapacidad
       });
 
       // Actualizar resultados en el DOM
@@ -655,6 +660,33 @@ export class ViewManager {
     const diasIncapacidadVacunados =
       empleadosIncapacidadVacunados * this.formVariables.diasIncapacidad;
 
+    // Calcular salarios pagados en ausentismo
+    const salariosAusentismoNoVacunados = Math.round(
+      empleadosIncapacidadNoVacunados * (this.formVariables.salarioPromedio / 30) * 2
+    );
+    const salariosAusentismoVacunados = Math.round(
+      empleadosIncapacidadVacunados * (this.formVariables.salarioPromedio / 30) * 2
+    );
+
+    // Calcular pérdida de productividad
+    const perdidaProductividadNoVacunados = Math.round(
+      empleadosIncapacidadNoVacunados * (this.formVariables.indicadorProductividad / 30) * this.formVariables.diasIncapacidad
+    );
+    const perdidaProductividadVacunados = Math.round(
+      empleadosIncapacidadVacunados * (this.formVariables.indicadorProductividad / 30) * this.formVariables.diasIncapacidad
+    );
+
+    // Calcular pérdidas operativas (fila 6 + fila 7)
+    const perdidasOperativasNoVacunados = salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
+    const perdidasOperativasVacunados = salariosAusentismoVacunados + perdidaProductividadVacunados;
+
+    // Calcular impacto presupuestal (fila 8 + fila 9)
+    const impactoPresupuestalNoVacunados = 0 + perdidasOperativasNoVacunados; // gastos vacunación = 0 para no vacunados
+    const impactoPresupuestalVacunados = costoTotalVacunacion + perdidasOperativasVacunados;
+
+    // Calcular ahorro (fila 10 no vacunados - fila 10 vacunados)
+    const ahorro = impactoPresupuestalNoVacunados - impactoPresupuestalVacunados;
+
     // Mapeo de selectores CSS a valores
     const view2Updates = [
       // Población Vacunada - fila 1
@@ -693,6 +725,62 @@ export class ViewManager {
       {
         selector: "#view2 .divide-y > div:nth-child(5) > div:nth-child(3)",
         value: diasIncapacidadVacunados.toString(),
+      },
+
+      // Salarios pagados en ausentismo - fila 6
+      {
+        selector: "#view2 .divide-y > div:nth-child(6) > div:nth-child(2)",
+        value: formatCurrency(salariosAusentismoNoVacunados),
+      },
+      {
+        selector: "#view2 .divide-y > div:nth-child(6) > div:nth-child(3)",
+        value: formatCurrency(salariosAusentismoVacunados),
+      },
+
+      // Pérdida de productividad - fila 7
+      {
+        selector: "#view2 .divide-y > div:nth-child(7) > div:nth-child(2)",
+        value: formatCurrency(perdidaProductividadNoVacunados),
+      },
+      {
+        selector: "#view2 .divide-y > div:nth-child(7) > div:nth-child(3)",
+        value: formatCurrency(perdidaProductividadVacunados),
+      },
+
+      // Gastos de vacunación - fila 8 (igual que fila 3)
+      {
+        selector: "#view2 .divide-y > div:nth-child(8) > div:nth-child(2)",
+        value: "$ 0",
+      },
+      {
+        selector: "#view2 .divide-y > div:nth-child(8) > div:nth-child(3)",
+        value: formatCurrency(costoTotalVacunacion),
+      },
+
+      // Pérdidas Operativas - fila 9
+      {
+        selector: "#view2 .divide-y > div:nth-child(9) > div:nth-child(2)",
+        value: formatCurrency(perdidasOperativasNoVacunados),
+      },
+      {
+        selector: "#view2 .divide-y > div:nth-child(9) > div:nth-child(3)",
+        value: formatCurrency(perdidasOperativasVacunados),
+      },
+
+      // Impacto presupuestal - fila 10
+      {
+        selector: "#view2 .divide-y > div:nth-child(10) > div:nth-child(2)",
+        value: formatCurrency(impactoPresupuestalNoVacunados),
+      },
+      {
+        selector: "#view2 .divide-y > div:nth-child(10) > div:nth-child(3)",
+        value: formatCurrency(impactoPresupuestalVacunados),
+      },
+
+      // Ahorro - última fila
+      {
+        selector: "#view2 .divide-y > div:nth-child(11) > div:nth-child(3)",
+        value: formatCurrency(ahorro),
       },
     ];
 
