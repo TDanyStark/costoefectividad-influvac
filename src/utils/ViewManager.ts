@@ -10,6 +10,7 @@ import generateInfluenzaBVictoria_V from "@/utils/generateInfluenzaBVictoria_V";
 import generateInfluenzaBYamagata from "@/utils/generateInfluenzaBYamagata";
 import generateInfluenzaBYamagata_V from "@/utils/generateInfluenzaBYamagata_V";
 import generateNoVacunal from "@/utils/generateNoVacunal";
+import sumarCampoPorDia from "@/utils/sumarCampoPorDia";
 
 export class ViewManager {
   private currentView: string = "view1";
@@ -526,6 +527,50 @@ export class ViewManager {
     const mortalityVacunados = symptomaticVacunados * 0.00127;
     const mortalityNoVacunados = symptomaticNoVacunados * 0.00127;
 
+    // GRÁFICA - Datos para las series de tiempo
+    const seriesNoVacunados = [
+      influenzaAH1N1,
+      influenzaAH3N2,
+      influenzaBVictoria,
+      influenzaBYamagata,
+      noVacunal,
+    ];
+
+    const seriesVacunados = [
+      influenzaAH1N1_V,
+      influenzaAH3N2_V,
+      influenzaBVictoria_V,
+      influenzaBYamagata_V,
+      noVacunal
+    ];
+
+    // Array único con la suma diaria de Infectivos (día 1 -> index 0)
+    const infectivosTotalesNoVacunados: number[] = sumarCampoPorDia(
+      seriesNoVacunados,
+      "Infectivos",
+      diasEnAnio
+    );
+
+    // Arrays individuales por tipo de influenza - No Vacunados
+    const infectivosAH1N1NoVacunados = influenzaAH1N1.map(item => Math.round(item.Infectivos));
+    const infectivosAH3N2NoVacunados = influenzaAH3N2.map(item => Math.round(item.Infectivos));
+    const infectivosBVictoriaNoVacunados = influenzaBVictoria.map(item => Math.round(item.Infectivos));
+    const infectivosBYamagataNoVacunados = influenzaBYamagata.map(item => Math.round(item.Infectivos));
+
+    // Arrays para vacunados
+    const infectivosTotalesVacunados: number[] = sumarCampoPorDia(
+      seriesVacunados,
+      "Infectivos",
+      diasEnAnio
+    );
+    const infectivosAH1N1Vacunados = influenzaAH1N1_V.map(item => Math.round(item.Infectivos));
+    const infectivosAH3N2Vacunados = influenzaAH3N2_V.map(item => Math.round(item.Infectivos));
+    const infectivosBVictoriaVacunados = influenzaBVictoria_V.map(item => Math.round(item.Infectivos));
+    const infectivosBYamagataVacunados = influenzaBYamagata_V.map(item => Math.round(item.Infectivos));
+
+    // No vacunal es igual para ambos grupos
+    const infectivosNoVacunal = noVacunal.map(item => Math.round(item.Infectivos));
+
     return {
       totalCasosNuevosVacunados,
       totalCasosNuevosNoVacunados,
@@ -538,6 +583,19 @@ export class ViewManager {
       mortalityVacunados,
       mortalityNoVacunados,
       diasIncapacidad,
+      // Datos para gráficas
+      diasEnAnio,
+      infectivosTotalesNoVacunados,
+      infectivosAH1N1NoVacunados,
+      infectivosAH3N2NoVacunados,
+      infectivosBVictoriaNoVacunados,
+      infectivosBYamagataNoVacunados,
+      infectivosTotalesVacunados,
+      infectivosAH1N1Vacunados,
+      infectivosAH3N2Vacunados,
+      infectivosBVictoriaVacunados,
+      infectivosBYamagataVacunados,
+      infectivosNoVacunal,
     };
   }
 
@@ -1022,37 +1080,43 @@ export class ViewManager {
   private createInfluenzaCharts(): void {
     this.cleanupCharts();
 
-    const days = Array.from({ length: 365 }, (_, i) => i + 1);
-    const generateData = (multiplier: number) => ({
-      activos: days.map(
-        (day) =>
-          Math.max(0, Math.sin(day * 0.02) * 15 + Math.random() * 5) *
-          multiplier
-      ),
-      ah1n1: days.map(
-        (day) =>
-          Math.max(0, Math.sin(day * 0.015) * 12 + Math.random() * 3) *
-          multiplier
-      ),
-      ah3n2: days.map(
-        (day) =>
-          Math.max(0, Math.sin(day * 0.025) * 10 + Math.random() * 4) *
-          multiplier
-      ),
-      victoria: days.map(
-        (day) =>
-          Math.max(0, Math.sin(day * 0.018) * 8 + Math.random() * 2) *
-          multiplier
-      ),
-      yamagata: days.map(
-        (day) =>
-          Math.max(0, Math.sin(day * 0.022) * 6 + Math.random() * 3) *
-          multiplier
-      ),
-    });
+    // Verificar que tenemos los datos calculados
+    if (!this.calculatedResults) {
+      console.warn('No hay datos calculados disponibles para las gráficas');
+      return;
+    }
 
-    const noVacunarData = generateData(2.5);
-    const vacunacionData = generateData(0.8);
+    // Usar el número real de días del año (365 o 366)
+    const diasEnAnio = this.calculatedResults.diasEnAnio || 365;
+    const days = Array.from({ length: diasEnAnio }, (_, i) => i + 1);
+
+    console.log('Creando gráficas con datos reales:', {
+      diasEnAnio,
+      totalInfectivosNoVacunados: this.calculatedResults.infectivosTotalesNoVacunados?.length,
+      totalInfectivosVacunados: this.calculatedResults.infectivosTotalesVacunados?.length,
+      maxInfectivosNoVacunados: Math.max(...(this.calculatedResults.infectivosTotalesNoVacunados || [0])),
+      maxInfectivosVacunados: Math.max(...(this.calculatedResults.infectivosTotalesVacunados || [0]))
+    });
+    
+    // Datos reales para población no vacunada
+    const noVacunarData = {
+      activos: this.calculatedResults.infectivosTotalesNoVacunados || Array(diasEnAnio).fill(0),
+      ah1n1: this.calculatedResults.infectivosAH1N1NoVacunados || Array(diasEnAnio).fill(0),
+      ah3n2: this.calculatedResults.infectivosAH3N2NoVacunados || Array(diasEnAnio).fill(0),
+      victoria: this.calculatedResults.infectivosBVictoriaNoVacunados || Array(diasEnAnio).fill(0),
+      yamagata: this.calculatedResults.infectivosBYamagataNoVacunados || Array(diasEnAnio).fill(0),
+      noVacunal: this.calculatedResults.infectivosNoVacunal || Array(diasEnAnio).fill(0),
+    };
+
+    // Datos reales para población vacunada
+    const vacunacionData = {
+      activos: this.calculatedResults.infectivosTotalesVacunados || Array(diasEnAnio).fill(0),
+      ah1n1: this.calculatedResults.infectivosAH1N1Vacunados || Array(diasEnAnio).fill(0),
+      ah3n2: this.calculatedResults.infectivosAH3N2Vacunados || Array(diasEnAnio).fill(0),
+      victoria: this.calculatedResults.infectivosBVictoriaVacunados || Array(diasEnAnio).fill(0),
+      yamagata: this.calculatedResults.infectivosBYamagataVacunados || Array(diasEnAnio).fill(0),
+      noVacunal: this.calculatedResults.infectivosNoVacunal || Array(diasEnAnio).fill(0),
+    };
 
     const createChart = (canvasId: string, data: any) => {
       const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -1064,44 +1128,58 @@ export class ViewManager {
           labels: days,
           datasets: [
             {
-              label: "Activos",
+              label: "Total Infectivos",
               data: data.activos,
               borderColor: "#FF6B6B",
               backgroundColor: "#FF6B6B20",
               tension: 0.3,
               fill: true,
+              borderWidth: 3,
             },
             {
-              label: "AH1N1",
+              label: "A H1N1",
               data: data.ah1n1,
               borderColor: "#4ECDC4",
               backgroundColor: "#4ECDC420",
               tension: 0.3,
-              fill: true,
+              fill: false,
+              borderWidth: 2,
             },
             {
-              label: "AH3N2",
+              label: "A H3N2",
               data: data.ah3n2,
               borderColor: "#45B7D1",
               backgroundColor: "#45B7D120",
               tension: 0.3,
-              fill: true,
+              fill: false,
+              borderWidth: 2,
             },
             {
-              label: "Victoria",
+              label: "B Victoria",
               data: data.victoria,
               borderColor: "#F7DC6F",
               backgroundColor: "#F7DC6F20",
               tension: 0.3,
-              fill: true,
+              fill: false,
+              borderWidth: 2,
             },
             {
-              label: "Yamagata",
+              label: "B Yamagata",
               data: data.yamagata,
               borderColor: "#BB8FCE",
               backgroundColor: "#BB8FCE20",
               tension: 0.3,
-              fill: true,
+              fill: false,
+              borderWidth: 2,
+            },
+            {
+              label: "No Vacunal",
+              data: data.noVacunal,
+              borderColor: "#95A5A6",
+              backgroundColor: "#95A5A620",
+              tension: 0.3,
+              fill: false,
+              borderWidth: 2,
             },
           ],
         },
@@ -1111,8 +1189,17 @@ export class ViewManager {
           plugins: {
             legend: {
               position: "bottom" as const,
-              labels: { usePointStyle: true, padding: 15, font: { size: 11 } },
+              labels: { 
+                usePointStyle: true, 
+                padding: 15, 
+                font: { size: 11 }
+              },
             },
+            title: {
+              display: true,
+              text: canvasId.includes('no-vacunar') ? 'Evolución de Infectivos - Sin Vacunación' : 'Evolución de Infectivos - Con Vacunación Tetravalente',
+              font: { size: 14, weight: 'bold' }
+            }
           },
           scales: {
             x: {
@@ -1121,17 +1208,51 @@ export class ViewManager {
                 text: "Días del año",
                 font: { size: 12, weight: "bold" },
               },
-              ticks: { maxTicksLimit: 12 },
+              ticks: { 
+                maxTicksLimit: 12,
+                callback: function(value: any) {
+                  // Mostrar solo algunos meses para mejor legibilidad
+                  const dayNumber = parseInt(value);
+                  if (dayNumber === 1) return 'Ene';
+                  if (dayNumber === 32) return 'Feb';
+                  if (dayNumber === 60) return 'Mar';
+                  if (dayNumber === 91) return 'Abr';
+                  if (dayNumber === 121) return 'May';
+                  if (dayNumber === 152) return 'Jun';
+                  if (dayNumber === 182) return 'Jul';
+                  if (dayNumber === 213) return 'Ago';
+                  if (dayNumber === 244) return 'Sep';
+                  if (dayNumber === 274) return 'Oct';
+                  if (dayNumber === 305) return 'Nov';
+                  if (dayNumber === 335) return 'Dic';
+                  return '';
+                }
+              },
             },
             y: {
               title: {
                 display: true,
-                text: "Número de casos",
+                text: "Número de infectivos",
                 font: { size: 12, weight: "bold" },
               },
               beginAtZero: true,
+              ticks: {
+                callback: function(value: any) {
+                  return Math.round(value).toLocaleString('es-CO');
+                }
+              }
             },
           },
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          },
+          elements: {
+            point: {
+              radius: 0,
+              hoverRadius: 5
+            }
+          }
         },
       });
     };
