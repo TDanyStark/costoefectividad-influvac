@@ -1,23 +1,39 @@
 import { URL_BASE } from "@/variables";
 
+import ajustePoblacional from "@/utils/ajustePoblacional";
+import generateinfluenzaAH1N1 from "@/utils/generateinfluenzaAH1N1";
+import generateinfluenzaAH1N1_V from "@/utils/generateInfluenzaAH1N1_V";
+import generateinfluenzaAH3N2 from "@/utils/generateinfluenzaAH3N2";
+import generateinfluenzaAH3N2_V from "@/utils/generateinfluenzaAH3N2_V";
+import generateInfluenzaBVictoria from "@/utils/generateInfluenzaBVictoria";
+import generateInfluenzaBVictoria_V from "@/utils/generateInfluenzaBVictoria_V";
+import generateInfluenzaBYamagata from "@/utils/generateInfluenzaBYamagata";
+import generateInfluenzaBYamagata_V from "@/utils/generateInfluenzaBYamagata_V";
+import generateNoVacunal from "@/utils/generateNoVacunal";
+
 export class ViewManager {
   private currentView: string = "view1";
   private formData: any = null;
   private mainContainer: HTMLElement | null = null;
   private chartNoVacunar: any = null;
   private chartVacunacionTetravalente: any = null;
-  
+
+  // Variables calculadas para los resultados
+  private calculatedResults: any = null;
+
   // Referencias a los elementos del formulario
   private form: HTMLFormElement | null = null;
-  private formElements: {[key: string]: HTMLInputElement | HTMLSelectElement | null} = {};
+  private formElements: {
+    [key: string]: HTMLInputElement | HTMLSelectElement | null;
+  } = {};
   private productivityDisplay: HTMLElement | null = null;
-  
+
   // Variables por defecto del formulario (nunca cambian)
   private defaultFormVariables = {
     numEmpleados: 5000,
     fecha1Vacunacion: "2025-05-30",
     numeroDeVacunados1: 2000,
-    fecha2Vacunacion: '',
+    fecha2Vacunacion: "",
     numeroDeVacunados2: 0,
     calculoProductividad: "promedio_empresarial",
     ventaNeta: 4388774488000,
@@ -25,9 +41,9 @@ export class ViewManager {
     salarioPromedio: 6000000,
     precioVacunacion: 55000,
     nivelExposicion: 2,
-    diasIncapacidad: 5
+    diasIncapacidad: 5,
   };
-  
+
   // Variables del formulario (estado actual)
   private formVariables: Record<string, any> = { ...this.defaultFormVariables };
 
@@ -39,31 +55,46 @@ export class ViewManager {
     this.initializeFormVariables();
     this.populateFormFromVariables();
     this.initializeFormHandler();
+    // Calcular resultados iniciales
+    this.recalculateResults();
   }
 
   private initializeFormElements(): void {
-    this.form = document.getElementById("modelParametersForm") as HTMLFormElement;
-    
+    this.form = document.getElementById(
+      "modelParametersForm"
+    ) as HTMLFormElement;
+
     if (this.form) {
       // Mapeo más simple de elementos del formulario
       const formFields = [
-        'numEmpleados', 'fecha1Vacunacion', 'numeroDeVacunados1',
-        'fecha2Vacunacion', 'numeroDeVacunados2', 'calculoProductividad',
-        'ventaNeta', 'salarioPromedio', 'precioVacunacion',
-        'nivelExposicion', 'diasIncapacidad'
+        "numEmpleados",
+        "fecha1Vacunacion",
+        "numeroDeVacunados1",
+        "fecha2Vacunacion",
+        "numeroDeVacunados2",
+        "calculoProductividad",
+        "ventaNeta",
+        "salarioPromedio",
+        "precioVacunacion",
+        "nivelExposicion",
+        "diasIncapacidad",
       ];
-      
-      formFields.forEach(field => {
-        this.formElements[field] = this.form!.querySelector(`[name="${field}"]`);
+
+      formFields.forEach((field) => {
+        this.formElements[field] = this.form!.querySelector(
+          `[name="${field}"]`
+        );
       });
-      
-      this.productivityDisplay = document.querySelector('#indicadorProductividad div.px-2');
+
+      this.productivityDisplay = document.querySelector(
+        "#indicadorProductividad div.px-2"
+      );
     }
   }
 
   private initializeFormVariables(): void {
     const savedFormData = this.loadFromLocalStorage();
-    
+
     if (savedFormData && this.isValidFormData(savedFormData)) {
       this.formVariables = savedFormData;
     } else {
@@ -73,30 +104,39 @@ export class ViewManager {
 
   private loadFromLocalStorage(): any {
     try {
-      const savedData = localStorage.getItem('influvac-form-data');
+      const savedData = localStorage.getItem("influvac-form-data");
       return savedData ? JSON.parse(savedData) : null;
     } catch (error) {
-      console.error('Error al cargar desde localStorage:', error);
-      localStorage.removeItem('influvac-form-data');
+      console.error("Error al cargar desde localStorage:", error);
+      localStorage.removeItem("influvac-form-data");
       return null;
     }
   }
 
   private saveToLocalStorage(): void {
     try {
-      localStorage.setItem('influvac-form-data', JSON.stringify(this.formVariables));
+      localStorage.setItem(
+        "influvac-form-data",
+        JSON.stringify(this.formVariables)
+      );
     } catch (error) {
-      console.error('Error al guardar en localStorage:', error);
+      console.error("Error al guardar en localStorage:", error);
     }
   }
 
   private isValidFormData(data: any): boolean {
     const requiredProps = [
-      'numEmpleados', 'fecha1Vacunacion', 'numeroDeVacunados1',
-      'calculoProductividad', 'ventaNeta', 'salarioPromedio',
-      'precioVacunacion', 'nivelExposicion', 'diasIncapacidad'
+      "numEmpleados",
+      "fecha1Vacunacion",
+      "numeroDeVacunados1",
+      "calculoProductividad",
+      "ventaNeta",
+      "salarioPromedio",
+      "precioVacunacion",
+      "nivelExposicion",
+      "diasIncapacidad",
     ];
-    return requiredProps.every(prop => data.hasOwnProperty(prop));
+    return requiredProps.every((prop) => data.hasOwnProperty(prop));
   }
 
   private initializeNavigation(): void {
@@ -126,53 +166,76 @@ export class ViewManager {
 
   private initializeProductivityUpdaters(): void {
     const cleanNumericValue = (value: string): number => {
-      return parseInt(value.replace(/\./g, '')) || 0;
+      return parseInt(value.replace(/\./g, "")) || 0;
     };
 
     const updateProductivity = () => {
       let indicadorProductividad = 0;
-      
-      if (this.formVariables.calculoProductividad === "productividad_individual") {
+
+      if (
+        this.formVariables.calculoProductividad === "productividad_individual"
+      ) {
         indicadorProductividad = this.formVariables.ventaNeta;
       } else {
         if (this.formVariables.numEmpleados > 0) {
-          indicadorProductividad = (this.formVariables.ventaNeta / this.formVariables.numEmpleados) / 12;
+          indicadorProductividad =
+            this.formVariables.ventaNeta / this.formVariables.numEmpleados / 12;
         }
       }
-      
+
       this.formVariables.indicadorProductividad = indicadorProductividad;
       this.updateProductivityDisplay();
     };
 
     // Configurar listeners para campos numéricos
-    const numericFields = ['numEmpleados', 'numeroDeVacunados1', 'numeroDeVacunados2', 
-                          'ventaNeta', 'salarioPromedio', 'precioVacunacion', 'diasIncapacidad'];
-    
-    numericFields.forEach(field => {
+    const numericFields = [
+      "numEmpleados",
+      "numeroDeVacunados1",
+      "numeroDeVacunados2",
+      "ventaNeta",
+      "salarioPromedio",
+      "precioVacunacion",
+      "diasIncapacidad",
+    ];
+
+    numericFields.forEach((field) => {
       const element = this.formElements[field] as HTMLInputElement;
       if (element) {
         const updateField = () => {
           this.formVariables[field] = cleanNumericValue(element.value);
-          if (['numEmpleados', 'ventaNeta', 'calculoProductividad'].includes(field)) {
+          if (
+            ["numEmpleados", "ventaNeta", "calculoProductividad"].includes(
+              field
+            )
+          ) {
             updateProductivity();
           }
           this.saveToLocalStorage();
+          // Recalcular resultados cuando cambien valores relevantes
+          this.recalculateResults();
         };
-        
-        element.addEventListener('input', updateField);
-        element.addEventListener('change', updateField);
+
+        element.addEventListener("input", updateField);
+        element.addEventListener("change", updateField);
       }
     });
 
     // Listeners para campos de texto y selects
-    const textFields = ['fecha1Vacunacion', 'fecha2Vacunacion', 'calculoProductividad', 'nivelExposicion'];
-    textFields.forEach(field => {
+    const textFields = [
+      "fecha1Vacunacion",
+      "fecha2Vacunacion",
+      "calculoProductividad",
+      "nivelExposicion",
+    ];
+    textFields.forEach((field) => {
       const element = this.formElements[field];
       if (element) {
-        element.addEventListener('change', () => {
+        element.addEventListener("change", () => {
           this.formVariables[field] = element.value;
-          if (field === 'calculoProductividad') updateProductivity();
+          if (field === "calculoProductividad") updateProductivity();
           this.saveToLocalStorage();
+          // Recalcular resultados cuando cambien valores relevantes
+          this.recalculateResults();
         });
       }
     });
@@ -183,10 +246,10 @@ export class ViewManager {
   private initializeCustomEvents(): void {
     document.addEventListener("switchToView", (e: any) => {
       const { viewId } = e.detail;
-      const bgMap: {[key: string]: string} = {
+      const bgMap: { [key: string]: string } = {
         view2: "banner3",
-        view3: "banner4", 
-        view4: "banner5"
+        view3: "banner4",
+        view4: "banner5",
       };
       this.switchView(viewId, bgMap[viewId] || "banner2");
     });
@@ -202,20 +265,23 @@ export class ViewManager {
     };
 
     const formatDateForInput = (dateStr: string): string => {
-      return dateStr.match(/^\d{4}-\d{2}-\d{2}$/) ? dateStr : '';
+      return dateStr.match(/^\d{4}-\d{2}-\d{2}$/) ? dateStr : "";
     };
 
     if (!this.form) return;
 
     // Poblar campos de forma más eficiente
-    Object.keys(this.formElements).forEach(field => {
+    Object.keys(this.formElements).forEach((field) => {
       const element = this.formElements[field];
       if (element && this.formVariables[field] !== undefined) {
         const value = this.formVariables[field];
-        
-        if (field.includes('fecha')) {
+
+        if (field.includes("fecha")) {
           element.value = formatDateForInput(value);
-        } else if (typeof value === 'number' && ['ventaNeta', 'salarioPromedio', 'precioVacunacion'].includes(field)) {
+        } else if (
+          typeof value === "number" &&
+          ["ventaNeta", "salarioPromedio", "precioVacunacion"].includes(field)
+        ) {
           element.value = formatWithThousands(value);
         } else {
           element.value = value.toString();
@@ -226,7 +292,7 @@ export class ViewManager {
     // Disparar evento change para calculoProductividad
     const calcElement = this.formElements.calculoProductividad;
     if (calcElement) {
-      calcElement.dispatchEvent(new Event('change'));
+      calcElement.dispatchEvent(new Event("change"));
     }
 
     this.updateProductivityDisplay();
@@ -234,16 +300,17 @@ export class ViewManager {
 
   private resetFormToDefaults(): void {
     this.formVariables = { ...this.defaultFormVariables };
-    localStorage.removeItem('influvac-form-data');
+    localStorage.removeItem("influvac-form-data");
     this.populateFormFromVariables();
   }
 
   private updateProductivityDisplay(): void {
     if (this.productivityDisplay) {
-      this.productivityDisplay.textContent = this.formVariables.indicadorProductividad.toLocaleString('es-CO', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      this.productivityDisplay.textContent =
+        this.formVariables.indicadorProductividad.toLocaleString("es-CO", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
     }
   }
 
@@ -252,7 +319,7 @@ export class ViewManager {
       this.cleanupCharts();
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (bgImage && this.mainContainer) {
       const urlBase = URL_BASE || "";
@@ -261,7 +328,7 @@ export class ViewManager {
 
     const currentViewElement = document.getElementById(this.currentView);
     const newViewElement = document.getElementById(viewId);
-    
+
     currentViewElement?.classList.add("hidden");
     currentViewElement?.classList.remove("active");
     newViewElement?.classList.remove("hidden");
@@ -277,38 +344,277 @@ export class ViewManager {
     this.calculateResults();
   }
 
-  private extractFormValues(): void {
-    if (this.formVariables.calculoProductividad === "productividad_individual") {
-      this.formVariables.indicadorProductividad = this.formVariables.ventaNeta;
-    } else {
-      this.formVariables.indicadorProductividad = this.formVariables.numEmpleados > 0 
-        ? (this.formVariables.ventaNeta / this.formVariables.numEmpleados) / 12
-        : 0;
+  private recalculateResults(): void {
+    // Recalcular solo si tenemos los datos necesarios
+    if (
+      this.formVariables.numEmpleados &&
+      this.formVariables.fecha1Vacunacion &&
+      this.formVariables.numeroDeVacunados1 >= 0
+    ) {
+      this.extractFormValues();
+      this.calculateResults();
     }
   }
 
-  private calculateResults(): void {
-    const totalVacunados = this.formVariables.numeroDeVacunados1 + this.formVariables.numeroDeVacunados2;
-    const porcentajeVacunacion = (totalVacunados / this.formVariables.numEmpleados) * 100;
-    const costoTotalVacunacion = totalVacunados * this.formVariables.precioVacunacion;
-    
-    console.log('Cálculos realizados:', {
-      totalVacunados: totalVacunados.toLocaleString('es-CO'),
-      porcentajeVacunacion: porcentajeVacunacion.toFixed(2) + '%',
-      costoTotalVacunacion: '$' + costoTotalVacunacion.toLocaleString('es-CO')
-    });
-
-    // Actualizar resultados en el DOM
-    setTimeout(() => this.updateResultsInDOM(costoTotalVacunacion, totalVacunados), 500);
+  private extractFormValues(): void {
+    if (
+      this.formVariables.calculoProductividad === "productividad_individual"
+    ) {
+      this.formVariables.indicadorProductividad = this.formVariables.ventaNeta;
+    } else {
+      this.formVariables.indicadorProductividad =
+        this.formVariables.numEmpleados > 0
+          ? this.formVariables.ventaNeta / this.formVariables.numEmpleados / 12
+          : 0;
+    }
   }
 
-  private updateResultsInDOM(costoTotalVacunacion: number, totalVacunados: number): void {
+  private calculateInfluenzaResults(): any {
+    const numEmpleados = this.formVariables.numEmpleados;
+    const firstVaccinationDate = this.formVariables.fecha1Vacunacion;
+    const firstvaccinatedIndividuals = this.formVariables.numeroDeVacunados1;
+    const secondVaccinationDate = this.formVariables.fecha2Vacunacion;
+    const secondvaccinatedIndividuals = this.formVariables.numeroDeVacunados2;
+    const nivelExposicion = this.formVariables.nivelExposicion;
+    const diasIncapacidad = this.formVariables.diasIncapacidad;
+
+    const year = new Date(firstVaccinationDate).getFullYear();
+    const isLeap = (y: number) =>
+      y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
+    const diasEnAnio = isLeap(year) ? 366 : 365;
+
+    // Validar primera fecha
+    const firstDate = new Date(firstVaccinationDate);
+    if (isNaN(firstDate.getTime())) {
+      throw new Error("❌ La primera fecha no es válida");
+    }
+
+    // Declarar fuera para poder usar después
+    let secondDate: Date | null = null;
+
+    // Validar segunda fecha solo si existe
+    if (secondVaccinationDate) {
+      secondDate = new Date(secondVaccinationDate);
+
+      if (isNaN(secondDate.getTime())) {
+        throw new Error("❌ La segunda fecha no es válida");
+      }
+
+      if (firstDate.getFullYear() !== secondDate.getFullYear()) {
+        throw new Error("❌ Las fechas no son del mismo año");
+      }
+
+      if (secondDate <= firstDate) {
+        throw new Error("❌ La segunda fecha debe ser mayor que la primera");
+      }
+    }
+
+    // Crear objeto final
+    const vaccinationObject: {
+      firstVaccinationDate: Date;
+      firstvaccinatedIndividuals: number;
+      secondVaccinationDate: Date | null;
+      secondvaccinatedIndividuals: number;
+    } = {
+      firstVaccinationDate: firstDate,
+      firstvaccinatedIndividuals,
+      secondVaccinationDate: secondDate,
+      secondvaccinatedIndividuals,
+    };
+
+    const ajustePoblacionalResult = ajustePoblacional(
+      numEmpleados,
+      nivelExposicion
+    );
+
+    const influenzaAH1N1 = generateinfluenzaAH1N1(
+      numEmpleados,
+      ajustePoblacionalResult["A H1N1"]
+    );
+    const influenzaAH1N1_V = generateinfluenzaAH1N1_V(
+      numEmpleados,
+      ajustePoblacionalResult["A H1N1"],
+      vaccinationObject
+    );
+
+    const influenzaAH3N2 = generateinfluenzaAH3N2(
+      numEmpleados,
+      ajustePoblacionalResult["A H3N2"]
+    );
+    const influenzaAH3N2_V = generateinfluenzaAH3N2_V(
+      numEmpleados,
+      ajustePoblacionalResult["A H3N2"],
+      vaccinationObject
+    );
+
+    const influenzaBVictoria = generateInfluenzaBVictoria(
+      numEmpleados,
+      ajustePoblacionalResult["B Victoria"]
+    );
+    const influenzaBVictoria_V = generateInfluenzaBVictoria_V(
+      numEmpleados,
+      ajustePoblacionalResult["B Victoria"],
+      vaccinationObject
+    );
+
+    const influenzaBYamagata = generateInfluenzaBYamagata(
+      numEmpleados,
+      ajustePoblacionalResult["B Yamagata"]
+    );
+    const influenzaBYamagata_V = generateInfluenzaBYamagata_V(
+      numEmpleados,
+      ajustePoblacionalResult["B Yamagata"],
+      vaccinationObject
+    );
+
+    const noVacunal = generateNoVacunal(
+      numEmpleados,
+      ajustePoblacionalResult["No vacunal"]
+    );
+
+    // Sumar "Casos Nuevos" de cada serie
+    type SerieItem = { [k: string]: any; "Casos Nuevos": number };
+    const sumCasosNuevos = (serie: Array<SerieItem>) =>
+      serie.reduce((acc, item) => acc + (item["Casos Nuevos"] || 0), 0);
+
+    const totalCasosNuevosInfluenzaAH1N1 = sumCasosNuevos(influenzaAH1N1);
+    const totalCasosNuevosInfluenzaAH1N1_V = sumCasosNuevos(influenzaAH1N1_V);
+
+    const totalCasosNuevosInfluenzaAH3N2 = sumCasosNuevos(influenzaAH3N2);
+    const totalCasosNuevosInfluenzaAH3N2_V = sumCasosNuevos(influenzaAH3N2_V);
+
+    const totalCasosNuevosInfluenzaBVictoria =
+      sumCasosNuevos(influenzaBVictoria);
+    const totalCasosNuevosInfluenzaBVictoria_V =
+      sumCasosNuevos(influenzaBVictoria_V);
+
+    const totalCasosNuevosInfluenzaBYamagata =
+      sumCasosNuevos(influenzaBYamagata);
+    const totalCasosNuevosInfluenzaBYamagata_V =
+      sumCasosNuevos(influenzaBYamagata_V);
+
+    const totalCasosNuevosNoVacunal = sumCasosNuevos(noVacunal);
+
+    // Totales agrupados por condición de vacunación
+    const totalCasosNuevosVacunados =
+      totalCasosNuevosInfluenzaAH1N1_V +
+      totalCasosNuevosInfluenzaAH3N2_V +
+      totalCasosNuevosInfluenzaBVictoria_V +
+      totalCasosNuevosInfluenzaBYamagata_V +
+      totalCasosNuevosNoVacunal;
+
+    const totalCasosNuevosNoVacunados =
+      totalCasosNuevosInfluenzaAH1N1 +
+      totalCasosNuevosInfluenzaAH3N2 +
+      totalCasosNuevosInfluenzaBVictoria +
+      totalCasosNuevosInfluenzaBYamagata +
+      totalCasosNuevosNoVacunal;
+
+    // Sintomáticos (redondeados a enteros)
+    const symptomaticVacunados = Math.round(totalCasosNuevosVacunados * 0.84);
+    const symptomaticNoVacunados = Math.round(
+      totalCasosNuevosNoVacunados * 0.84
+    );
+
+    // Días de incapacidad (redondeados)
+    const sickDaysVacunados = Math.round(
+      symptomaticVacunados * 0.4865 * diasIncapacidad
+    );
+    const sickDaysNoVacunados = Math.round(
+      symptomaticNoVacunados * 0.4865 * diasIncapacidad
+    );
+
+    // Hospitalizaciones (redondeados)
+    const hospitalizationVacunados = Math.round(symptomaticVacunados * 0.0154);
+    const hospitalizationNoVacunados = Math.round(
+      symptomaticNoVacunados * 0.0154
+    );
+
+    // Mortalidad (redondeados)
+    const mortalityVacunados = Math.round(symptomaticVacunados * 0.00127);
+    const mortalityNoVacunados = Math.round(symptomaticNoVacunados * 0.00127);
+
+    return {
+      totalCasosNuevosVacunados,
+      totalCasosNuevosNoVacunados,
+      symptomaticVacunados,
+      symptomaticNoVacunados,
+      sickDaysVacunados,
+      sickDaysNoVacunados,
+      hospitalizationVacunados,
+      hospitalizationNoVacunados,
+      mortalityVacunados,
+      mortalityNoVacunados,
+      diasIncapacidad,
+    };
+  }
+
+  private calculateResults(): void {
+    try {
+      // Calcular los resultados de influenza
+      this.calculatedResults = this.calculateInfluenzaResults();
+
+      // Cálculos básicos
+      const totalVacunados =
+        this.formVariables.numeroDeVacunados1 +
+        this.formVariables.numeroDeVacunados2;
+      const porcentajeVacunacion =
+        (totalVacunados / this.formVariables.numEmpleados) * 100;
+      const costoTotalVacunacion = Math.round(
+        totalVacunados * this.formVariables.precioVacunacion
+      );
+
+      console.log("Cálculos realizados:", {
+        totalVacunados: totalVacunados.toLocaleString("es-CO"),
+        porcentajeVacunacion: porcentajeVacunacion.toFixed(2) + "%",
+        costoTotalVacunacion:
+          "$" + costoTotalVacunacion.toLocaleString("es-CO"),
+        sickDaysVacunados: this.calculatedResults.sickDaysVacunados,
+        sickDaysNoVacunados: this.calculatedResults.sickDaysNoVacunados,
+      });
+
+      // Actualizar resultados en el DOM
+      setTimeout(
+        () =>
+          this.updateResultsInDOM(
+            costoTotalVacunacion,
+            totalVacunados,
+            porcentajeVacunacion
+          ),
+        500
+      );
+    } catch (error) {
+      console.error("Error en los cálculos:", error);
+    }
+  }
+
+  private updateResultsInDOM(
+    costoTotalVacunacion: number,
+    totalVacunados: number,
+    porcentajeVacunacion: number
+  ): void {
+    // Actualizar vista 2 - Impacto Presupuestal
+    this.updateView2Results(
+      costoTotalVacunacion,
+      totalVacunados,
+      porcentajeVacunacion
+    );
+
+    // Mantener las actualizaciones originales para otras vistas si existen
     const updates = [
-      { id: "resultado-ahorro-total", value: `$${(costoTotalVacunacion * 2.5).toLocaleString('es-CO')}` },
+      {
+        id: "resultado-ahorro-total",
+        value: `$${(costoTotalVacunacion * 2.5).toLocaleString("es-CO")}`,
+      },
       { id: "resultado-roi", value: "320%" },
       { id: "resultado-costo-beneficio", value: "3.2:1" },
-      { id: "resultado-costo-caso-evitado", value: `$${(costoTotalVacunacion / Math.max(totalVacunados * 0.1, 1)).toLocaleString('es-CO')}` },
-      { id: "resultado-efectividad", value: "85%" }
+      {
+        id: "resultado-costo-caso-evitado",
+        value: `$${(
+          costoTotalVacunacion / Math.max(totalVacunados * 0.1, 1)
+        ).toLocaleString("es-CO")}`,
+      },
+      { id: "resultado-efectividad", value: "85%" },
     ];
 
     updates.forEach(({ id, value }) => {
@@ -319,20 +625,104 @@ export class ViewManager {
     this.updateCasesResults(totalVacunados);
   }
 
+  private updateView2Results(
+    costoTotalVacunacion: number,
+    totalVacunados: number,
+    porcentajeVacunacion: number
+  ): void {
+    if (!this.calculatedResults) return;
+
+    const formatCurrency = (amount: number): string => {
+      return `$ ${Math.round(amount).toLocaleString("es-CO")}`;
+    };
+
+    const formatPercentage = (percentage: number): string => {
+      return `${percentage.toFixed(2)}%`;
+    };
+
+    // Calcular empleados con incapacidad médica
+    const empleadosIncapacidadNoVacunados = Math.floor(
+      this.calculatedResults.sickDaysNoVacunados /
+        this.formVariables.diasIncapacidad
+    );
+    const empleadosIncapacidadVacunados = Math.floor(
+      this.calculatedResults.sickDaysVacunados /
+        this.formVariables.diasIncapacidad
+    );
+    // Calcular días de incapacidad médica
+    const diasIncapacidadNoVacunados =
+      empleadosIncapacidadNoVacunados * this.formVariables.diasIncapacidad;
+    const diasIncapacidadVacunados =
+      empleadosIncapacidadVacunados * this.formVariables.diasIncapacidad;
+
+    // Mapeo de selectores CSS a valores
+    const view2Updates = [
+      // Población Vacunada - fila 1
+      {
+        selector: "#view2 .divide-y > div:nth-child(1) > div:nth-child(3)",
+        value: totalVacunados.toLocaleString("es-CO"),
+      },
+
+      // Porcentaje de vacunación - fila 2
+      {
+        selector: "#view2 .divide-y > div:nth-child(2) > div:nth-child(3)",
+        value: formatPercentage(porcentajeVacunacion),
+      },
+
+      // Costo de la vacunación - fila 3
+      {
+        selector: "#view2 .divide-y > div:nth-child(3) > div:nth-child(3)",
+        value: formatCurrency(costoTotalVacunacion),
+      },
+
+      // Empleados con incapacidad médica - fila 4
+      {
+        selector: "#view2 .divide-y > div:nth-child(4) > div:nth-child(2)",
+        value: empleadosIncapacidadNoVacunados.toString(),
+      },
+      {
+        selector: "#view2 .divide-y > div:nth-child(4) > div:nth-child(3)",
+        value: empleadosIncapacidadVacunados.toString(),
+      },
+
+      // Días de incapacidad médica - fila 5
+      {
+        selector: "#view2 .divide-y > div:nth-child(5) > div:nth-child(2)",
+        value: diasIncapacidadNoVacunados.toString(),
+      },
+      {
+        selector: "#view2 .divide-y > div:nth-child(5) > div:nth-child(3)",
+        value: diasIncapacidadVacunados.toString(),
+      },
+    ];
+
+    view2Updates.forEach(({ selector, value }) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.textContent = value;
+      }
+    });
+  }
+
   private updateCasesResults(totalVacunados: number): void {
     const factorExposicion = this.formVariables.nivelExposicion;
-    const baseCase = Math.round((this.formVariables.numEmpleados - totalVacunados) * 0.01 * factorExposicion);
-    
+    const baseCase = Math.round(
+      (this.formVariables.numEmpleados - totalVacunados) *
+        0.01 *
+        factorExposicion
+    );
+
     const cases = [
       { id: "casos-h1n1", factor: 1.2 },
       { id: "casos-h3n2", factor: 1.0 },
       { id: "casos-b-victoria", factor: 0.8 },
-      { id: "casos-b-yamagata", factor: 0.9 }
+      { id: "casos-b-yamagata", factor: 0.9 },
     ];
 
     cases.forEach(({ id, factor }) => {
       const element = document.getElementById(id);
-      if (element) element.textContent = Math.round(baseCase * factor).toString();
+      if (element)
+        element.textContent = Math.round(baseCase * factor).toString();
     });
   }
 
@@ -354,7 +744,7 @@ export class ViewManager {
   }
 
   private cleanupCharts(): void {
-    [this.chartNoVacunar, this.chartVacunacionTetravalente].forEach(chart => {
+    [this.chartNoVacunar, this.chartVacunacionTetravalente].forEach((chart) => {
       if (chart) {
         chart.destroy();
         chart = null;
@@ -367,11 +757,31 @@ export class ViewManager {
 
     const days = Array.from({ length: 365 }, (_, i) => i + 1);
     const generateData = (multiplier: number) => ({
-      activos: days.map(day => Math.max(0, Math.sin(day * 0.02) * 15 + Math.random() * 5) * multiplier),
-      ah1n1: days.map(day => Math.max(0, Math.sin(day * 0.015) * 12 + Math.random() * 3) * multiplier),
-      ah3n2: days.map(day => Math.max(0, Math.sin(day * 0.025) * 10 + Math.random() * 4) * multiplier),
-      victoria: days.map(day => Math.max(0, Math.sin(day * 0.018) * 8 + Math.random() * 2) * multiplier),
-      yamagata: days.map(day => Math.max(0, Math.sin(day * 0.022) * 6 + Math.random() * 3) * multiplier)
+      activos: days.map(
+        (day) =>
+          Math.max(0, Math.sin(day * 0.02) * 15 + Math.random() * 5) *
+          multiplier
+      ),
+      ah1n1: days.map(
+        (day) =>
+          Math.max(0, Math.sin(day * 0.015) * 12 + Math.random() * 3) *
+          multiplier
+      ),
+      ah3n2: days.map(
+        (day) =>
+          Math.max(0, Math.sin(day * 0.025) * 10 + Math.random() * 4) *
+          multiplier
+      ),
+      victoria: days.map(
+        (day) =>
+          Math.max(0, Math.sin(day * 0.018) * 8 + Math.random() * 2) *
+          multiplier
+      ),
+      yamagata: days.map(
+        (day) =>
+          Math.max(0, Math.sin(day * 0.022) * 6 + Math.random() * 3) *
+          multiplier
+      ),
     });
 
     const noVacunarData = generateData(2.5);
@@ -386,12 +796,47 @@ export class ViewManager {
         data: {
           labels: days,
           datasets: [
-            { label: "Activos", data: data.activos, borderColor: "#FF6B6B", backgroundColor: "#FF6B6B20", tension: 0.3, fill: true },
-            { label: "AH1N1", data: data.ah1n1, borderColor: "#4ECDC4", backgroundColor: "#4ECDC420", tension: 0.3, fill: true },
-            { label: "AH3N2", data: data.ah3n2, borderColor: "#45B7D1", backgroundColor: "#45B7D120", tension: 0.3, fill: true },
-            { label: "Victoria", data: data.victoria, borderColor: "#F7DC6F", backgroundColor: "#F7DC6F20", tension: 0.3, fill: true },
-            { label: "Yamagata", data: data.yamagata, borderColor: "#BB8FCE", backgroundColor: "#BB8FCE20", tension: 0.3, fill: true }
-          ]
+            {
+              label: "Activos",
+              data: data.activos,
+              borderColor: "#FF6B6B",
+              backgroundColor: "#FF6B6B20",
+              tension: 0.3,
+              fill: true,
+            },
+            {
+              label: "AH1N1",
+              data: data.ah1n1,
+              borderColor: "#4ECDC4",
+              backgroundColor: "#4ECDC420",
+              tension: 0.3,
+              fill: true,
+            },
+            {
+              label: "AH3N2",
+              data: data.ah3n2,
+              borderColor: "#45B7D1",
+              backgroundColor: "#45B7D120",
+              tension: 0.3,
+              fill: true,
+            },
+            {
+              label: "Victoria",
+              data: data.victoria,
+              borderColor: "#F7DC6F",
+              backgroundColor: "#F7DC6F20",
+              tension: 0.3,
+              fill: true,
+            },
+            {
+              label: "Yamagata",
+              data: data.yamagata,
+              borderColor: "#BB8FCE",
+              backgroundColor: "#BB8FCE20",
+              tension: 0.3,
+              fill: true,
+            },
+          ],
         },
         options: {
           responsive: true,
@@ -399,19 +844,36 @@ export class ViewManager {
           plugins: {
             legend: {
               position: "bottom" as const,
-              labels: { usePointStyle: true, padding: 15, font: { size: 11 } }
-            }
+              labels: { usePointStyle: true, padding: 15, font: { size: 11 } },
+            },
           },
           scales: {
-            x: { title: { display: true, text: "Días del año", font: { size: 12, weight: "bold" } }, ticks: { maxTicksLimit: 12 } },
-            y: { title: { display: true, text: "Número de casos", font: { size: 12, weight: "bold" } }, beginAtZero: true }
-          }
-        }
+            x: {
+              title: {
+                display: true,
+                text: "Días del año",
+                font: { size: 12, weight: "bold" },
+              },
+              ticks: { maxTicksLimit: 12 },
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Número de casos",
+                font: { size: 12, weight: "bold" },
+              },
+              beginAtZero: true,
+            },
+          },
+        },
       });
     };
 
     this.chartNoVacunar = createChart("chart-no-vacunar", noVacunarData);
-    this.chartVacunacionTetravalente = createChart("chart-vacunacion-tetravalente", vacunacionData);
+    this.chartVacunacionTetravalente = createChart(
+      "chart-vacunacion-tetravalente",
+      vacunacionData
+    );
   }
 
   private updateLogo(currentView: string): void {
@@ -423,6 +885,9 @@ export class ViewManager {
 
     if (!whiteLogo || !colorLogo) return;
 
-    logo.src = (currentView === "view1" || currentView === "view4") ? whiteLogo : colorLogo;
+    logo.src =
+      currentView === "view1" || currentView === "view4"
+        ? whiteLogo
+        : colorLogo;
   }
 }

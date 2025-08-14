@@ -18,13 +18,13 @@ import generateNoVacunal from "@/utils/generateNoVacunal";
 
 import sumarCampoPorDia from "@/utils/sumarCampoPorDia";
 
-const population = 5000;
+const numEmpleados = 5000;
 const firstVaccinationDate: string = "2025-05-30";
 const firstvaccinatedIndividuals: number = 2000;
 const secondVaccinationDate: string = ""; // opcional
 const secondvaccinatedIndividuals: number = 0;
-const levelOfPublicExposure = 2; // bajo = 1 medio = 2 alto = 3
-const averageDaysOffWork = 5;
+const nivelExposicion = 2; // bajo = 1 medio = 2 alto = 3
+const diasIncapacidad = 5;
 
 const year = new Date(firstVaccinationDate).getFullYear();
 const isLeap = (y: number) => y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
@@ -70,52 +70,52 @@ const vaccinationObject: {
 };
 
 const ajustePoblacionalResult = ajustePoblacional(
-  population,
-  levelOfPublicExposure
+  numEmpleados,
+  nivelExposicion
 );
 
 const influenzaAH1N1 = generateinfluenzaAH1N1(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["A H1N1"]
 );
 const influenzaAH1N1_V = generateinfluenzaAH1N1_V(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["A H1N1"],
   vaccinationObject
 );
 
 const influenzaAH3N2 = generateinfluenzaAH3N2(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["A H3N2"]
 );
 const influenzaAH3N2_V = generateinfluenzaAH3N2_V(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["A H3N2"],
   vaccinationObject
 );
 
 const influenzaBVictoria = generateInfluenzaBVictoria(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["B Victoria"]
 );
 const influenzaBVictoria_V = generateInfluenzaBVictoria_V(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["B Victoria"],
   vaccinationObject
 );
 
 const influenzaBYamagata = generateInfluenzaBYamagata(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["B Yamagata"]
 );
 const influenzaBYamagata_V = generateInfluenzaBYamagata_V(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["B Yamagata"],
   vaccinationObject
 );
 
 const noVacunal = generateNoVacunal(
-  population,
+  numEmpleados,
   ajustePoblacionalResult["No vacunal"]
 );
 
@@ -161,10 +161,10 @@ const symptomaticNoVacunados = Math.round(totalCasosNuevosNoVacunados * 0.84);
 
 // Días de incapacidad (redondeados)
 const sickDaysVacunados = Math.round(
-  symptomaticVacunados * 0.4865 * averageDaysOffWork
+  symptomaticVacunados * 0.4865 * diasIncapacidad
 );
 const sickDaysNoVacunados = Math.round(
-  symptomaticNoVacunados * 0.4865 * averageDaysOffWork
+  symptomaticNoVacunados * 0.4865 * diasIncapacidad
 );
 
 // Hospitalizaciones (redondeados)
