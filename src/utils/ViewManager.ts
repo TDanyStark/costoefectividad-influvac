@@ -14,7 +14,6 @@ import sumarCampoPorDia from "@/utils/sumarCampoPorDia";
 
 export class ViewManager {
   private currentView: string = "view1";
-  private formData: any = null;
   private mainContainer: HTMLElement | null = null;
   private chartNoVacunar: any = null;
   private chartVacunacionTetravalente: any = null;

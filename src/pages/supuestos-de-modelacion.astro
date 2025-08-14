@@ -3,6 +3,7 @@ import Header from "@/components/Header.astro";
 import Layout from "@/layouts/Layout.astro";
 import { URL_BASE } from "@/variables";
 import TableSupuestos from "@/components/TableSupuestos.astro";
+import HomeIcon from "@/icons/HomeIcon.astro";
 ---
 
 <Layout>
@@ -19,7 +20,7 @@ import TableSupuestos from "@/components/TableSupuestos.astro";
           <span class="font-bold">*: Casos respecto a población sintomática</span>
         </div>
         <a href={`${URL_BASE}/`} class="p-2 rounded-lg bg-ochre-influvac">
-            <img src={`${URL_BASE}/img/svg/Home.svg`} alt="Ir al inicio" class="w-10 h-10" />
+            <HomeIcon />
         </a>
       </div>
     </section>
