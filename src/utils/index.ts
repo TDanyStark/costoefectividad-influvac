@@ -200,18 +200,18 @@ const infectivosTotalesNoVacunados: number[] = sumarCampoPorDia(
   diasEnAnio
 );
 
-const infectivosTotalesVacunados: number[] = sumarCampoPorDia(
-  seriesVacunados,
-  "Infectivos",
-  diasEnAnio
-);
-
 // ahora necesito sacar solo un array con los infectivos de AH1N1
 const infectivosAH1N1NoVacunados = influenzaAH1N1.map(item => Math.round(item.Infectivos));
 const infectivosAH3N2NoVacunados = influenzaAH3N2.map(item => Math.round(item.Infectivos));
 const infectivosBVictoriaNoVacunados = influenzaBVictoria.map(item => Math.round(item.Infectivos));
 const infectivosBYamagataNoVacunados = influenzaBYamagata.map(item => Math.round(item.Infectivos));
 
+
+const infectivosTotalesVacunados: number[] = sumarCampoPorDia(
+  seriesVacunados,
+  "Infectivos",
+  diasEnAnio
+);
 const infectivosAH1N1Vacunados = influenzaAH1N1_V.map(item => Math.round(item.Infectivos));
 const infectivosAH3N2Vacunados = influenzaAH3N2_V.map(item => Math.round(item.Infectivos));
 const infectivosBVictoriaVacunados = influenzaBVictoria_V.map(item => Math.round(item.Infectivos));
