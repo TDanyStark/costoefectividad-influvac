@@ -511,28 +511,20 @@ export class ViewManager {
       totalCasosNuevosNoVacunal;
 
     // Sintomáticos (redondeados a enteros)
-    const symptomaticVacunados = Math.round(totalCasosNuevosVacunados * 0.84);
-    const symptomaticNoVacunados = Math.round(
-      totalCasosNuevosNoVacunados * 0.84
-    );
+    const symptomaticVacunados = totalCasosNuevosVacunados * 0.84;
+    const symptomaticNoVacunados = totalCasosNuevosNoVacunados * 0.84;
 
     // Días de incapacidad (redondeados)
-    const sickDaysVacunados = Math.round(
-      symptomaticVacunados * 0.4865 * diasIncapacidad
-    );
-    const sickDaysNoVacunados = Math.round(
-      symptomaticNoVacunados * 0.4865 * diasIncapacidad
-    );
+    const sickDaysVacunados = symptomaticVacunados * 0.4865 * diasIncapacidad;
+    const sickDaysNoVacunados = symptomaticNoVacunados * 0.4865 * diasIncapacidad;
 
     // Hospitalizaciones (redondeados)
-    const hospitalizationVacunados = Math.round(symptomaticVacunados * 0.0154);
-    const hospitalizationNoVacunados = Math.round(
-      symptomaticNoVacunados * 0.0154
-    );
+    const hospitalizationVacunados = symptomaticVacunados * 0.0154;
+    const hospitalizationNoVacunados = symptomaticNoVacunados * 0.0154;
 
     // Mortalidad (redondeados)
-    const mortalityVacunados = Math.round(symptomaticVacunados * 0.00127);
-    const mortalityNoVacunados = Math.round(symptomaticNoVacunados * 0.00127);
+    const mortalityVacunados = symptomaticVacunados * 0.00127;
+    const mortalityNoVacunados = symptomaticNoVacunados * 0.00127;
 
     return {
       totalCasosNuevosVacunados,
@@ -659,6 +651,7 @@ export class ViewManager {
       this.calculatedResults.sickDaysVacunados /
         this.formVariables.diasIncapacidad
     );
+    console.log(this.calculatedResults.sickDaysVacunados, empleadosIncapacidadVacunados);
     // Calcular días de incapacidad médica
     const diasIncapacidadNoVacunados =
       empleadosIncapacidadNoVacunados * this.formVariables.diasIncapacidad;
@@ -795,6 +788,20 @@ export class ViewManager {
         element.textContent = value;
       }
     });
+
+    // Actualizar el texto descriptivo de la vista 2
+    const personasEvitadas = Math.round(empleadosIncapacidadNoVacunados - empleadosIncapacidadVacunados);
+    const diasReducidos = diasIncapacidadNoVacunados - diasIncapacidadVacunados;
+    
+    const descriptiveText = `La inversión en vacunación para ${totalVacunados.toLocaleString("es-CO")} trabajadores es de ${formatCurrency(costoTotalVacunacion)}, lo que cubre al ${porcentajeVacunacion.toFixed(1)}% de los colaboradores. Este nivel de protección evita que ${personasEvitadas} personas se enfermen y reduce en ${diasReducidos.toLocaleString("es-CO")} el número de días de incapacidad.`;
+    
+    const descriptiveElement = document.querySelector('#view2 .bg-brown-influvac p');
+    if (descriptiveElement) {
+      descriptiveElement.textContent = descriptiveText;
+      console.log('Actualizado texto descriptivo vista 2:', descriptiveText);
+    } else {
+      console.log('No se encontró el elemento para actualizar el texto descriptivo de la vista 2');
+    }
   }
 
   private updateView3Results(costoTotalVacunacion: number): void {
@@ -812,11 +819,11 @@ export class ViewManager {
     };
 
     // Calcular empleados con incapacidad médica (mismos cálculos que vista 2)
-    const empleadosIncapacidadNoVacunados = Math.round(
+    const empleadosIncapacidadNoVacunados = Math.floor(
       this.calculatedResults.sickDaysNoVacunados /
         this.formVariables.diasIncapacidad
     );
-    const empleadosIncapacidadVacunados = Math.round(
+    const empleadosIncapacidadVacunados = Math.floor(
       this.calculatedResults.sickDaysVacunados /
         this.formVariables.diasIncapacidad
     );
