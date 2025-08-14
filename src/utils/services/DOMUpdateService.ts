@@ -1,11 +1,14 @@
 // Servicio para actualización del DOM
 
-import type { FormVariables, InfluenzaResults, ResumenData } from '../types/FormTypes';
-import { DataFormatter } from '../formatters/DataFormatter';
-import { StorageService } from './StorageService';
+import type {
+  FormVariables,
+  InfluenzaResults,
+  ResumenData,
+} from "../types/FormTypes";
+import { DataFormatter } from "../formatters/DataFormatter";
+import { StorageService } from "./StorageService";
 
 export class DOMUpdateService {
-
   /**
    * Actualiza todos los resultados en el DOM
    */
@@ -13,9 +16,13 @@ export class DOMUpdateService {
     formVariables: FormVariables,
     calculatedResults: InfluenzaResults
   ): void {
-    const totalVacunados = formVariables.numeroDeVacunados1 + formVariables.numeroDeVacunados2;
-    const porcentajeVacunacion = (totalVacunados / formVariables.numEmpleados) * 100;
-    const costoTotalVacunacion = Math.round(totalVacunados * formVariables.precioVacunacion);
+    const totalVacunados =
+      formVariables.numeroDeVacunados1 + formVariables.numeroDeVacunados2;
+    const porcentajeVacunacion =
+      (totalVacunados / formVariables.numEmpleados) * 100;
+    const costoTotalVacunacion = Math.round(
+      totalVacunados * formVariables.precioVacunacion
+    );
 
     console.log("Cálculos realizados:", {
       totalVacunados: totalVacunados.toLocaleString("es-CO"),
@@ -23,24 +30,40 @@ export class DOMUpdateService {
       costoTotalVacunacion: "$" + costoTotalVacunacion.toLocaleString("es-CO"),
       sickDaysVacunados: calculatedResults.sickDaysVacunados,
       sickDaysNoVacunados: calculatedResults.sickDaysNoVacunados,
-      empleadosIncapacidadNoVacunados: Math.round(calculatedResults.sickDaysNoVacunados / formVariables.diasIncapacidad),
-      empleadosIncapacidadVacunados: Math.round(calculatedResults.sickDaysVacunados / formVariables.diasIncapacidad),
+      empleadosIncapacidadNoVacunados: Math.round(
+        calculatedResults.sickDaysNoVacunados / formVariables.diasIncapacidad
+      ),
+      empleadosIncapacidadVacunados: Math.round(
+        calculatedResults.sickDaysVacunados / formVariables.diasIncapacidad
+      ),
       salarioPromedio: formVariables.salarioPromedio,
       indicadorProductividad: formVariables.indicadorProductividad,
       diasIncapacidad: formVariables.diasIncapacidad,
-      calculatedResults: calculatedResults
+      calculatedResults: calculatedResults,
     });
 
     // Guardar datos para resumen
-    this.saveResultsForResumen(formVariables, calculatedResults, costoTotalVacunacion, totalVacunados, porcentajeVacunacion);
+    this.saveResultsForResumen(
+      formVariables,
+      calculatedResults,
+      costoTotalVacunacion,
+      totalVacunados,
+      porcentajeVacunacion
+    );
 
     // Actualizar DOM
-    setTimeout(() => {
-      this.updateView2Results(formVariables, calculatedResults, costoTotalVacunacion, totalVacunados, porcentajeVacunacion);
-      this.updateView3Results(formVariables, calculatedResults, costoTotalVacunacion);
-      this.updateGeneralResults(costoTotalVacunacion, totalVacunados);
-      this.updateCasesResults(formVariables, totalVacunados);
-    }, 500);
+    this.updateView2Results(
+      formVariables,
+      calculatedResults,
+      costoTotalVacunacion,
+      totalVacunados,
+      porcentajeVacunacion
+    );
+    this.updateView3Results(
+      formVariables,
+      calculatedResults,
+      costoTotalVacunacion
+    );
   }
 
   /**
@@ -68,24 +91,39 @@ export class DOMUpdateService {
     );
 
     const perdidaProductividadNoVacunados = Math.round(
-      empleadosIncapacidadNoVacunados * (formVariables.indicadorProductividad / 30) * formVariables.diasIncapacidad
+      empleadosIncapacidadNoVacunados *
+        (formVariables.indicadorProductividad / 30) *
+        formVariables.diasIncapacidad
     );
     const perdidaProductividadVacunados = Math.round(
-      empleadosIncapacidadVacunados * (formVariables.indicadorProductividad / 30) * formVariables.diasIncapacidad
+      empleadosIncapacidadVacunados *
+        (formVariables.indicadorProductividad / 30) *
+        formVariables.diasIncapacidad
     );
 
-    const perdidasOperativasNoVacunados = salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
-    const perdidasOperativasVacunados = salariosAusentismoVacunados + perdidaProductividadVacunados;
+    const perdidasOperativasNoVacunados =
+      salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
+    const perdidasOperativasVacunados =
+      salariosAusentismoVacunados + perdidaProductividadVacunados;
 
     const impactoPresupuestalNoVacunados = 0 + perdidasOperativasNoVacunados;
-    const impactoPresupuestalVacunados = costoTotalVacunacion + perdidasOperativasVacunados;
+    const impactoPresupuestalVacunados =
+      costoTotalVacunacion + perdidasOperativasVacunados;
 
-    const ahorro = impactoPresupuestalNoVacunados - impactoPresupuestalVacunados;
-    const relacionCostoBeneficio = ((impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) / costoTotalVacunacion) + 1;
+    const ahorro =
+      impactoPresupuestalNoVacunados - impactoPresupuestalVacunados;
+    const relacionCostoBeneficio =
+      (impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) /
+        costoTotalVacunacion +
+      1;
 
-    const diasIncapacidadNoVacunados = empleadosIncapacidadNoVacunados * formVariables.diasIncapacidad;
-    const diasIncapacidadVacunados = empleadosIncapacidadVacunados * formVariables.diasIncapacidad;
-    const icer = (impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) / (diasIncapacidadNoVacunados - diasIncapacidadVacunados);
+    const diasIncapacidadNoVacunados =
+      empleadosIncapacidadNoVacunados * formVariables.diasIncapacidad;
+    const diasIncapacidadVacunados =
+      empleadosIncapacidadVacunados * formVariables.diasIncapacidad;
+    const icer =
+      (impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) /
+      (diasIncapacidadNoVacunados - diasIncapacidadVacunados);
 
     const resumenData: ResumenData = {
       costoTotalVacunacion,
@@ -94,22 +132,32 @@ export class DOMUpdateService {
       perdidaProductividadNoVacunados,
       perdidaProductividadVacunados,
       porcentajeVacunacion,
-      totalCasosNuevosNoVacunados: Math.floor(calculatedResults.totalCasosNuevosNoVacunados),
-      totalCasosNuevosVacunados: Math.floor(calculatedResults.totalCasosNuevosVacunados),
-      symptomaticNoVacunados: Math.floor(calculatedResults.symptomaticNoVacunados),
+      totalCasosNuevosNoVacunados: Math.floor(
+        calculatedResults.totalCasosNuevosNoVacunados
+      ),
+      totalCasosNuevosVacunados: Math.floor(
+        calculatedResults.totalCasosNuevosVacunados
+      ),
+      symptomaticNoVacunados: Math.floor(
+        calculatedResults.symptomaticNoVacunados
+      ),
       symptomaticVacunados: Math.floor(calculatedResults.symptomaticVacunados),
       sujetosIncapacitadosNoVacunados: empleadosIncapacidadNoVacunados,
       sujetosIncapacitadosVacunados: empleadosIncapacidadVacunados,
       sickDaysNoVacunados: Math.round(calculatedResults.sickDaysNoVacunados),
       sickDaysVacunados: Math.round(calculatedResults.sickDaysVacunados),
-      hospitalizationNoVacunados: Math.floor(calculatedResults.hospitalizationNoVacunados),
-      hospitalizationVacunados: Math.floor(calculatedResults.hospitalizationVacunados),
+      hospitalizationNoVacunados: Math.floor(
+        calculatedResults.hospitalizationNoVacunados
+      ),
+      hospitalizationVacunados: Math.floor(
+        calculatedResults.hospitalizationVacunados
+      ),
       mortalityNoVacunados: Math.floor(calculatedResults.mortalityNoVacunados),
       mortalityVacunados: Math.floor(calculatedResults.mortalityVacunados),
       ahorro,
       relacionCostoBeneficio,
       icer,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     StorageService.saveResumenData(resumenData);
@@ -132,8 +180,10 @@ export class DOMUpdateService {
       calculatedResults.sickDaysVacunados / formVariables.diasIncapacidad
     );
 
-    const diasIncapacidadNoVacunados = empleadosIncapacidadNoVacunados * formVariables.diasIncapacidad;
-    const diasIncapacidadVacunados = empleadosIncapacidadVacunados * formVariables.diasIncapacidad;
+    const diasIncapacidadNoVacunados =
+      empleadosIncapacidadNoVacunados * formVariables.diasIncapacidad;
+    const diasIncapacidadVacunados =
+      empleadosIncapacidadVacunados * formVariables.diasIncapacidad;
 
     const salariosAusentismoNoVacunados = Math.round(
       empleadosIncapacidadNoVacunados * (formVariables.salarioPromedio / 30) * 2
@@ -143,19 +193,27 @@ export class DOMUpdateService {
     );
 
     const perdidaProductividadNoVacunados = Math.round(
-      empleadosIncapacidadNoVacunados * (formVariables.indicadorProductividad / 30) * formVariables.diasIncapacidad
+      empleadosIncapacidadNoVacunados *
+        (formVariables.indicadorProductividad / 30) *
+        formVariables.diasIncapacidad
     );
     const perdidaProductividadVacunados = Math.round(
-      empleadosIncapacidadVacunados * (formVariables.indicadorProductividad / 30) * formVariables.diasIncapacidad
+      empleadosIncapacidadVacunados *
+        (formVariables.indicadorProductividad / 30) *
+        formVariables.diasIncapacidad
     );
 
-    const perdidasOperativasNoVacunados = salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
-    const perdidasOperativasVacunados = salariosAusentismoVacunados + perdidaProductividadVacunados;
+    const perdidasOperativasNoVacunados =
+      salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
+    const perdidasOperativasVacunados =
+      salariosAusentismoVacunados + perdidaProductividadVacunados;
 
     const impactoPresupuestalNoVacunados = 0 + perdidasOperativasNoVacunados;
-    const impactoPresupuestalVacunados = costoTotalVacunacion + perdidasOperativasVacunados;
+    const impactoPresupuestalVacunados =
+      costoTotalVacunacion + perdidasOperativasVacunados;
 
-    const ahorro = impactoPresupuestalNoVacunados - impactoPresupuestalVacunados;
+    const ahorro =
+      impactoPresupuestalNoVacunados - impactoPresupuestalVacunados;
 
     const view2Updates = [
       {
@@ -240,12 +298,24 @@ export class DOMUpdateService {
     });
 
     // Actualizar texto descriptivo
-    const personasEvitadas = Math.round(empleadosIncapacidadNoVacunados - empleadosIncapacidadVacunados);
+    const personasEvitadas = Math.round(
+      empleadosIncapacidadNoVacunados - empleadosIncapacidadVacunados
+    );
     const diasReducidos = diasIncapacidadNoVacunados - diasIncapacidadVacunados;
-    
-    const descriptiveText = `La inversión en vacunación para ${totalVacunados.toLocaleString("es-CO")} trabajadores es de ${DataFormatter.formatCurrency(costoTotalVacunacion)}, lo que cubre al ${porcentajeVacunacion.toFixed(1)}% de los colaboradores. Este nivel de protección evita que ${personasEvitadas} personas se enfermen y reduce en ${diasReducidos.toLocaleString("es-CO")} el número de días de incapacidad.`;
-    
-    const descriptiveElement = document.querySelector('#view2 .bg-brown-influvac p');
+
+    const descriptiveText = `La inversión en vacunación para ${totalVacunados.toLocaleString(
+      "es-CO"
+    )} trabajadores es de ${DataFormatter.formatCurrency(
+      costoTotalVacunacion
+    )}, lo que cubre al ${porcentajeVacunacion.toFixed(
+      1
+    )}% de los colaboradores. Este nivel de protección evita que ${personasEvitadas} personas se enfermen y reduce en ${diasReducidos.toLocaleString(
+      "es-CO"
+    )} el número de días de incapacidad.`;
+
+    const descriptiveElement = document.querySelector(
+      "#view2 .bg-brown-influvac p"
+    );
     if (descriptiveElement) {
       descriptiveElement.textContent = descriptiveText;
     }
@@ -266,8 +336,10 @@ export class DOMUpdateService {
       calculatedResults.sickDaysVacunados / formVariables.diasIncapacidad
     );
 
-    const diasIncapacidadNoVacunados = empleadosIncapacidadNoVacunados * formVariables.diasIncapacidad;
-    const diasIncapacidadVacunados = empleadosIncapacidadVacunados * formVariables.diasIncapacidad;
+    const diasIncapacidadNoVacunados =
+      empleadosIncapacidadNoVacunados * formVariables.diasIncapacidad;
+    const diasIncapacidadVacunados =
+      empleadosIncapacidadVacunados * formVariables.diasIncapacidad;
 
     const salariosAusentismoNoVacunados = Math.round(
       empleadosIncapacidadNoVacunados * (formVariables.salarioPromedio / 30) * 2
@@ -277,56 +349,83 @@ export class DOMUpdateService {
     );
 
     const perdidaProductividadNoVacunados = Math.round(
-      empleadosIncapacidadNoVacunados * (formVariables.indicadorProductividad / 30) * formVariables.diasIncapacidad
+      empleadosIncapacidadNoVacunados *
+        (formVariables.indicadorProductividad / 30) *
+        formVariables.diasIncapacidad
     );
     const perdidaProductividadVacunados = Math.round(
-      empleadosIncapacidadVacunados * (formVariables.indicadorProductividad / 30) * formVariables.diasIncapacidad
+      empleadosIncapacidadVacunados *
+        (formVariables.indicadorProductividad / 30) *
+        formVariables.diasIncapacidad
     );
 
-    const perdidasOperativasNoVacunados = salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
-    const perdidasOperativasVacunados = salariosAusentismoVacunados + perdidaProductividadVacunados;
+    const perdidasOperativasNoVacunados =
+      salariosAusentismoNoVacunados + perdidaProductividadNoVacunados;
+    const perdidasOperativasVacunados =
+      salariosAusentismoVacunados + perdidaProductividadVacunados;
 
     const impactoPresupuestalNoVacunados = 0 + perdidasOperativasNoVacunados;
-    const impactoPresupuestalVacunados = costoTotalVacunacion + perdidasOperativasVacunados;
+    const impactoPresupuestalVacunados =
+      costoTotalVacunacion + perdidasOperativasVacunados;
 
-    const relacionCostoBeneficio = ((impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) / costoTotalVacunacion) + 1;
-    const icer = (impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) / (diasIncapacidadNoVacunados - diasIncapacidadVacunados);
+    const relacionCostoBeneficio =
+      (impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) /
+        costoTotalVacunacion +
+      1;
+    const icer =
+      (impactoPresupuestalNoVacunados - impactoPresupuestalVacunados) /
+      (diasIncapacidadNoVacunados - diasIncapacidadVacunados);
 
     const view3Updates = [
       {
-        selector: "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(1) > div:nth-child(3)",
+        selector:
+          "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(1) > div:nth-child(3)",
         value: DataFormatter.formatCurrency(costoTotalVacunacion),
       },
       {
-        selector: "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(2) > div:nth-child(2)",
+        selector:
+          "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(2) > div:nth-child(2)",
         value: DataFormatter.formatCurrency(impactoPresupuestalNoVacunados),
       },
       {
-        selector: "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(2) > div:nth-child(3)",
+        selector:
+          "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(2) > div:nth-child(3)",
         value: DataFormatter.formatCurrency(impactoPresupuestalVacunados),
       },
       {
-        selector: "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(3) > div:nth-child(2)",
+        selector:
+          "#view3 .bg-white:nth-of-type(1) .divide-y > div:nth-child(3) > div:nth-child(2)",
         value: relacionCostoBeneficio.toFixed(2),
       },
       {
-        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(1) > div:nth-child(2)",
-        value: DataFormatter.formatCurrencyWithDecimals(impactoPresupuestalNoVacunados),
+        selector:
+          "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(1) > div:nth-child(2)",
+        value: DataFormatter.formatCurrencyWithDecimals(
+          impactoPresupuestalNoVacunados
+        ),
       },
       {
-        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(1) > div:nth-child(3)",
-        value: DataFormatter.formatCurrencyWithDecimals(impactoPresupuestalVacunados),
+        selector:
+          "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(1) > div:nth-child(3)",
+        value: DataFormatter.formatCurrencyWithDecimals(
+          impactoPresupuestalVacunados
+        ),
       },
       {
-        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(2) > div:nth-child(2)",
-        value: DataFormatter.formatNumberWithDecimals(diasIncapacidadNoVacunados),
+        selector:
+          "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(2) > div:nth-child(2)",
+        value: DataFormatter.formatNumberWithDecimals(
+          diasIncapacidadNoVacunados
+        ),
       },
       {
-        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(2) > div:nth-child(3)",
+        selector:
+          "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(2) > div:nth-child(3)",
         value: DataFormatter.formatNumberWithDecimals(diasIncapacidadVacunados),
       },
       {
-        selector: "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(3) > div:nth-child(2)",
+        selector:
+          "#view3 .bg-white:nth-of-type(3) .divide-y > div:nth-child(3) > div:nth-child(2)",
         value: DataFormatter.formatCurrencyWithDecimals(icer),
       },
     ];
@@ -345,63 +444,18 @@ export class DOMUpdateService {
   /**
    * Actualiza los textos descriptivos de la vista 3
    */
-  private static updateView3DescriptiveTexts(relacionCostoBeneficio: number, icer: number): void {
+  private static updateView3DescriptiveTexts(
+    relacionCostoBeneficio: number,
+    icer: number
+  ): void {
     // Actualizar texto costo-beneficio
-    const allStrongs = document.querySelectorAll('#view3 strong');
+    const allStrongs = document.querySelectorAll("#view3 strong");
     allStrongs.forEach((strong) => {
-      if (strong.textContent && strong.textContent.includes('$30,68')) {
+      if (strong.textContent && strong.textContent.includes("$30,68")) {
         strong.textContent = `$${relacionCostoBeneficio.toFixed(2)}`;
       }
-      if (strong.textContent && strong.textContent.includes('$2.436.118')) {
+      if (strong.textContent && strong.textContent.includes("$2.436.118")) {
         strong.textContent = `$${Math.round(icer).toLocaleString("es-CO")}`;
-      }
-    });
-  }
-
-  /**
-   * Actualiza resultados generales
-   */
-  private static updateGeneralResults(costoTotalVacunacion: number, totalVacunados: number): void {
-    const updates = [
-      {
-        id: "resultado-ahorro-total",
-        value: `$${(costoTotalVacunacion * 2.5).toLocaleString("es-CO")}`,
-      },
-      { id: "resultado-roi", value: "320%" },
-      { id: "resultado-costo-beneficio", value: "3.2:1" },
-      {
-        id: "resultado-costo-caso-evitado",
-        value: `$${(costoTotalVacunacion / Math.max(totalVacunados * 0.1, 1)).toLocaleString("es-CO")}`,
-      },
-      { id: "resultado-efectividad", value: "85%" },
-    ];
-
-    updates.forEach(({ id, value }) => {
-      const element = document.getElementById(id);
-      if (element) element.textContent = value;
-    });
-  }
-
-  /**
-   * Actualiza los resultados de casos
-   */
-  private static updateCasesResults(formVariables: FormVariables, totalVacunados: number): void {
-    const factorExposicion = formVariables.nivelExposicion;
-    const baseCase = Math.round(
-      (formVariables.numEmpleados - totalVacunados) * 0.01 * factorExposicion
-    );
-
-    const cases = [
-      { id: "casos-h1n1", factor: 1.2 },
-      { id: "casos-h3n2", factor: 1.0 },
-      { id: "casos-b-victoria", factor: 0.8 },
-      { id: "casos-b-yamagata", factor: 0.9 },
-    ];
-
-    cases.forEach(({ id, factor }) => {
-      const element = document.getElementById(id);
-      if (element) {
-        element.textContent = Math.round(baseCase * factor).toString();
       }
     });
   }

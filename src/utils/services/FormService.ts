@@ -58,6 +58,7 @@ export class FormService {
     if (this.form) {
       this.form.addEventListener("submit", (e) => {
         e.preventDefault();
+        console.log("Submit");
         this.handleFormSubmit();
       });
       this.initializeProductivityUpdaters();
@@ -119,9 +120,9 @@ export class FormService {
 
     Object.keys(this.formElements).forEach((field) => {
       const element = this.formElements[field];
+
       if (element && this.formVariables[field as keyof FormVariables] !== undefined) {
         const value = this.formVariables[field as keyof FormVariables];
-
         if (field.includes("fecha")) {
           element.value = DataFormatter.formatDateForInput(value as string);
         } else if (
