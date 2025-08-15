@@ -38,7 +38,7 @@ import BackIcon from "@/icons/BackIcon.astro";
 
           <!-- Botones de navegación -->
           <div class="flex-1 flex items-center justify-center">
-            <div class="flex flex-col gap-8">
+            <div class="flex flex-col gap-8 w-full">
               <button
                 class="bg-blue-influvac font-bold text-xl md:text-2xl xl:text-3xl py-6 px-8 rounded-full text-white view-nav-btn transition-all duration-300 hover:bg-blue-influvac/90 hover:scale-105 shadow-lg cursor-pointer"
                 data-view="view2"
@@ -221,7 +221,7 @@ import BackIcon from "@/icons/BackIcon.astro";
             </div>
           </div>
         </div>
-        <div class="w-full flex justify-between items-end">
+        <div class="w-full flex flex-col md:flex-row gap-2 justify-between items-end">
           <div
             class="bg-brown-influvac bg-opacity-90 text-white p-6 rounded-lg shadow-lg max-w-3xl"
           >
@@ -369,7 +369,7 @@ import BackIcon from "@/icons/BackIcon.astro";
             </p>
           </div>
         </div>
-        <div class="w-full flex justify-end">
+        <div class="w-full flex justify-end mt-2 md:mt-0">
           <div>
             <button
               class="bg-brown-influvac text-white p-2 rounded-lg font-semibold hover:bg-brown-influvac/90 transition-colors view-nav-btn border border-white cursor-pointer"
@@ -384,7 +384,7 @@ import BackIcon from "@/icons/BackIcon.astro";
 
       <!-- Vista 4: Casos de Influenza -->
       <div id="view4" class="view-content hidden w-full">
-        <div class="flex gap-8 items-end">
+        <div class="flex flex-col lg:flex-row gap-8 items-end">
           <div class="flex-1 flex flex-col gap-6">
             <!-- Primer título y gráfica -->
             <div class="bg-white rounded-lg shadow-lg p-6 flex-1">
