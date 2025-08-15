@@ -5,14 +5,14 @@
 <div id="pwa-install-banner" class="hidden fixed bottom-4 left-4 right-4 z-50 bg-blue-600 text-white p-4 rounded-lg shadow-lg">
   <div class="flex items-center justify-between">
     <div class="flex-1">
-      <h3 class="font-semibold text-sm">Instalar aplicación</h3>
-      <p class="text-xs opacity-90">Agrega esta app a tu pantalla de inicio para acceso rápido</p>
+      <h3 class="font-semibold text-xl">Instalar aplicación</h3>
+      <p class="text-lg opacity-90">Agrega esta app a tu pantalla de inicio para acceso rápido</p>
     </div>
     <div class="flex gap-2 ml-4">
-      <button id="pwa-install-button" class="bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium hover:bg-gray-100">
+      <button id="pwa-install-button" class="bg-white text-blue-600 px-3 py-1 rounded text-lg font-medium hover:bg-gray-100">
         Instalar
       </button>
-      <button id="pwa-dismiss-button" class="text-white/80 hover:text-white text-lg leading-none p-1">
+      <button id="pwa-dismiss-button" class="text-white/80 hover:text-white text-2xl leading-none p-1">
         ×
       </button>
     </div>
@@ -30,6 +30,18 @@
   window.addEventListener('beforeinstallprompt', (e) => {
     // Prevent the mini-infobar from appearing on mobile
     e.preventDefault();
+    
+    // Check if user has dismissed the banner recently
+    const dismissed = localStorage.getItem('pwa-dismissed');
+    if (dismissed) {
+      const dismissedTime = parseInt(dismissed);
+      const dayInMs = 24 * 60 * 60 * 1000;
+      if (Date.now() - dismissedTime < dayInMs) {
+        // Don't show banner if dismissed within last 24 hours
+        return;
+      }
+    }
+    
     // Save the event so it can be triggered later
     deferredPrompt = e;
     // Show the install banner
@@ -66,20 +78,8 @@
       // Store dismissal in localStorage to not show again for a while
       localStorage.setItem('pwa-dismissed', Date.now().toString());
     });
-  }
 
-  // Check if user has dismissed the banner recently
-  window.addEventListener('load', () => {
-    const dismissed = localStorage.getItem('pwa-dismissed');
-    if (dismissed) {
-      const dismissedTime = parseInt(dismissed);
-      const dayInMs = 24 * 60 * 60 * 1000;
-      if (Date.now() - dismissedTime < dayInMs) {
-        // Don't show banner if dismissed within last 24 hours
-        return;
-      }
-    }
-  });
+  }
 
   // Listen for app installed event
   window.addEventListener('appinstalled', () => {
