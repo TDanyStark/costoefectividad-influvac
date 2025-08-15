@@ -25,7 +25,6 @@ export class ViewManager {
     this.formService = new FormService(this.handleFormChange.bind(this));
     this.viewService = new ViewService();
     this.chartService = new ChartService();
-
     // Configurar eventos personalizados
     this.initializeCustomEvents();
     
