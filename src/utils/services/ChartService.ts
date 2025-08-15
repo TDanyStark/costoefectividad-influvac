@@ -5,6 +5,7 @@ import type { InfluenzaResults } from '../types/FormTypes';
 export class ChartService {
   private chartNoVacunar: any = null;
   private chartVacunacionTetravalente: any = null;
+  private resizeTimeout: any = null;
 
   constructor() {
     // Escuchar cambios de vista
@@ -17,6 +18,25 @@ export class ChartService {
         this.loadChartsView4();
       }
     });
+
+    // Escuchar cambios de tamaño de ventana para redimensionar gráficas
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  /**
+   * Maneja el redimensionamiento de la ventana
+   */
+  private handleResize(): void {
+    // Debounce para evitar demasiadas llamadas
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      if (this.chartNoVacunar) {
+        this.chartNoVacunar.resize();
+      }
+      if (this.chartVacunacionTetravalente) {
+        this.chartVacunacionTetravalente.resize();
+      }
+    }, 100);
   }
 
   /**
@@ -173,14 +193,18 @@ export class ChartService {
             position: "bottom" as const,
             labels: { 
               usePointStyle: true, 
-              padding: 15, 
-              font: { size: 11 }
+              padding: window.innerWidth < 768 ? 8 : 15, 
+              font: { size: window.innerWidth < 768 ? 9 : 11 },
+              boxWidth: window.innerWidth < 768 ? 8 : 12
             },
           },
           title: {
             display: true,
             text: canvasId.includes('no-vacunar') ? 'Evolución de Infectivos - Sin Vacunación' : 'Evolución de Infectivos - Con Vacunación Tetravalente',
-            font: { size: 14, weight: 'bold' }
+            font: { 
+              size: window.innerWidth < 768 ? 12 : 14, 
+              weight: 'bold' 
+            }
           }
         },
         scales: {
@@ -188,15 +212,18 @@ export class ChartService {
             title: {
               display: true,
               text: "Días del año",
-              font: { size: 12, weight: "bold" },
+              font: { 
+                size: window.innerWidth < 768 ? 10 : 12, 
+                weight: "bold" 
+              },
             },
             ticks: { 
-              maxTicksLimit: 12,
+              maxTicksLimit: window.innerWidth < 768 ? 6 : 12,
               autoSkip: true,
               callback: function(value: any, index: number, ticks: any[]) {
                 const dayNumber = parseInt(value);
                 
-                const interval = Math.ceil(diasEnAnio / 12);
+                const interval = Math.ceil(diasEnAnio / (window.innerWidth < 768 ? 6 : 12));
                 
                 if (dayNumber % interval === 0 || dayNumber === 1 || dayNumber === diasEnAnio) {
                   return dayNumber.toString();
@@ -204,21 +231,27 @@ export class ChartService {
                 
                 return '';
               },
-              maxRotation: 45,
-              minRotation: 0
+              maxRotation: window.innerWidth < 768 ? 45 : 45,
+              minRotation: 0,
+              font: { size: window.innerWidth < 768 ? 9 : 11 }
             },
           },
           y: {
             title: {
               display: true,
               text: "Número de infectivos",
-              font: { size: 12, weight: "bold" },
+              font: { 
+                size: window.innerWidth < 768 ? 10 : 12, 
+                weight: "bold" 
+              },
             },
             beginAtZero: true,
             ticks: {
               callback: function(value: any) {
                 return Math.round(value).toLocaleString('es-CO');
-              }
+              },
+              font: { size: window.innerWidth < 768 ? 9 : 11 },
+              maxTicksLimit: window.innerWidth < 768 ? 5 : 8
             }
           },
         },
@@ -229,7 +262,10 @@ export class ChartService {
         elements: {
           point: {
             radius: 0,
-            hoverRadius: 5
+            hoverRadius: window.innerWidth < 768 ? 3 : 5
+          },
+          line: {
+            borderWidth: window.innerWidth < 768 ? 1.5 : 2
           }
         }
       },

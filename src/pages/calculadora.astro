@@ -384,32 +384,32 @@ import BackIcon from "@/icons/BackIcon.astro";
 
       <!-- Vista 4: Casos de Influenza -->
       <div id="view4" class="view-content hidden w-full">
-        <div class="flex flex-col lg:flex-row gap-8 items-end">
-          <div class="flex-1 flex flex-col gap-6">
+        <div class="flex flex-col gap-4 md:gap-6 lg:gap-8 items-end">
+          <div class="w-full flex flex-col gap-4 md:gap-6">
             <!-- Primer título y gráfica -->
-            <div class="bg-white rounded-lg shadow-lg p-6 flex-1">
+            <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 flex-1">
               <h3
-                class="text-2xl font-bold text-ochre-influvac mb-4 text-center"
+                class="text-xl md:text-2xl font-bold text-ochre-influvac mb-3 md:mb-4 text-center"
               >
                 NO VACUNAR
               </h3>
-              <div class="h-full">
-                <canvas id="chart-no-vacunar" class="w-full h-full max-h-64"
+              <div class="h-48 md:h-64">
+                <canvas id="chart-no-vacunar" class="w-full h-full"
                 ></canvas>
               </div>
             </div>
 
             <!-- Segundo título y gráfica -->
-            <div class="bg-white rounded-lg shadow-lg p-6 flex-1">
+            <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 flex-1">
               <h3
-                class="text-2xl font-bold text-ochre-influvac mb-4 text-center"
+                class="text-xl md:text-2xl font-bold text-ochre-influvac mb-3 md:mb-4 text-center"
               >
                 VACUNACIÓN TETRAVALENTE
               </h3>
-              <div class="h-full">
+              <div class="h-48 md:h-64">
                 <canvas
                   id="chart-vacunacion-tetravalente"
-                  class="w-full h-full max-h-64"></canvas>
+                  class="w-full h-full"></canvas>
               </div>
             </div>
           </div>
@@ -458,5 +458,28 @@ import BackIcon from "@/icons/BackIcon.astro";
 
   .view-nav-btn {
     transition: all 0.3s ease;
+  }
+
+  /* Estilos específicos para las gráficas en móviles */
+  @media (max-width: 768px) {
+    #view4 .bg-white {
+      padding: 1rem !important;
+    }
+    
+    #view4 canvas {
+      touch-action: pan-x pan-y;
+    }
+    
+    /* Mejoras para la leyenda en móviles */
+    .chart-container {
+      position: relative;
+      overflow: hidden;
+    }
+  }
+
+  /* Asegurar que las gráficas se redimensionen correctamente */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
   }
 </style>
