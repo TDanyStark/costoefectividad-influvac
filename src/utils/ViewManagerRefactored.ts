@@ -82,6 +82,7 @@ export class ViewManager {
       const validation = this.formService.validateForm();
       if (!validation.isValid) {
         console.error("Errores de validación:", validation.errors);
+        alert(`Error de validación: ${validation.errors.join(', ')}`);
         return;
       }
 
